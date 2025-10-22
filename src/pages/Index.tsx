@@ -1,15 +1,15 @@
 import Navigation from "@/components/Navigation";
-import ParticleField from "@/components/ParticleField";
+import { QuantumCanvas } from "@/components/QuantumCanvas";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, Sparkles, Globe, Users, Zap } from "lucide-react";
+import { ArrowRight, Sparkles, Globe, Users, Zap, Brain, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import heroQuantum from "@/assets/hero-quantum.jpg";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
-      <ParticleField />
+      <QuantumCanvas />
       <Navigation />
 
       {/* Hero Section */}
@@ -58,22 +58,23 @@ const Index = () => {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
               {[
-                { icon: Sparkles, label: "Dream Spaces 4D", value: "Inmersivos" },
-                { icon: Globe, label: "Metaverso", value: "Sensorial" },
-                { icon: Users, label: "Comunidad", value: "Global" },
-                { icon: Zap, label: "Isabella AI", value: "Multimodal" },
+                { icon: Sparkles, label: "Dream Spaces 4D", value: "Inmersivos", link: "/metaverse" },
+                { icon: Brain, label: "Isabella AI", value: "Multimodal", link: "/isabella" },
+                { icon: Users, label: "Comunidad", value: "Global", link: "/community" },
+                { icon: Shield, label: "Anubis Security", value: "Cuántica", link: "/anubis" },
               ].map((feature, index) => {
                 const Icon = feature.icon;
                 return (
-                  <Card
-                    key={index}
-                    className="glass-panel p-6 hover:shadow-quantum transition-all duration-300 hover:scale-105 border-border/50 animate-scale-in"
-                    style={{ animationDelay: `${0.3 + index * 0.1}s` }}
-                  >
-                    <Icon className="w-8 h-8 mx-auto mb-3 text-primary animate-pulse-glow" />
-                    <p className="text-sm text-muted-foreground mb-1">{feature.label}</p>
-                    <p className="font-bold">{feature.value}</p>
-                  </Card>
+                  <Link key={index} to={feature.link}>
+                    <Card
+                      className="glass-panel p-6 hover:shadow-quantum transition-all duration-300 hover:scale-105 border-border/50 animate-scale-in cursor-pointer"
+                      style={{ animationDelay: `${0.3 + index * 0.1}s` }}
+                    >
+                      <Icon className="w-8 h-8 mx-auto mb-3 text-primary animate-pulse-glow" />
+                      <p className="text-sm text-muted-foreground mb-1">{feature.label}</p>
+                      <p className="font-bold">{feature.value}</p>
+                    </Card>
+                  </Link>
                 );
               })}
             </div>

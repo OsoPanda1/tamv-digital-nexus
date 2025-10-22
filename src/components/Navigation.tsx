@@ -7,11 +7,11 @@ const Navigation = () => {
 
   const navItems = [
     { path: "/", label: "Inicio", icon: Home },
-    { path: "/dashboard", label: "Dashboard", icon: Sparkles },
+    { path: "/ecosystem", label: "Ecosistema", icon: Sparkles },
+    { path: "/isabella", label: "Isabella AI", icon: Sparkles },
     { path: "/metaverse", label: "Metaverse", icon: Compass },
     { path: "/community", label: "Community", icon: Users },
     { path: "/docs", label: "Docs", icon: FileText },
-    { path: "/profile", label: "Profile", icon: User },
   ];
 
   return (

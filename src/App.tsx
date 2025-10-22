@@ -9,6 +9,10 @@ import Metaverse from "./pages/Metaverse";
 import Community from "./pages/Community";
 import Docs from "./pages/Docs";
 import Profile from "./pages/Profile";
+import Isabella from "./pages/Isabella";
+import Anubis from "./pages/Anubis";
+import Kaos from "./pages/Kaos";
+import Ecosystem from "./pages/Ecosystem";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +30,10 @@ const App = () => (
           <Route path="/community" element={<Community />} />
           <Route path="/docs" element={<Docs />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/isabella" element={<Isabella />} />
+          <Route path="/anubis" element={<Anubis />} />
+          <Route path="/kaos" element={<Kaos />} />
+          <Route path="/ecosystem" element={<Ecosystem />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

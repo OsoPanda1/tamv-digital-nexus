@@ -1,0 +1,4 @@
+project_id = "bnjvxgguatrfwswnoluz"
+
+[functions.isabella-chat]
+verify_jwt = false
