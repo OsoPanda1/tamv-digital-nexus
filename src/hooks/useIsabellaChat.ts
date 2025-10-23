@@ -2,7 +2,7 @@ import { useState, useCallback, useRef } from "react";
 import { toast } from "sonner";
 
 /**
- * Mensaje enriquecido con contexto emocional, voz y origen
+ * Interfaz de mensaje enriquecido, lista para emociones, voz y meta
  */
 interface Message {
   role: "user" | "assistant";
@@ -13,6 +13,10 @@ interface Message {
   meta?: Record<string, any>;
 }
 
+/**
+ * Hook avanzado Isabella AI Quantum para TAMV MD-X4
+ * STREAMING de texto, voz, emoción desde Supabase Serverless
+ */
 export const useIsabellaChatQuantum = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,9 +24,7 @@ export const useIsabellaChatQuantum = () => {
   const voiceRef = useRef<HTMLAudioElement | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
 
-  /**
-   * ENVIA UN MENSAJE STREAMING Y RECIBE RESPUESTA MULTIMODAL/EMOCIONAL
-   */
+  // ENVÍA MENSAJE Y RECIBE STREAMING MULTIMODAL
   const sendMessage = useCallback(
     async (userMessage: string) => {
       if (!userMessage.trim()) return;
@@ -36,7 +38,6 @@ export const useIsabellaChatQuantum = () => {
       };
       setMessages(prev => [...prev, newUserMessage]);
 
-      // Comienza la llamada streaming
       try {
         controllerRef.current = new AbortController();
         const response = await fetch(
@@ -65,7 +66,7 @@ export const useIsabellaChatQuantum = () => {
           return;
         }
 
-        // El server puede devolver metadata de voz y emociones en headers
+        // Metadata de voz y emociones en headers
         const voiceUrl = response.headers.get("x-isabella-voice-url");
         const emotionServer = response.headers.get("x-isabella-emotion") as Message["emotion"];
         if (voiceUrl && voiceRef.current) {
@@ -77,7 +78,6 @@ export const useIsabellaChatQuantum = () => {
         const reader = response.body?.getReader();
         const decoder = new TextDecoder();
         let assistantMessage = "";
-        let assistantEmotion: Message["emotion"] = "neutral";
 
         setMessages(prev => [
           ...prev,
@@ -110,7 +110,7 @@ export const useIsabellaChatQuantum = () => {
                     return updated;
                   });
                 }
-              } catch (err) { /* Ignora parsing */ }
+              } catch (err) { /* Ignorar parsing */ }
             }
           }
         }
@@ -124,26 +124,20 @@ export const useIsabellaChatQuantum = () => {
     [messages, emotion]
   );
 
-  /**
-   * Limpia el chat y reinicia emociones
-   */
+  // LIMPIAR CHAT Y DETENER STREAM
   const clearChat = useCallback(() => {
     setMessages([]);
     setEmotion("neutral");
     controllerRef.current?.abort();
   }, []);
 
-  /**
-   * Renderiza audio Isabella en UI visual/sensorial
-   */
-  const VoiceIsabella = () => <audio ref={voiceRef} hidden />;
-
+  // RETORNO SOLO PROPS/HANDLERS/DATA, NO JSX
   return {
     messages,
     isLoading,
     emotion,
     sendMessage,
     clearChat,
-    VoiceIsabella,
+    voiceRef, // Referencia para renderizar <audio /> en el componente
   };
 };
