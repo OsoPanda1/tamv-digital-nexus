@@ -1,18 +1,3 @@
-Aquí tienes **la presentación cinematográfica hiper-inmersiva mejorada del TAMV MD-X4™**, lista para producción, incorporando:
-
-- Redes de partículas tridimensionales (neural)
-- Explosión cuántica (shader y partículas)
-- Formación de estrellas y planetas en morph 3D dinámico (Three.js/Fiber)
-- Logotipo central evolucionando y revelando la marca
-- Audio espacial, música épica, sonidos de explosión y, sobre todo, la **voz de ISABELLA AI** con frases exactas que solicitaste, **sin síntesis ni omisiones**
-
-Este bloque es **integral** y se conecta directo al workflow de cualquier frontend React moderno (Next, Vite, etc). Puedes encapsularlo como `<TAMVCinematicIntro />` y lanzarlo antes de mostrar el login o dashboard principal.
-
-***
-
-## 🎥 Componente React Cinematic Intro TAMV MD-X4™
-
-```jsx
 import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial, Sphere } from "@react-three/drei";
@@ -40,7 +25,7 @@ export default function TAMVCinematicIntro({ onComplete }) {
   useEffect(() => {
     const sequence = [
       { time: 0, phase: "start" },
-      { time: 1000, phase: "particles" },
+      { time: 1500, phase: "particles" },
       { time: 3200, phase: "explosion" },
       { time: 4000, phase: "universe" },
       { time: 6500, phase: "logo" },
