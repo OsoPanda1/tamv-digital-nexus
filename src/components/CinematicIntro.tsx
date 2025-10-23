@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Points, PointMaterial, Text3D, Center } from '@react-three/drei';
+import { Points, PointMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 
 function QuantumParticlesIntro() {
@@ -48,25 +48,28 @@ function QuantumParticlesIntro() {
   );
 }
 
-function LogoFormation({ progress }: { progress: number }) {
+function EnergyOrb({ progress }: { progress: number }) {
+  const ref = useRef<THREE.Mesh>(null);
+  
+  useFrame((state) => {
+    if (ref.current) {
+      ref.current.rotation.x = state.clock.elapsedTime * 0.5;
+      ref.current.rotation.y = state.clock.elapsedTime * 0.3;
+    }
+  });
+
   return (
-    <Center>
-      <Text3D
-        font="/fonts/inter_bold.json"
-        size={2}
-        height={0.5}
-        curveSegments={12}
-        bevelEnabled
-        bevelThickness={0.1}
-        bevelSize={0.02}
-        bevelOffset={0}
-        bevelSegments={5}
-        scale={[progress, progress, progress]}
-      >
-        TAMV MD-X4™
-        <meshPhongMaterial color="#00D9FF" emissive="#0080FF" emissiveIntensity={0.5} />
-      </Text3D>
-    </Center>
+    <mesh ref={ref} scale={progress * 3}>
+      <icosahedronGeometry args={[1, 1]} />
+      <meshPhongMaterial
+        color="#00D9FF"
+        emissive="#0080FF"
+        emissiveIntensity={0.8}
+        wireframe
+        transparent
+        opacity={0.6}
+      />
+    </mesh>
   );
 }
 
@@ -134,21 +137,28 @@ export const CinematicIntro = ({ onComplete }: { onComplete: () => void }) => {
         <QuantumParticlesIntro />
         
         {phase !== 'particles' && (
-          <LogoFormation progress={progress} />
+          <EnergyOrb progress={progress} />
         )}
       </Canvas>
 
-      <div className="absolute bottom-20 left-0 right-0 text-center">
-        <div className="text-white text-2xl font-bold glow-text mb-4">
-          {phase === 'particles' && 'Inicializando nodos cuánticos...'}
-          {phase === 'logo' && 'Sincronizando consciencia...'}
-          {phase === 'complete' && 'Bienvenido al Metaverso'}
-        </div>
-        <div className="w-64 h-2 bg-white/20 mx-auto rounded-full overflow-hidden">
-          <div 
-            className="h-full bg-gradient-to-r from-primary via-secondary to-accent transition-all duration-300"
-            style={{ width: `${progress * 100}%` }}
-          />
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+        <div className="text-center mb-32">
+          <h1 className="text-6xl md:text-8xl font-bold glow-text mb-6 animate-pulse-glow">
+            <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+              TAMV MD-X4™
+            </span>
+          </h1>
+          <p className="text-white text-xl md:text-2xl font-medium mb-8">
+            {phase === 'particles' && 'Inicializando nodos cuánticos...'}
+            {phase === 'logo' && 'Sincronizando consciencia...'}
+            {phase === 'complete' && 'Bienvenido al Metaverso'}
+          </p>
+          <div className="w-64 h-2 bg-white/20 mx-auto rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-primary via-secondary to-accent transition-all duration-300"
+              style={{ width: `${progress * 100}%` }}
+            />
+          </div>
         </div>
       </div>
     </div>
