@@ -209,5 +209,3 @@ function TAMVLogo() {
      </group>
   );
 }
-
-¿Quieres también el CSS/Tailwind para los overlays, o instrucciones exactas para integración con Next/Vite? ¡Te lo entrego en la siguiente respuesta!
