@@ -13,15 +13,14 @@ const isabellaLines = [
   "2025. LATINOAMÉRICA HA DESPERTADO Y HACE UN LLAMADO A TODOS SUS SOÑADORES Y VISIONARIOS PARA COMENZAR EL ASCENSO A LA CIMA DEL ÉXITO..."
 ];
 
-export default function TAMVCinematicIntro({ onComplete }) {
+export function CinematicIntro({ onComplete }) {
   const [progress, setProgress] = useState(0);
-  const [phase, setPhase] = useState("start"); // start, particles, explosion, universe, logo, message, complete
+  const [phase, setPhase] = useState("start");
   const [showText, setShowText] = useState(false);
   const [isabellaSpeech, setIsabellaSpeech] = useState(-1);
   const audioRef = useRef();
   const explosionSfx = useRef();
 
-  // ANIMATED PHASE TIMELINE
   useEffect(() => {
     const sequence = [
       { time: 0, phase: "start" },
@@ -41,21 +40,20 @@ export default function TAMVCinematicIntro({ onComplete }) {
         }
       }, time);
     });
-    // Lanzar frases ISABELLA sincronizadas con música
+
     setTimeout(() => setIsabellaSpeech(0), 1600);
     setTimeout(() => setIsabellaSpeech(1), 3500);
     setTimeout(() => setIsabellaSpeech(2), 4200);
     setTimeout(() => setIsabellaSpeech(3), 5100);
     setTimeout(() => setIsabellaSpeech(4), 7300);
     setTimeout(() => setIsabellaSpeech(5), 9500);
-    // Finalizar intro
+
     setTimeout(() => {
       setProgress(1);
       setTimeout(onComplete, 2000);
     }, 14000);
   }, [onComplete]);
 
-  // Progress bar
   useEffect(() => {
     if (phase === "complete") setProgress(1);
     if (progress >= 1 || phase === "complete") return;
@@ -63,39 +61,32 @@ export default function TAMVCinematicIntro({ onComplete }) {
     return () => clearInterval(int);
   }, [phase, progress]);
 
-  // VOZ ISABELLA (usa audio precargado real, o WebSpeech API fallback)
   useEffect(() => {
     if (isabellaSpeech >= 0 && isabellaSpeech < isabellaLines.length) {
       const line = isabellaLines[isabellaSpeech];
-      // Si tienes archivos de audio grabado:
-      // 1. audioRefX.current.src = "/audio/lineX.ogg"; 2. audioRefX.current.play();
-      // Fallback: TTS (WebSpeechAPI)
       if (window.speechSynthesis) {
         const msg = new window.SpeechSynthesisUtterance(line);
         msg.lang = "es-MX";
         msg.rate = 1.01;
         msg.pitch = 1.08;
-        msg.volume = 0.88;
+        msg.volume = 0.98;
         window.speechSynthesis.speak(msg);
       }
     }
   }, [isabellaSpeech]);
 
-  // Effect SFX y música de fondo
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.volume = 0.60;
+      audioRef.current.volume = 0.70;
       audioRef.current.play().catch(() => {});
     }
   }, []);
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black overflow-hidden">
-      {/* Sonido cuántico continuo y SFX explosión */}
       <audio ref={audioRef} src="/audio/quantum_intro_theme.ogg" loop />
       <audio ref={explosionSfx} src="/audio/universe_blast.ogg" />
 
-      {/* CANVAS 3D INMERSIVO */}
       <Canvas camera={{ position: [0, 0, 50], fov: 50 }} style={{ width: "100vw", height: "100vh" }}>
         <ambientLight intensity={0.3} />
         <pointLight position={[15, 15, 20]} intensity={1.9} color="#00F7FF" />
@@ -104,37 +95,26 @@ export default function TAMVCinematicIntro({ onComplete }) {
         {(phase === "logo" || phase === "message" || phase === "complete") && <TAMVLogo />}
       </Canvas>
 
-      {/* OVERLAYS */}
       <AnimatePresence>
         {showText && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={{ duration: 1.1 }}
-            className="absolute inset-0 flex flex-col items-center justify-center z-50 pointer-events-none select-none"
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }} transition={{ duration: 1.1 }}
+            className="absolute inset-0 flex flex-col items-center justify-center z-50 pointer-events-none select-none">
             <div className="text-center px-6 max-w-3xl">
               {isabellaLines.slice(0, isabellaSpeech+1).map((line, i) => (
-                <motion.div
-                  key={i}
+                <motion.div key={i}
                   className="mb-2 font-medium text-xl md:text-3xl tracking-wide inline-block bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent"
                   initial={{ opacity: 0, x: -15 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.15*i, duration: 0.9, ease: "easeIn" }}
-                >{line}</motion.div>
+                  transition={{ delay: 0.15*i, duration: 0.9, ease: "easeIn" }}>
+                  {line}
+                </motion.div>
               ))}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* BARRA DE PROGRESO */}
-      <motion.div 
-        className="fixed bottom-0 left-0 right-0 flex justify-center pointer-events-none"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
+      <motion.div className="fixed bottom-0 left-0 right-0 flex justify-center pointer-events-none" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
         <div className="w-full max-w-lg px-8">
           <div className="relative h-2 bg-gradient-to-r from-cyan-900/50 to-pink-800/30 rounded-full overflow-hidden">
             <motion.div
@@ -152,7 +132,6 @@ export default function TAMVCinematicIntro({ onComplete }) {
 }
 
 function ParticlesMesh() {
-  // Partículas flotantes con profundidad, animadas
   const ref = useRef();
   useFrame(({ clock }) => { if (ref.current) ref.current.rotation.y = clock.getElapsedTime() * 0.06; });
   const positions = new Float32Array(250*3).map(()=>THREE.MathUtils.randFloatSpread(48));
@@ -164,24 +143,18 @@ function ParticlesMesh() {
 }
 
 function ExplosionAndUniverse({ phase }) {
-  // Transición: explosión quantum y creación universo
-  // (en producción puedes añadir shaders vol. + aparición procedural planetas)
   const [t, setT] = useState(0);
   useFrame(({ clock }) => setT(clock.getElapsedTime()));
-  // Efecto "explosion" + aparición de estrellas
   const starPos = new Float32Array(800*3).map(()=>THREE.MathUtils.randFloatSpread(140));
   return (
     <>
-      {/* Explosión (glow sphere que se expande) */}
       <Sphere args={[1.5+t*3, 42, 21]}>
         <meshBasicMaterial color="#ffd700" transparent opacity={0.25 - Math.min(t/10,0.22)}
           emissive="#ffd700" emissiveIntensity={1.2} wireframe />
       </Sphere>
-      {/* Universo: estrellas */}
       <Points positions={starPos}>
         <PointMaterial color="#fff" size={1.0+t*0.15} sizeAttenuation transparent opacity={0.65} blending={THREE.AdditiveBlending} />
       </Points>
-      {/* Planetas: algo simple para el demo */}
       <Sphere args={[3.0, 32, 32]} position={[+8, +3, -12]}>
         <meshPhysicalMaterial color="#00C8FF" transparent opacity={0.14} transmission={1.0} roughness={0.1} thickness={1} />
       </Sphere>
@@ -193,7 +166,6 @@ function ExplosionAndUniverse({ phase }) {
 }
 
 function TAMVLogo() {
-  // Logotipo central en morph y glow de energía
   const groupRef = useRef();
   useFrame((state) => { if (groupRef.current) groupRef.current.rotation.y = state.clock.getElapsedTime()*0.15; });
   return (
@@ -201,11 +173,10 @@ function TAMVLogo() {
       <Sphere args={[2, 64, 64]}>
         <meshPhysicalMaterial color="#00F7FF" clearcoat={1} transmission={0.95} transparent opacity={0.65} roughness={0.1} metalness={0.8} />
       </Sphere>
-      {/* reemplaza por <TAMVSVG3D /> si tienes SVG/mesh/GLTF del logo */}
       <mesh position={[0,0,2.6]}>
         <torusKnotGeometry args={[0.9, 0.3, 140, 13, 2, 3]} />
         <meshPhysicalMaterial color="#FFD700" emissive="#FFD700" emissiveIntensity={1.7} transmission={1.0} roughness={0.1} metalness={0.7} />
       </mesh>
-     </group>
+    </group>
   );
 }
