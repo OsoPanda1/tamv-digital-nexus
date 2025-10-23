@@ -8,8 +8,9 @@ const Navigation = () => {
   const navItems = [
     { path: "/", label: "Inicio", icon: Home },
     { path: "/ecosystem", label: "Ecosistema", icon: Sparkles },
+    { path: "/dream-spaces", label: "Dream Spaces", icon: Compass },
     { path: "/isabella", label: "Isabella AI", icon: Sparkles },
-    { path: "/metaverse", label: "Metaverse", icon: Compass },
+    { path: "/university", label: "Universidad", icon: FileText },
     { path: "/community", label: "Community", icon: Users },
     { path: "/docs", label: "Docs", icon: FileText },
   ];

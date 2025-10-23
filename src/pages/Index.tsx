@@ -1,5 +1,7 @@
+import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { QuantumCanvas } from "@/components/QuantumCanvas";
+import { CinematicIntro } from "@/components/CinematicIntro";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Sparkles, Globe, Users, Zap, Brain, Shield } from "lucide-react";
@@ -7,6 +9,28 @@ import { Link } from "react-router-dom";
 import heroQuantum from "@/assets/hero-quantum.jpg";
 
 const Index = () => {
+  const [showIntro, setShowIntro] = useState(false);
+  const [introComplete, setIntroComplete] = useState(false);
+
+  useEffect(() => {
+    const hasSeenIntro = localStorage.getItem('tamv_intro_shown');
+    if (!hasSeenIntro) {
+      setShowIntro(true);
+    } else {
+      setIntroComplete(true);
+    }
+  }, []);
+
+  const handleIntroComplete = () => {
+    localStorage.setItem('tamv_intro_shown', 'true');
+    setShowIntro(false);
+    setIntroComplete(true);
+  };
+
+  if (showIntro && !introComplete) {
+    return <CinematicIntro onComplete={handleIntroComplete} />;
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <QuantumCanvas />

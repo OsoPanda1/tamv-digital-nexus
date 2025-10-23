@@ -13,6 +13,8 @@ import Isabella from "./pages/Isabella";
 import Anubis from "./pages/Anubis";
 import Kaos from "./pages/Kaos";
 import Ecosystem from "./pages/Ecosystem";
+import DreamSpaces from "./pages/DreamSpaces";
+import University from "./pages/University";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +36,8 @@ const App = () => (
           <Route path="/anubis" element={<Anubis />} />
           <Route path="/kaos" element={<Kaos />} />
           <Route path="/ecosystem" element={<Ecosystem />} />
+          <Route path="/dream-spaces" element={<DreamSpaces />} />
+          <Route path="/university" element={<University />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
