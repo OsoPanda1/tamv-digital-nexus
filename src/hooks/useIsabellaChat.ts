@@ -32,7 +32,10 @@ export const useIsabellaChat = () => {
         }
       );
 
-      if (!response.ok || !response.body) {
+      // Verificar si la respuesta es válida
+      const contentType = response.headers.get('content-type');
+      
+      if (!response.ok) {
         if (response.status === 429) {
           toast.error("Límite alcanzado. Espera un momento.");
           return;
@@ -41,7 +44,22 @@ export const useIsabellaChat = () => {
           toast.error("Créditos agotados.");
           return;
         }
-        throw new Error('Error en la respuesta');
+        
+        // Intentar leer el error como texto
+        try {
+          const errorText = await response.text();
+          console.error('Error response:', errorText);
+          toast.error('Isabella AI no está disponible en este momento.');
+        } catch {
+          toast.error('Error al conectar con Isabella AI');
+        }
+        return;
+      }
+
+      // Verificar que sea una respuesta de streaming
+      if (!response.body || !contentType?.includes('text/event-stream')) {
+        toast.error('Respuesta inválida del servidor');
+        return;
       }
 
       const reader = response.body.getReader();
