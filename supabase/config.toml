@@ -3,8 +3,20 @@ project_id = "bnjvxgguatrfwswnoluz"
 [functions.isabella-chat]
 verify_jwt = false
 
+[functions.isabella-chat-enhanced]
+verify_jwt = false
+
 [functions.quantum-analytics]
 verify_jwt = false
 
+[functions.quantum-analytics-enhanced]
+verify_jwt = false
+
 [functions.dekateotl-security]
+verify_jwt = false
+
+[functions.dekateotl-security-enhanced]
+verify_jwt = false
+
+[functions.kaos-audio-system]
 verify_jwt = false
