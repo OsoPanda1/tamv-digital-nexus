@@ -5,11 +5,11 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useIsabellaChat } from '@/hooks/useIsabellaChat';
+import { useIsabellaChatQuantum } from '@/hooks/useIsabellaChatQuantum';
 import { Send, Sparkles, Brain, Heart, Zap } from 'lucide-react';
 
 const Isabella = () => {
-  const { messages, isLoading, sendMessage } = useIsabellaChat();
+  const { messages, isLoading, sendMessage } = useIsabellaChatQuantum();
   const [input, setInput] = useState('');
 
   const handleSend = () => {

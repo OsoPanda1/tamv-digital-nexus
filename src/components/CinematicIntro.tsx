@@ -18,8 +18,8 @@ export function CinematicIntro({ onComplete }) {
   const [phase, setPhase] = useState("start");
   const [showText, setShowText] = useState(false);
   const [isabellaSpeech, setIsabellaSpeech] = useState(-1);
-  const audioRef = useRef();
-  const explosionSfx = useRef();
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const explosionSfx = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     const sequence = [
@@ -90,7 +90,7 @@ export function CinematicIntro({ onComplete }) {
       <Canvas camera={{ position: [0, 0, 50], fov: 50 }} style={{ width: "100vw", height: "100vh" }}>
         <ambientLight intensity={0.3} />
         <pointLight position={[15, 15, 20]} intensity={1.9} color="#00F7FF" />
-        {phase === "particles" && <ParticlesMesh glow />}
+        {phase === "particles" && <ParticlesMesh />}
         {["explosion","universe"].includes(phase) && <ExplosionAndUniverse phase={phase} />}
         {(phase === "logo" || phase === "message" || phase === "complete") && <TAMVLogo />}
       </Canvas>
@@ -132,7 +132,7 @@ export function CinematicIntro({ onComplete }) {
 }
 
 function ParticlesMesh() {
-  const ref = useRef();
+  const ref = useRef<THREE.Points>(null);
   useFrame(({ clock }) => { if (ref.current) ref.current.rotation.y = clock.getElapsedTime() * 0.06; });
   const positions = new Float32Array(250*3).map(()=>THREE.MathUtils.randFloatSpread(48));
   return (
@@ -149,7 +149,7 @@ function ExplosionAndUniverse({ phase }) {
   return (
     <>
       <Sphere args={[1.5+t*3, 42, 21]}>
-        <meshBasicMaterial color="#ffd700" transparent opacity={0.25 - Math.min(t/10,0.22)}
+        <meshPhongMaterial color="#ffd700" transparent opacity={0.25 - Math.min(t/10,0.22)}
           emissive="#ffd700" emissiveIntensity={1.2} wireframe />
       </Sphere>
       <Points positions={starPos}>
@@ -166,7 +166,7 @@ function ExplosionAndUniverse({ phase }) {
 }
 
 function TAMVLogo() {
-  const groupRef = useRef();
+  const groupRef = useRef<THREE.Group>(null);
   useFrame((state) => { if (groupRef.current) groupRef.current.rotation.y = state.clock.getElapsedTime()*0.15; });
   return (
     <group ref={groupRef} position={[0,0,0]}>
