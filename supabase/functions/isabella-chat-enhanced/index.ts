@@ -61,7 +61,7 @@ serve(async (req) => {
 Contexto actual: ${JSON.stringify(context)}`;
 
     // Call Lovable AI Gateway
-    const response = await fetch('https://api.lovable.app/v1/chat/completions', {
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${LOVABLE_API_KEY}`,
@@ -71,14 +71,12 @@ Contexto actual: ${JSON.stringify(context)}`;
         model: 'google/gemini-2.5-flash',
         messages: [
           { role: 'system', content: systemPrompt },
-          ...messages.map(msg => ({
+          ...messages.map((msg: any) => ({
             role: msg.role,
             content: msg.content
           }))
         ],
-        stream: true,
-        max_tokens: 1500,
-        temperature: 0.8
+        stream: true
       }),
     });
 
@@ -119,7 +117,7 @@ Contexto actual: ${JSON.stringify(context)}`;
   } catch (error) {
     console.error('[Isabella] Error:', error);
     return new Response(
-      JSON.stringify({ error: error.message }), 
+      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }), 
       { 
         status: 500, 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 

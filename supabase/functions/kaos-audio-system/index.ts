@@ -42,7 +42,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('[KAOS] Error:', error);
     return new Response(
-      JSON.stringify({ error: error.message }), 
+      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }), 
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
@@ -73,7 +73,7 @@ function generateAtmosphere(params: any) {
     }
   };
 
-  const config = atmospheres[space_type] || atmospheres['dream_space'];
+  const config = atmospheres[space_type as keyof typeof atmospheres] || atmospheres['dream_space'];
 
   return {
     success: true,
@@ -89,7 +89,7 @@ function createSoundscape(params: any) {
   const { elements, duration, evolution_rate } = params;
   
   // Crear paisaje sonoro multicapa
-  const layers = elements.map((element, index) => ({
+  const layers = elements.map((element: any, index: number) => ({
     layer_id: index,
     element_type: element,
     frequency_range: [100 * (index + 1), 1000 * (index + 1)],
@@ -144,7 +144,7 @@ function generateReactiveMusic(params: any) {
     'tristeza': ['A', 'C', 'D', 'F']
   };
 
-  const scale = scales[emotion] || scales['neutral'];
+  const scale = scales[emotion as keyof typeof scales] || scales['neutral'];
   const bpm = Math.floor(60 + energy_level * 80);
 
   return {

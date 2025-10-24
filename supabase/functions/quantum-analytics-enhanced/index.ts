@@ -57,13 +57,13 @@ serve(async (req) => {
   } catch (error) {
     console.error('[Analytics] Error:', error);
     return new Response(
-      JSON.stringify({ error: error.message }), 
+      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }), 
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 });
 
-async function performRealTimeAnalysis(supabase, eventType: string, properties: any) {
+async function performRealTimeAnalysis(supabase: any, eventType: string, properties: any) {
   // Análisis de patrones y anomalías
   const last24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
   

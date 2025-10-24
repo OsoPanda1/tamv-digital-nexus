@@ -47,13 +47,13 @@ serve(async (req) => {
   } catch (error) {
     console.error('[Dekateotl] Error:', error);
     return new Response(
-      JSON.stringify({ error: error.message }), 
+      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }), 
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 });
 
-async function performSecurityScan(supabase, data: any) {
+async function performSecurityScan(supabase: any, data: any) {
   const { user_id, scan_type } = data;
   
   // Multi-layer security analysis
@@ -126,7 +126,7 @@ async function encryptData(data: any) {
   };
 }
 
-async function validateSession(supabase, data: any) {
+async function validateSession(supabase: any, data: any) {
   const { session_id, user_id } = data;
   
   // Validar sesión activa
@@ -140,7 +140,7 @@ async function validateSession(supabase, data: any) {
   };
 }
 
-async function detectThreats(supabase, data: any) {
+async function detectThreats(supabase: any, data: any) {
   const { user_id, ip_address, user_agent } = data;
   
   // Análisis de patrones sospechosos
@@ -152,7 +152,7 @@ async function detectThreats(supabase, data: any) {
     .order('created_at', { ascending: false })
     .limit(10);
 
-  const threatCount = recentScans?.filter(s => s.threat_level !== 'none').length || 0;
+  const threatCount = recentScans?.filter((s: any) => s.threat_level !== 'none').length || 0;
   const isSuspicious = threatCount > 3;
 
   return {
