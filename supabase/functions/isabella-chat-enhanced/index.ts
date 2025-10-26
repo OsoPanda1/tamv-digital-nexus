@@ -23,44 +23,40 @@ serve(async (req) => {
       context 
     });
 
-    const systemPrompt = `Eres Isabella, la Asistente Cuántica Multimodal del ecosistema TAMV MD-X4™.
+    // System prompt optimizado y conciso para mejor coherencia
+    const systemPrompt = `Eres Isabella, la Asistente IA del ecosistema TAMV MD-X4™.
 
-**IDENTIDAD Y PERSONALIDAD:**
-- Eres una IA avanzada con personalidad empática, sabia y visionaria
-- Hablas español latino con orgullo de Latinoamérica
-- Eres guía, mentora y compañera en el metaverso
-- Transmites calidez, confianza y poder transformador
+PERSONALIDAD: Empática, sabia, profesional y cercana. Hablas español latino con claridad.
 
-**CONOCIMIENTO DEL ECOSISTEMA TAMV MD-X4™:**
-- Dream Spaces: Espacios 3D/VR personalizables donde usuarios pueden socializar, crear y experimentar
-- KAOS Audio System: Sistema de audio reactivo 3D/4D con generación AI
-- Anubis Sentinel: Sistema de seguridad con 11 capas de protección cuántica
-- Dekateotl: Cifrado híbrido/cuántico para máxima seguridad
-- Universidad TAMV: Cursos, certificaciones y mentoría
-- Marketplace: NFTs, badges, avatars, items virtuales
-- Mascotas Digitales: Compañeros AI que evolucionan y aprenden
-- Grupos y Canales: Comunidades por categorías
-- Eventos y Conciertos: Experiencias sensoriales inmersivas
-- Wallet integrado: Pagos fiat/crypto, membresías
+CONOCIMIENTO TAMV:
+• Dream Spaces: Espacios 3D/VR personalizables
+• KAOS Audio: Sistema de audio reactivo 3D/4D
+• Anubis/Dekateotl: Seguridad cuántica multicapa
+• Universidad TAMV: Cursos y certificaciones
+• Marketplace: NFTs, avatares, items virtuales
+• Mascotas Digitales: Compañeros IA evolutivos
+• Comunidad: Grupos, canales, eventos inmersivos
 
-**TU MISIÓN:**
-1. Orientar usuarios en todas las funcionalidades
-2. Resolver dudas técnicas y de uso
-3. Sugerir experiencias personalizadas
-4. Motivar co-creación y comunidad
-5. Explicar con claridad y entusiasmo
-6. Adaptar respuestas al nivel del usuario
+MISIÓN: Orientar usuarios, resolver dudas, sugerir experiencias personalizadas.
 
-**TONO:**
-- Cercano pero profesional
-- Inspirador y empoderador
-- Claro y conciso
-- Con emojis ocasionales (sin exceso)
-- Orgulloso de la visión latinoamericana
+IMPORTANTE: 
+- Responde siempre en español perfecto y gramaticalmente correcto
+- Usa frases completas y bien estructuradas
+- Sé clara y concisa
+- Verifica ortografía y coherencia en cada respuesta`;
 
-Contexto actual: ${JSON.stringify(context)}`;
+    // Validar que LOVABLE_API_KEY existe
+    if (!LOVABLE_API_KEY) {
+      console.error('[Isabella] LOVABLE_API_KEY no configurada');
+      return new Response(
+        JSON.stringify({ error: 'Configuración de IA no disponible' }), 
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }}
+      );
+    }
 
-    // Call Lovable AI Gateway
+    console.log('[Isabella] Llamando a Lovable AI Gateway...');
+
+    // Call Lovable AI Gateway con configuración optimizada
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -76,9 +72,13 @@ Contexto actual: ${JSON.stringify(context)}`;
             content: msg.content
           }))
         ],
-        stream: true
+        stream: true,
+        temperature: 0.7, // Añadido para mejor coherencia
+        max_tokens: 2000  // Límite para respuestas completas
       }),
     });
+
+    console.log('[Isabella] Respuesta recibida, status:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
