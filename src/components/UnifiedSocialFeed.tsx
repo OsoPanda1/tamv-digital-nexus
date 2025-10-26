@@ -1,10 +1,3 @@
-Aquí tienes un **supercomponente React/Tailwind/FramerMotion** de nivel flagship, que integra TODO el ecosistema TAMV como un verdadero “portal” social sensorial de nueva era:  
-- Equilibra épica, exclusividad, diseño sensorial y funcionalidad real
-- Seccionamiento multimedial, efectos hidupremium, botones quantum, y cada bloque destaca como una joya.
-
-***
-
-```tsx
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
