@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import { QuantumCanvas } from "@/components/QuantumCanvas";
 import { CinematicIntro } from "@/components/CinematicIntro";
+import { UnifiedSocialFeed } from "@/components/UnifiedSocialFeed";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Sparkles, Globe, Users, Zap, Brain, Shield } from "lucide-react";
@@ -105,6 +106,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Unified Social Feed */}
+      <UnifiedSocialFeed />
 
       {/* Features Section */}
       <section className="py-32 relative z-10">
