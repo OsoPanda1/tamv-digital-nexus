@@ -155,14 +155,32 @@ export function useIsabellaChatQuantum() {
           }
         }
 
-        // Validar que el mensaje final no esté vacío
-        if (!assistantMessage.trim()) {
-          throw new Error("Isabella no generó una respuesta válida");
+        // Validaciones científicas de calidad de respuesta
+        const validations = {
+          notEmpty: assistantMessage.trim().length > 0,
+          minimumLength: assistantMessage.trim().length >= 20, // Al menos 20 caracteres
+          hasVowels: /[aeiouáéíóúAEIOUÁÉÍÓÚ]/.test(assistantMessage), // Contiene vocales
+          noExcessiveSpaces: !assistantMessage.includes('   '), // No espacios excesivos
+          hasProperPunctuation: /[.!?]/.test(assistantMessage), // Tiene puntuación
+          notOnlySymbols: /[a-záéíóúñA-ZÁÉÍÓÚÑ]/.test(assistantMessage), // Tiene letras
+          coherentWords: assistantMessage.split(' ').filter(w => w.length > 2).length >= 3 // Al menos 3 palabras de más de 2 letras
+        };
+
+        // Verificar todas las validaciones
+        const failedValidations = Object.entries(validations)
+          .filter(([_, passed]) => !passed)
+          .map(([name, _]) => name);
+
+        if (failedValidations.length > 0) {
+          console.error('[Isabella Frontend] Validaciones fallidas:', failedValidations);
+          throw new Error(`Isabella generó una respuesta inválida. Validaciones fallidas: ${failedValidations.join(', ')}`);
         }
 
-        console.log('[Isabella Frontend] Mensaje completo:', {
+        console.log('[Isabella Frontend] ✓ Mensaje validado exitosamente:', {
           length: assistantMessage.length,
-          preview: assistantMessage.substring(0, 100)
+          words: assistantMessage.split(' ').length,
+          sentences: assistantMessage.split(/[.!?]/).filter(s => s.trim()).length,
+          preview: assistantMessage.substring(0, 150) + (assistantMessage.length > 150 ? '...' : '')
         });
       } catch (error: any) {
         console.error('[Isabella Frontend] Error completo:', error);
