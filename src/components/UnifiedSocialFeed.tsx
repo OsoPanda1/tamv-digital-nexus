@@ -44,6 +44,29 @@ const EXCLUSIVE_SECTIONS = [
   { icon: Shield, label: "Membresías", color: "from-pink-600 to-purple-600" }
 ];
 
+// Component para el feed social
+const SocialPost = ({ idx }: { idx: number }) => (
+  <Card className={`${glass} p-6 ${glassHover} mb-6 max-w-2xl mx-auto`}>
+    <div className="flex items-start gap-4">
+      <img src={`https://randomuser.me/api/portraits/${idx % 2 === 0 ? 'men' : 'women'}/${idx}.jpg`} className="w-14 h-14 rounded-full border-2 border-purple-400/30" alt="User" />
+      <div className="flex-1">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="font-bold text-lg">Usuario {idx}</span>
+          <Badge className="bg-gradient-to-r from-cyan-500 to-purple-500">Creador</Badge>
+          <span className="text-sm text-muted-foreground">• hace 2h</span>
+        </div>
+        <p className="text-base mb-4">Explorando nuevas dimensiones en el metaverso TAMV 🚀✨ #DreamSpaces #QuantumReality</p>
+        <img src={`https://picsum.photos/seed/post${idx}/600/400`} className="rounded-xl mb-4 w-full" alt="Post content" />
+        <div className="flex items-center gap-6 text-muted-foreground">
+          <Button variant="ghost" size="sm" className="gap-2"><Heart className="w-5 h-5" /> {Math.floor(Math.random() * 500) + 50}</Button>
+          <Button variant="ghost" size="sm" className="gap-2"><MessageCircle className="w-5 h-5" /> {Math.floor(Math.random() * 100) + 10}</Button>
+          <Button variant="ghost" size="sm" className="gap-2"><Share2 className="w-5 h-5" /> Compartir</Button>
+        </div>
+      </div>
+    </div>
+  </Card>
+);
+
 export default function TAMVEpicPortal() {
   return (
     <main className="min-h-screen w-full bg-gradient-to-br from-[#141028] via-[#20134b] to-[#4e23aa] scrollbar-thin pb-20 relative">
@@ -145,9 +168,16 @@ export default function TAMVEpicPortal() {
         initial={{ opacity: 0, x: 44 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.9, duration: 1.5, type: "spring" }}
-        className="py-20"
+        className="py-20 px-4"
       >
-        <UnifiedSocialFeed />
+        <h2 className="text-4xl font-black text-center mb-8 bg-gradient-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 bg-clip-text text-transparent">
+          Feed Global • Social Quantum
+        </h2>
+        <div className="space-y-6">
+          {[...Array(5)].map((_, idx) => (
+            <SocialPost key={idx} idx={idx} />
+          ))}
+        </div>
       </motion.section>
 
       {/* Panel Música, Podcasts, Streams, Webcams */}
@@ -195,3 +225,4 @@ export default function TAMVEpicPortal() {
       {/* OPCIONAL: Overlay animado de partículas, background sensorial, animaciones Framer detrás de los bloques para sensación epic-final */}
     </main>
   );
+}
