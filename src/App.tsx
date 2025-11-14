@@ -15,6 +15,8 @@ import Kaos from "./pages/Kaos";
 import Ecosystem from "./pages/Ecosystem";
 import DreamSpaces from "./pages/DreamSpaces";
 import University from "./pages/University";
+import BookPI from "./pages/BookPI";
+import ThreeDSpace from "./pages/ThreeDSpace";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +40,8 @@ const App = () => (
           <Route path="/ecosystem" element={<Ecosystem />} />
           <Route path="/dream-spaces" element={<DreamSpaces />} />
           <Route path="/university" element={<University />} />
+          <Route path="/bookpi" element={<BookPI />} />
+          <Route path="/3d-space" element={<ThreeDSpace />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
