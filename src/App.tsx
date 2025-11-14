@@ -17,6 +17,10 @@ import DreamSpaces from "./pages/DreamSpaces";
 import University from "./pages/University";
 import BookPI from "./pages/BookPI";
 import ThreeDSpace from "./pages/ThreeDSpace";
+import Auth from "./pages/Auth";
+import Onboarding from "./pages/Onboarding";
+import Monetization from "./pages/Monetization";
+import Crisis from "./pages/Crisis";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +46,10 @@ const App = () => (
           <Route path="/university" element={<University />} />
           <Route path="/bookpi" element={<BookPI />} />
           <Route path="/3d-space" element={<ThreeDSpace />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/monetization" element={<Monetization />} />
+          <Route path="/crisis" element={<Crisis />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
