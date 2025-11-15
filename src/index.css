@@ -2,37 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* TAMV MD-X4 Civilizatory Design System - Epic Palette */
 
 @layer base {
   :root {
-    /* TAMV Quantum-Crystal Design System */
-    --background: 240 10% 3.9%;
+    /* Deep Black Foundation */
+    --background: 220 15% 4%;
     --foreground: 0 0% 98%;
 
-    --card: 240 10% 7%;
+    /* Silver Hyper-Realistic */
+    --silver: 210 8% 85%;
+    --silver-light: 210 8% 92%;
+    --silver-dark: 210 8% 70%;
+    --silver-metallic: 210 12% 78%;
+
+    /* Aqua Luminescent */
+    --aqua: 185 95% 65%;
+    --aqua-light: 185 95% 75%;
+    --aqua-dark: 185 95% 55%;
+    --aqua-glow: 185 100% 70%;
+
+    /* Navy Blue Metallic Iridescent */
+    --navy: 215 65% 35%;
+    --navy-metallic: 215 75% 45%;
+    --navy-deep: 215 85% 25%;
+    --navy-iridescent: 215 70% 50%;
+
+    /* Semantic Tokens */
+    --card: 220 15% 6%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 240 10% 5%;
+    --popover: 220 15% 5%;
     --popover-foreground: 0 0% 98%;
 
-    /* Quantum Neon Palette */
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 217 91% 75%;
-    --primary-dark: 217 91% 45%;
-    
-    --secondary: 271 81% 56%;
+    --primary: 185 95% 65%;
+    --primary-foreground: 220 15% 4%;
+    --primary-glow: 185 100% 70%;
+
+    --secondary: 215 75% 45%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-glow: 271 81% 70%;
-    --secondary-dark: 271 81% 40%;
-    
-    --accent: 45 93% 58%;
-    --accent-foreground: 240 10% 3.9%;
-    --accent-glow: 45 93% 70%;
-    --accent-dark: 45 93% 45%;
+    --secondary-glow: 215 70% 60%;
+
+    --accent: 210 12% 78%;
+    --accent-foreground: 220 15% 4%;
 
     --muted: 240 5% 26%;
     --muted-foreground: 240 5% 65%;
