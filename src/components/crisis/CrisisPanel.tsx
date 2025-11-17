@@ -27,7 +27,7 @@ const CRISIS_TYPES = [
 
 export const CrisisPanel = () => {
   const [crisisType, setCrisisType] = useState('fraud');
-  const [severity, setSeverity] = useState([5]);
+  const [severity, setSeverity] = useState<'low' | 'medium' | 'high' | 'critical'>('medium');
   const [description, setDescription] = useState('');
   const [affectedResources, setAffectedResources] = useState('');
   const [loading, setLoading] = useState(false);
@@ -71,10 +71,9 @@ export const CrisisPanel = () => {
 
       // Call crisis rollback function
       const { data, error } = await supabase.rpc('trigger_crisis_rollback', {
-        p_crisis_type: crisisType,
-        p_severity: severity[0],
+        p_incident_type: crisisType,
         p_description: description,
-        p_affected_resources: resources
+        p_severity: severity
       });
 
       if (error) throw error;

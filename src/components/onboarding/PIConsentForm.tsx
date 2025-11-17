@@ -69,29 +69,34 @@ export const PIConsentForm = () => {
         throw new Error('Usuario no autenticado');
       }
 
-      // Insert consents
-      const consentPromises = Object.entries(consents)
+      // Insert granted consents only
+      const consentsToInsert = Object.entries(consents)
         .filter(([_, granted]) => granted)
-        .map(([consentType]) =>
-          supabase.from('pi_consents').insert({
-            user_id: user.id,
-            consent_type: consentType,
-            granted: true,
-            granted_at: new Date().toISOString(),
-            hash_sha3: crypto.randomUUID(), // In production: generate actual SHA3-256 hash
-            doi: `doi:10.tamv/${crypto.randomUUID()}`,
-            export_format: 'pdf,qr,json',
-          })
-        );
+        .map(([consentType]) => ({
+          user_id: user.id,
+          consent_type: consentType as any,
+          granted: true,
+          granted_at: new Date().toISOString(),
+          purpose: 'Onboarding PI consent',
+          doi: `doi:10.tamv/consent/${crypto.randomUUID()}`,
+          metadata: { version: '1.0', timestamp: new Date().toISOString() }
+        }));
 
-      await Promise.all(consentPromises);
+      if (consentsToInsert.length > 0) {
+        const { error: consentError } = await supabase
+          .from('pi_consents')
+          .insert(consentsToInsert);
 
-      // Create BookPI event
+        if (consentError) throw consentError;
+      }
+
+      // Create BookPI event for audit trail
       await supabase.rpc('create_bookpi_event', {
-        p_event_type: 'consent',
-        p_resource_type: 'onboarding',
+        p_event_type: 'pi_consent_granted',
+        p_actor_id: user.id,
+        p_resource_type: 'pi_consent',
         p_resource_id: user.id,
-        p_payload: { consents }
+        p_payload: { consents, timestamp: new Date().toISOString() }
       });
 
       toast({
