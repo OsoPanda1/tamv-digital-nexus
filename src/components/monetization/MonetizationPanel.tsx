@@ -122,9 +122,9 @@ export const MonetizationPanel = () => {
     if (data) {
       setTransactions(data);
       
-      // Calculate stats
-      const total = data.reduce((sum, t) => sum + parseFloat(t.amount), 0);
-      const commission = data.reduce((sum, t) => sum + parseFloat(t.commission_amount || 0), 0);
+      // Calculate stats - 85-95% creator share target
+      const total = data.reduce((sum, t) => sum + Number(t.amount), 0);
+      const creatorShare = total * 0.90;
       
       setStats({
         totalRevenue: total,
