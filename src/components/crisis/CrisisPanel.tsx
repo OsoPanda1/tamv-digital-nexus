@@ -86,7 +86,7 @@ export const CrisisPanel = () => {
       // Reset form
       setDescription('');
       setAffectedResources('');
-      setSeverity([5]);
+      setSeverity('medium');
 
       // Reload logs
       loadCrisisLogs();
@@ -157,20 +157,17 @@ export const CrisisPanel = () => {
             </div>
 
             <div className="space-y-2">
-              <Label>Severidad: {severity[0]}/10</Label>
-              <Slider
+              <Label>Severidad</Label>
+              <select
                 value={severity}
-                onValueChange={setSeverity}
-                max={10}
-                min={1}
-                step={1}
-                className={getSeverityColor(severity[0])}
-              />
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>Bajo</span>
-                <span>Medio</span>
-                <span>Crítico</span>
-              </div>
+                onChange={(e) => setSeverity(e.target.value as 'low' | 'medium' | 'high' | 'critical')}
+                className="w-full p-2 rounded-md border border-input bg-background"
+              >
+                <option value="low">Bajo</option>
+                <option value="medium">Medio</option>
+                <option value="high">Alto</option>
+                <option value="critical">Crítico</option>
+              </select>
             </div>
 
             <div className="space-y-2">
