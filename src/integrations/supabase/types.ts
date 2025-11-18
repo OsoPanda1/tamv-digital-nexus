@@ -862,6 +862,69 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          action_label: string | null
+          action_url: string | null
+          audio_signature: string | null
+          category: string
+          celebrated: boolean | null
+          created_at: string | null
+          emotional_tone: string | null
+          expires_at: string | null
+          id: string
+          message: string
+          metadata: Json | null
+          priority: string
+          read: boolean | null
+          title: string
+          type: string
+          updated_at: string | null
+          user_id: string
+          visual_effect: string | null
+        }
+        Insert: {
+          action_label?: string | null
+          action_url?: string | null
+          audio_signature?: string | null
+          category?: string
+          celebrated?: boolean | null
+          created_at?: string | null
+          emotional_tone?: string | null
+          expires_at?: string | null
+          id?: string
+          message: string
+          metadata?: Json | null
+          priority?: string
+          read?: boolean | null
+          title: string
+          type: string
+          updated_at?: string | null
+          user_id: string
+          visual_effect?: string | null
+        }
+        Update: {
+          action_label?: string | null
+          action_url?: string | null
+          audio_signature?: string | null
+          category?: string
+          celebrated?: boolean | null
+          created_at?: string | null
+          emotional_tone?: string | null
+          expires_at?: string | null
+          id?: string
+          message?: string
+          metadata?: Json | null
+          priority?: string
+          read?: boolean | null
+          title?: string
+          type?: string
+          updated_at?: string | null
+          user_id?: string
+          visual_effect?: string | null
+        }
+        Relationships: []
+      }
       pi_consents: {
         Row: {
           consent_type: Database["public"]["Enums"]["consent_type"]

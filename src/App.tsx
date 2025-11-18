@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MatrixBackground } from "@/components/MatrixBackground";
 import { CivilizatorySidebar } from "@/components/CivilizatorySidebar";
 import { IsabellaChat } from "@/components/IsabellaChat";
+import { NotificationCenter } from "@/components/notifications/NotificationCenter";
+import { NotificationToast } from "@/components/notifications/NotificationToast";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Metaverse from "./pages/Metaverse";
@@ -39,6 +41,10 @@ const App = () => (
           <MatrixBackground />
           <CivilizatorySidebar />
           <IsabellaChat />
+          <NotificationToast />
+          <div className="fixed top-4 right-4 z-50">
+            <NotificationCenter />
+          </div>
           
           <main className="ml-20 lg:ml-72 transition-all duration-500">
             <Routes>
