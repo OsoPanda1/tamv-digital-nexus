@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import type { Database } from '@/integrations/supabase/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -65,7 +66,7 @@ const MEMBERSHIP_TIERS: MembershipTier[] = [
     price: 999,
     features: ['Todo Gold 18+ +', 'Acceso VIP', 'Eventos exclusivos', 'NFT airdrop', 'Quantum privileges'],
     icon: Sparkles,
-    color: 'from-purple-500 to-indigo-600'
+    color: 'from-cyan-400 to-blue-600'
   },
   {
     name: 'Enterprise',
@@ -130,7 +131,7 @@ export const MonetizationPanel = () => {
         totalRevenue: total,
         monthlyRevenue: total * 0.7, // Mock monthly
         transactionCount: data.length,
-        commissionEarned: commission
+        commissionEarned: creatorShare
       });
     }
   };
@@ -148,13 +149,19 @@ export const MonetizationPanel = () => {
 
     try {
       // Update membership
-      await supabase
+      const { data, error } = await supabase
         .from('memberships')
-        .upsert({
+        .insert({
           user_id: user.id,
-          tier: tier,
-          started_at: new Date().toISOString(),
-        });
+          tier: tier as Database['public']['Enums']['membership_tier'],
+          start_date: new Date().toISOString(),
+          payment_method: 'credit_card',
+          metadata: { price }
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
 
       // Create transaction
       await supabase.from('transactions').insert({
@@ -162,16 +169,16 @@ export const MonetizationPanel = () => {
         transaction_type: 'subscription',
         amount: price,
         currency: 'MXN',
-        commission_rate: 8.00,
-        commission_amount: price * 0.08,
         status: 'completed',
+        metadata: { tier }
       });
 
       // Log to BookPI
       await supabase.rpc('create_bookpi_event', {
+        p_actor_id: user.id,
         p_event_type: 'subscription',
         p_resource_type: 'membership',
-        p_resource_id: user.id,
+        p_resource_id: data.id,
         p_payload: { tier, price }
       });
 
