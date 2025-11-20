@@ -82,12 +82,14 @@ export function useIsabellaChatQuantum() {
 
         const decoder = new TextDecoder();
         let assistantMessage = "";
-        let buffer = ""; // Buffer para manejar chunks incompletos
+        let buffer = "";
+        let currentWordIndex = 0;
+        const words: string[] = [];
 
         // Crear mensaje asistente inicial
         setMessages(prev => [
           ...prev,
-          { role: "assistant", content: "", timestamp: Date.now() }
+          { role: "assistant", content: "", timestamp: Date.now(), meta: { wordIndex: 0, totalWords: 0 } }
         ]);
 
         console.log('[Isabella Frontend] Iniciando lectura de stream...');
