@@ -28,6 +28,8 @@ import Monetization from "./pages/Monetization";
 import Crisis from "./pages/Crisis";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import Gifts from "./pages/Gifts";
+import { HyperRealEngine } from "@/components/effects/HyperRealEngine";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +38,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <HyperRealEngine />
       <BrowserRouter>
         <div className="relative min-h-screen w-full bg-background">
           <MatrixBackground />
@@ -67,6 +70,7 @@ const App = () => (
               <Route path="/monetization" element={<Monetization />} />
               <Route path="/crisis" element={<Crisis />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/gifts" element={<Gifts />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

@@ -68,6 +68,8 @@ function SpaceEnvironment({ type }: { type: DreamSpace['environment'] }) {
         <>
           <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
           <Sky sunPosition={[0, 1, 0]} />
+          <pointLight position={[0, 10, 0]} intensity={2} color="#00D9FF" castShadow />
+          <pointLight position={[10, 0, 10]} intensity={1} color="#C0C0C0" />
         </>
       );
     case 'quantum':
@@ -75,7 +77,26 @@ function SpaceEnvironment({ type }: { type: DreamSpace['environment'] }) {
         <>
           <fog attach="fog" args={['#0a0a1a', 10, 50]} />
           <ambientLight intensity={0.4} />
-          <pointLight position={[10, 10, 10]} intensity={1} color="#00D9FF" />
+          <pointLight position={[10, 10, 10]} intensity={1} color="#00D9FF" castShadow />
+          <spotLight position={[0, 20, 0]} intensity={2} color="#00D9FF" angle={0.3} penumbra={1} castShadow />
+        </>
+      );
+    case 'forest':
+      return (
+        <>
+          <fog attach="fog" args={['#0a3a1a', 5, 30]} />
+          <ambientLight intensity={0.3} />
+          <directionalLight position={[5, 10, 5]} intensity={0.8} color="#90EE90" castShadow />
+          <pointLight position={[0, 5, 0]} intensity={0.5} color="#00D9FF" />
+        </>
+      );
+    case 'crystal':
+      return (
+        <>
+          <ambientLight intensity={0.5} />
+          <pointLight position={[10, 10, 10]} intensity={1.5} color="#C0C0C0" castShadow />
+          <pointLight position={[-10, 10, -10]} intensity={1.5} color="#00D9FF" castShadow />
+          <spotLight position={[0, 15, 0]} intensity={3} color="#FFFFFF" angle={0.4} penumbra={0.5} castShadow />
         </>
       );
     default:

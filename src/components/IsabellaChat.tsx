@@ -126,7 +126,27 @@ export const IsabellaChat = () => {
                           )
                     )}
                   >
-                    <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                    {msg.role === 'assistant' && msg.meta?.words ? (
+                      <p className="text-sm whitespace-pre-wrap">
+                        {msg.meta.words.map((word: string, i: number) => (
+                          <span
+                            key={i}
+                            className={cn(
+                              'transition-all duration-200',
+                              i === msg.meta!.wordIndex 
+                                ? 'text-aqua font-bold scale-110 inline-block' 
+                                : i < msg.meta!.wordIndex 
+                                ? 'text-foreground' 
+                                : 'text-silver-dark'
+                            )}
+                          >
+                            {word}{' '}
+                          </span>
+                        ))}
+                      </p>
+                    ) : (
+                      <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                    )}
                     {msg.emotion && msg.role === 'assistant' && (
                       <div className="flex items-center gap-1 mt-2 text-xs text-aqua">
                         <Sparkles className="w-3 h-3" />
