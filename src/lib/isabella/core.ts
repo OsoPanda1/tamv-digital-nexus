@@ -312,11 +312,11 @@ export class EOCTAnalyzer {
     }
     
     // Normalizar
-    const total = Object.values(emotion).reduce((sum: number, val) => sum + Number(val), 0) || 1;
+    const emotionValues = emotion as Record<string, number>;
+    const total = Object.values(emotionValues).reduce((sum, val) => sum + val, 0) || 1;
     const keys = ['joy', 'trust', 'fear', 'surprise', 'sadness', 'disgust', 'anger', 'anticipation'];
     for (const key of keys) {
-      const value = Number(emotion[key]);
-      emotion[key] = value / total;
+      emotionValues[key] = emotionValues[key] / total;
     }
     
     // Calcular dimensiones de Russell
