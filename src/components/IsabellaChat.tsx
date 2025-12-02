@@ -2,17 +2,20 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Brain, Send, Mic, Volume2, VolumeX, Sparkles } from 'lucide-react';
+import { Brain, Send, Mic, Volume2, VolumeX, Sparkles, Loader2 } from 'lucide-react';
 import { useIsabellaChatQuantum } from '@/hooks/useIsabellaChatQuantum';
+import { useIsabellaTTS, type EmotionalProfile } from '@/integrations/elevenlabs/isabella-tts';
 import { cn } from '@/lib/utils';
 
 export const IsabellaChat = () => {
   const [input, setInput] = useState('');
   const [isMinimized, setIsMinimized] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   
   const { messages, isLoading, emotion, sendMessage } = useIsabellaChatQuantum();
+  const { speak, isPlaying, progress: audioProgress, error: ttsError, stop: stopAudio } = useIsabellaTTS();
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -20,8 +23,35 @@ export const IsabellaChat = () => {
     }
   }, [messages]);
 
+  // Map emotions to TTS emotional profiles
+  const emotionToProfile = (emotion?: string): EmotionalProfile => {
+    const map: Record<string, EmotionalProfile> = {
+      alegría: 'celebration',
+      tristeza: 'empathy',
+      poder: 'guidance',
+      duda: 'calm',
+      neutral: 'neutral',
+    };
+    return map[emotion || 'neutral'] || 'empathy';
+  };
+
+  // Play TTS for the last assistant message when not muted
+  useEffect(() => {
+    if (!audioEnabled || isMuted || isLoading) return;
+    
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage?.role === 'assistant' && lastMessage.content) {
+      speak({
+        text: lastMessage.content,
+        emotionalProfile: emotionToProfile(lastMessage.emotion),
+        speed: 1.0,
+      });
+    }
+  }, [messages.length, audioEnabled, isMuted]);
+
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
+    stopAudio(); // Stop any playing audio
     await sendMessage(input);
     setInput('');
   };
@@ -54,14 +84,28 @@ export const IsabellaChat = () => {
         onClick={() => setIsMinimized(!isMinimized)}
       >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-epic-gradient flex items-center justify-center shadow-aqua animate-pulse-aqua">
-            <Brain className="w-5 h-5 text-background" />
+          <div className={cn(
+            "w-10 h-10 rounded-full bg-epic-gradient flex items-center justify-center shadow-aqua",
+            isPlaying ? "animate-pulse" : "animate-pulse-aqua"
+          )}>
+            {isPlaying ? (
+              <Loader2 className="w-5 h-5 text-background animate-spin" />
+            ) : (
+              <Brain className="w-5 h-5 text-background" />
+            )}
           </div>
           {!isMinimized && (
             <div>
               <h3 className="font-bold text-aqua">Isabella AI</h3>
               <p className="text-xs text-silver-dark">
-                {emotion && emotion !== 'neutral' ? `Emoción: ${emotion}` : 'Asistente Emocional'}
+                {isPlaying 
+                  ? `🔊 Hablando... ${audioProgress}%`
+                  : isLoading 
+                    ? 'Pensando...'
+                    : emotion && emotion !== 'neutral' 
+                      ? `Emoción: ${emotion}` 
+                      : 'Asistente Emocional'
+                }
               </p>
             </div>
           )}
@@ -73,11 +117,13 @@ export const IsabellaChat = () => {
               size="icon"
               onClick={(e) => {
                 e.stopPropagation();
+                if (isPlaying) stopAudio();
                 setIsMuted(!isMuted);
+                setAudioEnabled(!audioEnabled);
               }}
               className="hover:bg-aqua/10"
             >
-              {isMuted ? (
+              {isMuted || !audioEnabled ? (
                 <VolumeX className="w-4 h-4 text-silver" />
               ) : (
                 <Volume2 className="w-4 h-4 text-aqua" />

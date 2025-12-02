@@ -6,6 +6,9 @@ verify_jwt = false
 [functions.isabella-chat-enhanced]
 verify_jwt = false
 
+[functions.isabella-tts]
+verify_jwt = false
+
 [functions.quantum-analytics]
 verify_jwt = false
 
