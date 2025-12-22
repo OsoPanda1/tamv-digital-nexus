@@ -1,5 +1,11 @@
 project_id = "bnjvxgguatrfwswnoluz"
 
+[functions.create-checkout]
+verify_jwt = true
+
+[functions.stripe-webhook]
+verify_jwt = false
+
 [functions.isabella-chat]
 verify_jwt = false
 
