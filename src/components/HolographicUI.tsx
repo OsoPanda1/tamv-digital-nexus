@@ -34,12 +34,14 @@ export const HolographicButton = ({
   children, 
   onClick,
   variant = 'primary',
-  className = ''
+  className = '',
+  disabled = false
 }: { 
   children: ReactNode; 
   onClick?: () => void;
   variant?: 'primary' | 'secondary' | 'ghost';
   className?: string;
+  disabled?: boolean;
 }) => {
   const variants = {
     primary: 'bg-quantum-gradient text-white shadow-quantum hover:shadow-glow',
@@ -49,14 +51,16 @@ export const HolographicButton = ({
 
   return (
     <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      onClick={onClick}
+      whileHover={disabled ? {} : { scale: 1.05 }}
+      whileTap={disabled ? {} : { scale: 0.95 }}
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
       className={`
         px-6 py-3 rounded-xl font-semibold
         transition-all duration-300
         ${variants[variant]}
         ${className}
+        ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
       `}
     >
       {children}
