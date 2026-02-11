@@ -29,3 +29,6 @@ verify_jwt = false
 
 [functions.kaos-audio-system]
 verify_jwt = false
+
+[functions.tamv-unified-api]
+verify_jwt = false

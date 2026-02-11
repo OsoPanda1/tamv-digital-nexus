@@ -62,6 +62,8 @@ export const CivilizatorySidebar = () => {
     {
       title: 'Governance',
       items: [
+        { icon: Shield, label: 'CITEMESH DAO', path: '/governance', epicBadge: true },
+        { icon: DollarSign, label: 'Economía MSR', path: '/economy', badge: 'TCEP' },
         { icon: Shield, label: 'BookPI', path: '/bookpi' },
         { icon: AlertTriangle, label: 'Crisis Panel', path: '/crisis' },
         { icon: Settings, label: 'Admin', path: '/admin', badge: 'Admin' },

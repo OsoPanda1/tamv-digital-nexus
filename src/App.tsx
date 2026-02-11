@@ -29,6 +29,8 @@ import Crisis from "./pages/Crisis";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Gifts from "./pages/Gifts";
+import Governance from "./pages/Governance";
+import Economy from "./pages/Economy";
 import { HyperRealEngine } from "@/components/effects/HyperRealEngine";
 
 const queryClient = new QueryClient();
@@ -71,6 +73,8 @@ const App = () => (
               <Route path="/crisis" element={<Crisis />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/gifts" element={<Gifts />} />
+              <Route path="/governance" element={<Governance />} />
+              <Route path="/economy" element={<Economy />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
