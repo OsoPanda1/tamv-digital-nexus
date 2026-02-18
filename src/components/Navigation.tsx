@@ -11,8 +11,9 @@ const Navigation = () => {
     { path: "/dream-spaces", label: "Dream Spaces", icon: Compass },
     { path: "/isabella", label: "Isabella AI", icon: Sparkles },
     { path: "/university", label: "Universidad", icon: FileText },
+    { path: "/governance", label: "Gobernanza", icon: Users },
+    { path: "/economy", label: "Economía", icon: FileText },
     { path: "/community", label: "Community", icon: Users },
-    { path: "/docs", label: "Docs", icon: FileText },
   ];
 
   return (
