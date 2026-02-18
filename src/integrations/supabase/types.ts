@@ -245,6 +245,33 @@ export type Database = {
         }
         Relationships: []
       }
+      citemesh_roles: {
+        Row: {
+          granted_at: string
+          granted_by: string | null
+          id: string
+          powers: string[]
+          role: string
+          user_id: string
+        }
+        Insert: {
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          powers?: string[]
+          role?: string
+          user_id: string
+        }
+        Update: {
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          powers?: string[]
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       course_enrollments: {
         Row: {
           completed: boolean | null
@@ -375,6 +402,95 @@ export type Database = {
           triggered_by?: string | null
         }
         Relationships: []
+      }
+      dao_proposals: {
+        Row: {
+          author_id: string
+          category: string
+          created_at: string
+          description: string
+          evidence_hash: string | null
+          expires_at: string | null
+          id: string
+          impact_economic: number | null
+          quorum_required: number
+          status: string
+          title: string
+          updated_at: string
+          votes_against: number
+          votes_for: number
+        }
+        Insert: {
+          author_id: string
+          category?: string
+          created_at?: string
+          description: string
+          evidence_hash?: string | null
+          expires_at?: string | null
+          id?: string
+          impact_economic?: number | null
+          quorum_required?: number
+          status?: string
+          title: string
+          updated_at?: string
+          votes_against?: number
+          votes_for?: number
+        }
+        Update: {
+          author_id?: string
+          category?: string
+          created_at?: string
+          description?: string
+          evidence_hash?: string | null
+          expires_at?: string | null
+          id?: string
+          impact_economic?: number | null
+          quorum_required?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          votes_against?: number
+          votes_for?: number
+        }
+        Relationships: []
+      }
+      dao_votes: {
+        Row: {
+          created_at: string
+          id: string
+          proposal_id: string
+          reason: string | null
+          vote: boolean
+          voter_id: string
+          weight: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          proposal_id: string
+          reason?: string | null
+          vote: boolean
+          voter_id: string
+          weight?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          proposal_id?: string
+          reason?: string | null
+          vote?: boolean
+          voter_id?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dao_votes_proposal_id_fkey"
+            columns: ["proposal_id"]
+            isOneToOne: false
+            referencedRelation: "dao_proposals"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       digital_pets: {
         Row: {
@@ -739,6 +855,51 @@ export type Database = {
         }
         Relationships: []
       }
+      id_nvida: {
+        Row: {
+          biometric_hash: string | null
+          created_at: string
+          dignity_score: number
+          emotional_fingerprint: Json | null
+          id: string
+          immutable_username: string | null
+          last_dignity_decay: string | null
+          reputation_score: number
+          status: string
+          trust_level: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          biometric_hash?: string | null
+          created_at?: string
+          dignity_score?: number
+          emotional_fingerprint?: Json | null
+          id?: string
+          immutable_username?: string | null
+          last_dignity_decay?: string | null
+          reputation_score?: number
+          status?: string
+          trust_level?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          biometric_hash?: string | null
+          created_at?: string
+          dignity_score?: number
+          emotional_fingerprint?: Json | null
+          id?: string
+          immutable_username?: string | null
+          last_dignity_decay?: string | null
+          reputation_score?: number
+          status?: string
+          trust_level?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       isabella_interactions: {
         Row: {
           content: string
@@ -777,6 +938,77 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      lottery_draws: {
+        Row: {
+          created_at: string
+          draw_date: string | null
+          draw_name: string
+          id: string
+          max_tickets: number
+          prize_pool: number
+          status: string
+          ticket_price_usd: number
+          tickets_sold: number
+          winner_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          draw_date?: string | null
+          draw_name: string
+          id?: string
+          max_tickets?: number
+          prize_pool?: number
+          status?: string
+          ticket_price_usd?: number
+          tickets_sold?: number
+          winner_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          draw_date?: string | null
+          draw_name?: string
+          id?: string
+          max_tickets?: number
+          prize_pool?: number
+          status?: string
+          ticket_price_usd?: number
+          tickets_sold?: number
+          winner_id?: string | null
+        }
+        Relationships: []
+      }
+      lottery_tickets: {
+        Row: {
+          created_at: string
+          draw_id: string
+          id: string
+          ticket_number: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          draw_id: string
+          id?: string
+          ticket_number: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          draw_id?: string
+          id?: string
+          ticket_number?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lottery_tickets_draw_id_fkey"
+            columns: ["draw_id"]
+            isOneToOne: false
+            referencedRelation: "lottery_draws"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       marketplace_items: {
         Row: {
@@ -859,6 +1091,42 @@ export type Database = {
           tier?: Database["public"]["Enums"]["membership_tier"]
           updated_at?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      msr_events: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          domain: string
+          evidence_hash: string
+          id: string
+          parent_hash: string | null
+          payload: Json | null
+          severity: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          domain?: string
+          evidence_hash: string
+          id?: string
+          parent_hash?: string | null
+          payload?: Json | null
+          severity?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          domain?: string
+          evidence_hash?: string
+          id?: string
+          parent_hash?: string | null
+          payload?: Json | null
+          severity?: string | null
         }
         Relationships: []
       }
@@ -1087,6 +1355,81 @@ export type Database = {
           scan_type?: string | null
           threat_level?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      tcep_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          evidence_hash: string | null
+          from_user_id: string | null
+          id: string
+          metadata: Json | null
+          to_user_id: string | null
+          tx_type: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string | null
+          evidence_hash?: string | null
+          from_user_id?: string | null
+          id?: string
+          metadata?: Json | null
+          to_user_id?: string | null
+          tx_type: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          evidence_hash?: string | null
+          from_user_id?: string | null
+          id?: string
+          metadata?: Json | null
+          to_user_id?: string | null
+          tx_type?: string
+        }
+        Relationships: []
+      }
+      tcep_wallets: {
+        Row: {
+          balance_credits: number
+          balance_locked: number
+          commission_rate: number
+          created_at: string
+          id: string
+          lifetime_earned: number
+          lifetime_spent: number
+          membership_tier: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance_credits?: number
+          balance_locked?: number
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          lifetime_earned?: number
+          lifetime_spent?: number
+          membership_tier?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance_credits?: number
+          balance_locked?: number
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          lifetime_earned?: number
+          lifetime_spent?: number
+          membership_tier?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

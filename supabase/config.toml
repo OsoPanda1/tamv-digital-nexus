@@ -32,3 +32,6 @@ verify_jwt = false
 
 [functions.tamv-unified-api]
 verify_jwt = false
+
+[functions.tamv-content-sync]
+verify_jwt = false
