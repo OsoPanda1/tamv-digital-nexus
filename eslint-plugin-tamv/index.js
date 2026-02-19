@@ -5,7 +5,7 @@
  * This plugin enforces the invariant laws of the TAMV Civilizatory Client
  */
 
-const path = require('path');
+import path from "node:path";
 
 /**
  * L1 - Root único
@@ -353,18 +353,30 @@ const noDao = {
     schema: [],
   },
   create(context) {
+    const sourceCode = context.getSourceCode();
+    const text = sourceCode.getText();
+    const hasAllowedMark = /\[HISTORICAL\]|\[EXTERNAL\]|\[LEGACY\]/.test(text);
+
+    if (hasAllowedMark) {
+      return {};
+    }
+
+    const shouldReport = (value) => /\bDAOs?\b/.test(value);
+
     return {
-      Program(node) {
-        const source = context.getSourceCode().getText();
-        if (/\bDAO\b|\bDAOs\b/i.test(source)) {
-          // Check if it's properly marked
-          const hasHistoricalMark = /\[HISTORICAL\]|\[EXTERNAL\]|\[LEGACY\]/.test(source);
-          if (!hasHistoricalMark) {
-            context.report({
-              node,
-              messageId: 'daoTerm',
-            });
-          }
+      Identifier(node) {
+        if (shouldReport(node.name)) {
+          context.report({ node, messageId: 'daoTerm' });
+        }
+      },
+      Literal(node) {
+        if (typeof node.value === 'string' && shouldReport(node.value)) {
+          context.report({ node, messageId: 'daoTerm' });
+        }
+      },
+      TemplateElement(node) {
+        if (shouldReport(node.value.raw)) {
+          context.report({ node, messageId: 'daoTerm' });
         }
       },
     };
@@ -454,7 +466,7 @@ const noUnauditedAi = {
   },
 };
 
-module.exports = {
+const plugin = {
   rules: {
     'no-reactdom-outside-main': noReactDOMOutsideMain,
     'no-router-outside-app': noRouterOutsideApp,
@@ -483,3 +495,5 @@ module.exports = {
     },
   },
 };
+
+export default plugin;
