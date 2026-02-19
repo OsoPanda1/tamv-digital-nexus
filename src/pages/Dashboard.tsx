@@ -1,125 +1,239 @@
-import { motion } from "framer-motion";
+// ============================================================================
+// TAMV MD-X4â"¢ - Dashboard Page
+// Central control panel with unified design
+// ============================================================================
+
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
-import { StoriesCarousel } from "@/components/social/StoriesCarousel";
-import { SocialFeedPost, MOCK_POSTS } from "@/components/social/SocialFeedPost";
-import {
-  TrendingUp, Users, Sparkles, Zap, Activity, Eye,
-  ArrowRight, Radio, MessageCircle, Bell, BarChart3
+import { Progress } from "@/components/ui/progress";
+import { 
+  Sparkles, TrendingUp, Users, Zap, Brain, Shield,
+  Headphones, BookOpen, Vote, DollarSign, ArrowRight,
+  Activity, Globe, Layers
 } from "lucide-react";
+import { useBackgroundControl } from "@/components/UnifiedBackground";
+import { federationManager } from "@/systems/FederationSystem";
 
-const STATS = [
-  { label: "Usuarios Activos", value: "12.5K", change: "+18%", icon: Users, color: "text-primary" },
-  { label: "Posts Hoy", value: "3.2K", change: "+45%", icon: Activity, color: "text-emerald-400" },
-  { label: "Lives Ahora", value: "23", change: "", icon: Radio, color: "text-red-400" },
-  { label: "Coherencia", value: "98%", change: "+5%", icon: Zap, color: "text-amber-400" },
+// ============================================================================
+// Dashboard Stats
+// ============================================================================
+
+const stats = [
+  { label: "Usuarios Activos", value: "12.5K", icon: Users, color: "text-cyan-400", trend: "+12%" },
+  { label: "Dream Spaces", value: "234", icon: Sparkles, color: "text-rose-400", trend: "+8%" },
+  { label: "Engagement", value: "+45%", icon: TrendingUp, color: "text-emerald-400", trend: "+23%" },
+  { label: "Energy Level", value: "98%", icon: Zap, color: "text-amber-400", trend: "stable" },
 ];
 
-const Dashboard = () => (
-  <div className="min-h-screen bg-background">
-    <div className="max-w-7xl mx-auto px-4 pt-6 pb-20">
-      {/* Welcome */}
-      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-        <h1 className="text-2xl font-bold mb-1">Centro de Control</h1>
-        <p className="text-sm text-muted-foreground">Bienvenido al ecosistema TAMV MD-X4™</p>
-      </motion.div>
+const quickActions = [
+  { label: "Crear Dream Space", icon: Sparkles, path: "/dream-spaces", color: "from-rose-500 to-rose-700" },
+  { label: "Chat Isabella AI", icon: Brain, path: "/isabella", color: "from-cyan-500 to-blue-600" },
+  { label: "Ver Comunidad", icon: Users, path: "/community", color: "from-pink-500 to-pink-700" },
+  { label: "DocumentaciÃ³n", icon: BookOpen, path: "/docs", color: "from-emerald-500 to-green-600" },
+];
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-        {STATS.map((stat, i) => {
-          const Icon = stat.icon;
-          return (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.08 }}
-              className="bg-card/40 backdrop-blur border border-border/20 rounded-xl p-4"
+const recentActivity = [
+  { title: "Nuevo Dream Space creado", time: "Hace 5 min", user: "Usuario #1234", type: "creation" },
+  { title: "Evento comunitario iniciado", time: "Hace 15 min", user: "Moderador", type: "event" },
+  { title: "Isabella AI actualizada", time: "Hace 1 hora", user: "Sistema", type: "system" },
+  { title: "Nuevo contenido publicado", time: "Hace 2 horas", user: "Creador Pro", type: "content" },
+  { title: "Propuesta DAO aprobada", time: "Hace 3 horas", user: "CITEMESH", type: "governance" },
+];
+
+// ============================================================================
+// Dashboard Component
+// ============================================================================
+
+const Dashboard = () => {
+  const { setBackground } = useBackgroundControl();
+  const fedStats = federationManager.getStatistics();
+
+  useEffect(() => {
+    setBackground('quantum', 0.25);
+  }, [setBackground]);
+
+  return (
+    <div className="min-h-screen py-8">
+      <div className="container mx-auto px-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              <span 
+                style={{
+                  background: 'linear-gradient(90deg, #00D9FF, #3E7EA3, #C1CBD5)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                Centro de Control TAMV
+              </span>
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              Bienvenido al ecosistema digital civilizatorio
+            </p>
+          </div>
+
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            {stats.map((stat, index) => {
+              const Icon = stat.icon;
+              return (
+                <Card
+                  key={index}
+                  className="p-4 md:p-6 border-aqua/20 hover:border-aqua/40 transition-all duration-300"
+                  style={{
+                    background: 'rgba(11, 12, 17, 0.6)',
+                    backdropFilter: 'blur(10px)',
+                  }}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <Icon className={`w-6 h-6 ${stat.color}`} />
+                    <Badge variant="outline" className="text-xs border-aqua/30 text-aqua">
+                      {stat.trend}
+                    </Badge>
+                  </div>
+                  <p className="text-2xl md:text-3xl font-bold mb-1">{stat.value}</p>
+                  <p className="text-sm text-muted-foreground">{stat.label}</p>
+                </Card>
+              );
+            })}
+          </div>
+
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Activity Feed */}
+            <Card 
+              className="lg:col-span-2 p-6 border-aqua/20"
+              style={{
+                background: 'rgba(11, 12, 17, 0.6)',
+                backdropFilter: 'blur(10px)',
+              }}
             >
-              <div className="flex items-center justify-between mb-2">
-                <Icon className={`w-5 h-5 ${stat.color}`} />
-                {stat.change && (
-                  <Badge variant="secondary" className="text-[10px] bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
-                    <TrendingUp className="w-3 h-3 mr-0.5" />{stat.change}
-                  </Badge>
-                )}
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold flex items-center gap-2">
+                  <Activity className="w-5 h-5 text-aqua" />
+                  Actividad Reciente
+                </h2>
+                <Badge variant="outline" className="border-aqua/30 text-aqua">En vivo</Badge>
               </div>
-              <p className="text-2xl font-bold">{stat.value}</p>
-              <p className="text-xs text-muted-foreground">{stat.label}</p>
-            </motion.div>
-          );
-        })}
-      </div>
+              
+              <div className="space-y-3">
+                {recentActivity.map((activity, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-3 rounded-lg border border-aqua/10 hover:border-aqua/30 transition-colors"
+                    style={{ background: 'rgba(0, 217, 255, 0.03)' }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div 
+                        className="w-2 h-2 rounded-full"
+                        style={{
+                          background: activity.type === 'creation' ? '#F472B6' :
+                                     activity.type === 'event' ? '#22C55E' :
+                                     activity.type === 'system' ? '#00D9FF' :
+                                     activity.type === 'content' ? '#FBBF24' : '#8B5CF6'
+                        }}
+                      />
+                      <div>
+                        <p className="text-sm font-medium">{activity.title}</p>
+                        <p className="text-xs text-muted-foreground">{activity.user}</p>
+                      </div>
+                    </div>
+                    <span className="text-xs text-muted-foreground">{activity.time}</span>
+                  </div>
+                ))}
+              </div>
+            </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
-        <div className="space-y-4">
-          {/* Stories */}
-          <div className="bg-card/30 border border-border/20 rounded-2xl px-3 py-1">
-            <StoriesCarousel />
+            {/* Quick Actions */}
+            <Card 
+              className="p-6 border-aqua/20"
+              style={{
+                background: 'rgba(11, 12, 17, 0.6)',
+                backdropFilter: 'blur(10px)',
+              }}
+            >
+              <h2 className="text-xl font-bold mb-6">Acciones RÃ¡pidas</h2>
+              <div className="space-y-3">
+                {quickActions.map((action, index) => {
+                  const Icon = action.icon;
+                  return (
+                    <Link key={index} to={action.path}>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start gap-3 h-auto py-3 hover:bg-aqua/10 transition-all duration-300"
+                      >
+                        <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${action.color} flex items-center justify-center`}>
+                          <Icon className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="font-medium">{action.label}</span>
+                      </Button>
+                    </Link>
+                  );
+                })}
+              </div>
+            </Card>
           </div>
 
-          {/* Activity Feed */}
-          <div>
-            <h2 className="font-bold text-sm mb-3 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-primary" />
-              Actividad Reciente
-            </h2>
-            <div className="space-y-3">
-              {MOCK_POSTS.slice(0, 4).map((post, i) => (
-                <SocialFeedPost key={post.id} post={post} index={i} />
-              ))}
+          {/* Federation Status */}
+          <Card 
+            className="mt-6 p-6 border-aqua/20"
+            style={{
+              background: 'rgba(11, 12, 17, 0.6)',
+              backdropFilter: 'blur(10px)',
+            }}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <Layers className="w-5 h-5 text-aqua" />
+                Estado de Federaciones
+              </h2>
+              <Link to="/ecosystem">
+                <Button variant="outline" size="sm" className="border-aqua/30 text-aqua hover:bg-aqua/10">
+                  Ver Todas
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
             </div>
-          </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center p-4 rounded-lg border border-aqua/10">
+                <p className="text-3xl font-bold text-aqua">{fedStats.total}</p>
+                <p className="text-sm text-muted-foreground">Total Federaciones</p>
+              </div>
+              <div className="text-center p-4 rounded-lg border border-emerald-500/20">
+                <p className="text-3xl font-bold text-emerald-400">{fedStats.active}</p>
+                <p className="text-sm text-muted-foreground">Activas</p>
+              </div>
+              <div className="text-center p-4 rounded-lg border border-amber-500/20">
+                <p className="text-3xl font-bold text-amber-400">{fedStats.development}</p>
+                <p className="text-sm text-muted-foreground">En Desarrollo</p>
+              </div>
+              <div className="text-center p-4 rounded-lg border border-violet-500/20">
+                <p className="text-3xl font-bold text-violet-400">{fedStats.quantumEnabled}</p>
+                <p className="text-sm text-muted-foreground">Quantum Ready</p>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <div className="flex justify-between text-sm mb-2">
+                <span className="text-muted-foreground">Progreso del Ecosistema</span>
+                <span className="text-aqua">{Math.round((fedStats.active / fedStats.total) * 100)}%</span>
+              </div>
+              <Progress 
+                value={(fedStats.active / fedStats.total) * 100} 
+                className="h-2"
+              />
+            </div>
+          </Card>
         </div>
-
-        {/* Sidebar */}
-        <aside className="space-y-4">
-          <Card className="bg-card/40 backdrop-blur border border-border/20 rounded-xl p-4">
-            <h3 className="font-bold text-sm mb-3 flex items-center gap-2">
-              <BarChart3 className="w-4 h-4 text-primary" />
-              Acciones Rápidas
-            </h3>
-            <div className="space-y-2">
-              {[
-                { label: "Crear Dream Space", path: "/dream-spaces", icon: Sparkles },
-                { label: "Ver Comunidad", path: "/community", icon: Users },
-                { label: "Chat Isabella AI", path: "/isabella", icon: MessageCircle },
-                { label: "Gobernanza DAO", path: "/governance", icon: Eye },
-                { label: "Universidad", path: "/university", icon: ArrowRight },
-              ].map(({ label, path, icon: Icon }) => (
-                <Link key={path} to={path}>
-                  <Button variant="ghost" className="w-full justify-start gap-2 text-sm h-9">
-                    <Icon className="w-4 h-4 text-primary" />{label}
-                  </Button>
-                </Link>
-              ))}
-            </div>
-          </Card>
-
-          <Card className="bg-card/40 backdrop-blur border border-border/20 rounded-xl p-4">
-            <h3 className="font-bold text-sm mb-3 flex items-center gap-2">
-              <Bell className="w-4 h-4 text-amber-400" />
-              Notificaciones
-            </h3>
-            <div className="space-y-2">
-              {[
-                "Isabella AI procesó 340 análisis emocionales",
-                "Nuevo evento: Hackathon TAMV 2026",
-                "Tu propuesta DAO recibió 45 votos",
-                "Certificación Quantum completada"
-              ].map((n, i) => (
-                <div key={i} className="text-xs text-muted-foreground p-2 rounded-lg bg-muted/20 hover:bg-muted/30 transition-colors cursor-pointer">
-                  {n}
-                </div>
-              ))}
-            </div>
-          </Card>
-        </aside>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Dashboard;
