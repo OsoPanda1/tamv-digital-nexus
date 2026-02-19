@@ -60,6 +60,24 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Quality gate (MD-X5 Deca-V)
+
+To run the repeated quality shield before deploy:
+
+```sh
+npm run audit:deca-v
+```
+
+By default it runs 10 cycles of lint, typecheck, test and build.
+
+For faster local iteration:
+
+```sh
+DECA_V_CYCLES=2 npm run audit:deca-v
+```
+
+Full operational notes: `MDX5_OPERATIONAL_PROTOCOL.md`.
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b) and click on Share -> Publish.
