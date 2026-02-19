@@ -9,13 +9,18 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "lint:tamv": "eslint . --plugin tamv",
+    "lint:constitution": "eslint . --plugin tamv-constitution",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "check": "tsc --noEmit",
     "check:architecture": "ts-node scripts/check-architecture.ts",
+    "scan:semantics": "node scripts/scan-semantics.js",
+    "check:docs-sync": "echo 'Docs sync check not implemented yet'",
+    "audit:economy": "echo 'Economic audit check not implemented yet'",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "ci": "npm run lint && npm run check && npm run test && npm run check:architecture"
+    "ci": "npm run lint:constitution && npm run scan:semantics && npm run check && npm run test && npm run check:architecture",
+    "test:constitution": "npm run lint:constitution && npm run scan:semantics"
   },
   "dependencies": {
     "@11labs/react": "^0.2.0",

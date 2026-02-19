@@ -1,0 +1,32 @@
+name: TAMV Constitutional Gate
+
+on: [pull_request]
+
+jobs:
+  constitution:
+    runs-on: ubuntu-latest
+    name: Constitutional Quality Control
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint Constitutional
+        run: npm run lint:constitution
+
+      - name: Semantic Scanner
+        run: npm run scan:semantics
+
+      - name: Architecture Check
+        run: npm run check:architecture
+
+      - name: Documentation Sync Check
+        run: npm run check:docs-sync

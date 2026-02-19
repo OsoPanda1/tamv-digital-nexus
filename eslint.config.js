@@ -4,6 +4,9 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
+// Import TAMV constitutional plugin
+import tamvConstitution from "./eslint-plugin-tamv";
+
 export default tseslint.config(
   { ignores: ["dist"] },
   {
@@ -16,11 +19,15 @@ export default tseslint.config(
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
+      "tamv-constitution": tamvConstitution,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "@typescript-eslint/no-unused-vars": "off",
+      "tamv-constitution/no-dao": "error",
+      "tamv-constitution/no-hidden-economy": "error",
+      "tamv-constitution/no-unaudited-ai": "error",
     },
   },
 );

@@ -335,6 +335,125 @@ const noDomainLogicInPages = {
   },
 };
 
+/**
+ * TAMV Constitutional Rules
+ * Prohibits DAO-related terminology and patterns
+ */
+const noDao = {
+  meta: {
+    type: 'problem',
+    docs: {
+      description: 'DAO is constitutionally prohibited in TAMV. Use SCAO or mark as [HISTORICAL]/[EXTERNAL].',
+      category: 'TAMV Constitutional',
+      recommended: 'error',
+    },
+    messages: {
+      daoTerm: 'Constitutional Violation: DAO term prohibited. Use SCAO or mark as [HISTORICAL]/[EXTERNAL].',
+    },
+    schema: [],
+  },
+  create(context) {
+    return {
+      Program(node) {
+        const source = context.getSourceCode().getText();
+        if (/\bDAO\b|\bDAOs\b/i.test(source)) {
+          // Check if it's properly marked
+          const hasHistoricalMark = /\[HISTORICAL\]|\[EXTERNAL\]|\[LEGACY\]/.test(source);
+          if (!hasHistoricalMark) {
+            context.report({
+              node,
+              messageId: 'daoTerm',
+            });
+          }
+        }
+      },
+    };
+  },
+};
+
+/**
+ * TAMV Constitutional Rules
+ * Detects hidden economic logic without UI transparency
+ */
+const noHiddenEconomy = {
+  meta: {
+    type: 'problem',
+    docs: {
+      description: 'Economic logic must have explicit UI transparency.',
+      category: 'TAMV Constitutional',
+      recommended: 'error',
+    },
+    messages: {
+      hiddenEconomy: 'Constitutional Violation: Hidden economic logic detected. Must provide explicit UI transparency.',
+    },
+    schema: [],
+  },
+  create(context) {
+    return {
+      CallExpression(node) {
+        // Detect potential hidden economic operations
+        const functionNames = ['processPayment', 'calculateFee', 'transferFunds', 'withdraw', 'deposit'];
+        const hasEconomicFunction = functionNames.some(name => 
+          (node.callee.name && node.callee.name.includes(name)) ||
+          (node.callee.property && node.callee.property.name && node.callee.property.name.includes(name))
+        );
+        
+        if (hasEconomicFunction) {
+          // Check if there's corresponding UI logic
+          const source = context.getSourceCode().getText();
+          const hasUIReference = /tooltip|modal|dialog|notification|alert/.test(source.toLowerCase());
+          
+          if (!hasUIReference) {
+            context.report({
+              node,
+              messageId: 'hiddenEconomy',
+            });
+          }
+        }
+      },
+    };
+  },
+};
+
+/**
+ * TAMV Constitutional Rules
+ * Prohibits unaudited AI systems without proper logging
+ */
+const noUnauditedAi = {
+  meta: {
+    type: 'problem',
+    docs: {
+      description: 'AI systems must have proper logging and audit trails.',
+      category: 'TAMV Constitutional',
+      recommended: 'error',
+    },
+    messages: {
+      unauditedAi: 'Constitutional Violation: Unaudited AI system detected. Must implement proper logging and audit trails.',
+    },
+    schema: [],
+  },
+  create(context) {
+    return {
+      ImportDeclaration(node) {
+        // Detect AI-related imports
+        const aiPatterns = /openai|anthropic|cohere|huggingface|llama|gpt|ai\//;
+        if (node.source && aiPatterns.test(node.source.value)) {
+          // Check if logging is implemented
+          const source = context.getSourceCode().getText();
+          const hasLogging = /console\.log|logger|audit|logEvent/.test(source);
+          
+          if (!hasLogging) {
+            context.report({
+              node,
+              messageId: 'unauditedAi',
+            });
+          }
+        }
+      },
+    };
+  },
+};
+
 module.exports = {
   rules: {
     'no-reactdom-outside-main': noReactDOMOutsideMain,
@@ -343,6 +462,9 @@ module.exports = {
     'no-router-in-modules': noRouterInModules,
     'no-page-to-page-import': noPageToPageImport,
     'no-domain-logic-in-pages': noDomainLogicInPages,
+    'no-dao': noDao,
+    'no-hidden-economy': noHiddenEconomy,
+    'no-unaudited-ai': noUnauditedAi,
   },
   configs: {
     recommended: {
@@ -354,6 +476,9 @@ module.exports = {
         'tamv/no-router-in-modules': 'error',
         'tamv/no-page-to-page-import': 'error',
         'tamv/no-domain-logic-in-pages': 'warn',
+        'tamv/no-dao': 'error',
+        'tamv/no-hidden-economy': 'error',
+        'tamv/no-unaudited-ai': 'error',
       },
     },
   },
