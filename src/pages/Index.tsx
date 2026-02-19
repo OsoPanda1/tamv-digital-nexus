@@ -1,13 +1,37 @@
 import { useState, useEffect } from "react";
-import Navigation from "@/components/Navigation";
-import { QuantumCanvas } from "@/components/QuantumCanvas";
-import { CinematicIntro } from "@/components/CinematicIntro";
-import TAMVEpicPortal from "@/components/UnifiedSocialFeed";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ArrowRight, Sparkles, Globe, Users, Zap, Brain, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
-import heroQuantum from "@/assets/hero-quantum.jpg";
+import { CinematicIntro } from "@/components/CinematicIntro";
+import { StoriesCarousel } from "@/components/social/StoriesCarousel";
+import { SocialFeedPost, MOCK_POSTS } from "@/components/social/SocialFeedPost";
+import { CreatePostComposer } from "@/components/social/CreatePostComposer";
+import { TrendingSidebar } from "@/components/social/TrendingSidebar";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
+import {
+  Compass, Tv, GraduationCap, Music, Gamepad2, ShoppingBag,
+  Users, Radio, Globe, Sparkles, Play, Flame, ArrowRight
+} from "lucide-react";
+
+const QUICK_NAV = [
+  { icon: Compass, label: "Explorar", path: "/ecosystem", color: "text-cyan-400" },
+  { icon: Tv, label: "Videos", path: "/dream-spaces", color: "text-red-400" },
+  { icon: Radio, label: "Lives", path: "/kaos", color: "text-green-400" },
+  { icon: Music, label: "Música", path: "/kaos", color: "text-purple-400" },
+  { icon: GraduationCap, label: "Cursos", path: "/university", color: "text-amber-400" },
+  { icon: Users, label: "Grupos", path: "/community", color: "text-blue-400" },
+  { icon: ShoppingBag, label: "Market", path: "/monetization", color: "text-pink-400" },
+  { icon: Gamepad2, label: "Games", path: "/dream-spaces", color: "text-emerald-400" },
+];
+
+const FEATURED_REELS = [
+  { id: 1, img: "https://picsum.photos/seed/reel1/300/530", user: "María R.", views: "12.4K" },
+  { id: 2, img: "https://picsum.photos/seed/reel2/300/530", user: "Carlos M.", views: "8.2K" },
+  { id: 3, img: "https://picsum.photos/seed/reel3/300/530", user: "TAMV", views: "45.1K" },
+  { id: 4, img: "https://picsum.photos/seed/reel4/300/530", user: "Isabella", views: "23.7K" },
+  { id: 5, img: "https://picsum.photos/seed/reel5/300/530", user: "UTAMV", views: "5.6K" },
+  { id: 6, img: "https://picsum.photos/seed/reel6/300/530", user: "Ana T.", views: "9.3K" },
+];
 
 const Index = () => {
   const [showIntro, setShowIntro] = useState(false);
@@ -34,153 +58,90 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <QuantumCanvas />
-      <Navigation />
-
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src={heroQuantum} 
-            alt="TAMV Quantum Background" 
-            className="w-full h-full object-cover opacity-30"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/80 to-background" />
-        </div>
-        
-        <div className="container mx-auto px-6 relative z-10 pt-20">
-          <div className="max-w-5xl mx-auto text-center">
-            <div className="mb-8 animate-float">
-              <span className="px-6 py-2 rounded-full glass-panel text-sm font-medium shadow-quantum inline-block">
-                Ecosistema Civilizatorio Digital Mexicano
-              </span>
-            </div>
-            
-            <h1 className="text-7xl md:text-8xl font-bold mb-6 glow-text animate-slide-in-up">
-              <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                TAMV MD-X4™
-              </span>
-            </h1>
-            
-            <p className="text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto animate-slide-in-up" style={{ animationDelay: '0.1s' }}>
-              Plataforma completa de metaverso, red social, IA y documentación técnica.
-              El futuro de la civilización digital comienza aquí.
-            </p>
-
-            <div className="flex gap-4 justify-center mb-16 animate-slide-in-up" style={{ animationDelay: '0.2s' }}>
-              <Link to="/dashboard">
-                <Button size="lg" className="bg-quantum-gradient shadow-quantum hover:shadow-glow transition-all duration-300 hover:scale-105 text-lg px-8">
-                  Entrar al Dashboard
-                  <ArrowRight className="ml-2 w-5 h-5" />
+      {/* Quick Navigation Bar */}
+      <div className="border-b border-border/20 bg-card/30 backdrop-blur-sm sticky top-0 z-30">
+        <div className="max-w-7xl mx-auto px-4 py-2">
+          <div className="flex items-center gap-1 overflow-x-auto scrollbar-none">
+            {QUICK_NAV.map(({ icon: Icon, label, path, color }) => (
+              <Link key={label} to={path}>
+                <Button variant="ghost" size="sm" className="flex-shrink-0 gap-1.5 h-9 text-xs font-medium">
+                  <Icon className={`w-4 h-4 ${color}`} />
+                  {label}
                 </Button>
               </Link>
-              <Link to="/docs">
-                <Button size="lg" variant="outline" className="border-primary hover:bg-primary/20 text-lg px-8">
-                  Ver Documentación
-                </Button>
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-              {[
-                { icon: Sparkles, label: "Dream Spaces 4D", value: "Inmersivos", link: "/metaverse" },
-                { icon: Brain, label: "Isabella AI", value: "Multimodal", link: "/isabella" },
-                { icon: Users, label: "Comunidad", value: "Global", link: "/community" },
-                { icon: Shield, label: "Anubis Security", value: "Cuántica", link: "/anubis" },
-              ].map((feature, index) => {
-                const Icon = feature.icon;
-                return (
-                  <Link key={index} to={feature.link}>
-                    <Card
-                      className="glass-panel p-6 hover:shadow-quantum transition-all duration-300 hover:scale-105 border-border/50 animate-scale-in cursor-pointer"
-                      style={{ animationDelay: `${0.3 + index * 0.1}s` }}
-                    >
-                      <Icon className="w-8 h-8 mx-auto mb-3 text-primary animate-pulse-glow" />
-                      <p className="text-sm text-muted-foreground mb-1">{feature.label}</p>
-                      <p className="font-bold">{feature.value}</p>
-                    </Card>
-                  </Link>
-                );
-              })}
-            </div>
+            ))}
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Unified Social Feed */}
-      <TAMVEpicPortal />
-
-      {/* Features Section */}
-      <section className="py-32 relative z-10">
-        <div className="container mx-auto px-6">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-5xl font-bold mb-4 glow-text bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                Capacidades del Ecosistema
-              </h2>
-              <p className="text-xl text-muted-foreground">
-                Tecnología cuántica-cristalina para la civilización digital
-              </p>
+      <div className="max-w-7xl mx-auto px-4 pt-4 pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
+          {/* Main Feed Column */}
+          <div className="space-y-4">
+            {/* Stories */}
+            <div className="bg-card/30 backdrop-blur border border-border/20 rounded-2xl px-3 py-1">
+              <StoriesCarousel />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {[
-                {
-                  title: "Metaverso Sensorial 4D",
-                  description: "Espacios virtuales con ambientación completa: efectos visuales volumétricos, audio KAOS 3D/4D y feedback háptico. Dream Spaces personalizables con IA.",
-                  color: "from-primary to-primary-glow",
-                },
-                {
-                  title: "Red Social Inmersiva",
-                  description: "Timeline multimedia, grupos temáticos, canales live, streaming 4D. Conecta, comparte y co-crea con la comunidad global TAMV.",
-                  color: "from-secondary to-secondary-glow",
-                },
-                {
-                  title: "Isabella AI Multimodal",
-                  description: "Asistente de inteligencia artificial con capacidades de texto, voz (ElevenLabs), memoria cuántica y co-creación emocional.",
-                  color: "from-accent to-accent-glow",
-                },
-                {
-                  title: "Centro de Documentación",
-                  description: "TAMV Docs Center con niveles público y Pro. Blueprints, API, SDK, sandbox y referencias completas para desarrolladores.",
-                  color: "from-primary via-secondary to-accent",
-                },
-              ].map((feature, index) => (
-                <Card
-                  key={index}
-                  className="glass-panel p-8 hover:shadow-quantum transition-all duration-300 hover:scale-105 border-border/50"
-                >
-                  <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center shadow-quantum mb-6`}>
-                    <Sparkles className="w-7 h-7 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
-                </Card>
+            {/* Composer */}
+            <CreatePostComposer />
+
+            {/* Featured Reels */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h2 className="font-bold text-sm flex items-center gap-2">
+                  <Flame className="w-4 h-4 text-orange-400" />
+                  Reels Trending
+                </h2>
+                <Button variant="ghost" size="sm" className="text-xs text-primary gap-1">
+                  Ver todos <ArrowRight className="w-3 h-3" />
+                </Button>
+              </div>
+              <div className="flex gap-3 overflow-x-auto scrollbar-none pb-2">
+                {FEATURED_REELS.map((reel) => (
+                  <motion.div
+                    key={reel.id}
+                    whileHover={{ scale: 1.03 }}
+                    className="relative flex-shrink-0 w-32 aspect-[9/16] rounded-xl overflow-hidden cursor-pointer group"
+                  >
+                    <img src={reel.img} alt="" className="w-full h-full object-cover" loading="lazy" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Play className="w-8 h-8 text-foreground fill-foreground/20" />
+                    </div>
+                    <div className="absolute bottom-2 left-2 right-2">
+                      <p className="text-xs font-bold truncate">{reel.user}</p>
+                      <p className="text-[10px] text-foreground/60 flex items-center gap-1">
+                        <Play className="w-2.5 h-2.5" />{reel.views}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Feed Posts */}
+            <div className="space-y-4">
+              {MOCK_POSTS.map((post, i) => (
+                <SocialFeedPost key={post.id} post={post} index={i} />
               ))}
             </div>
+
+            {/* Load More */}
+            <div className="flex justify-center py-8">
+              <Button variant="outline" className="rounded-full gap-2 border-primary/30 text-primary hover:bg-primary/10">
+                <Sparkles className="w-4 h-4" />
+                Cargar más contenido
+              </Button>
+            </div>
+          </div>
+
+          {/* Right Sidebar */}
+          <div className="hidden lg:block">
+            <TrendingSidebar />
           </div>
         </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-32 relative z-10">
-        <div className="container mx-auto px-6">
-          <Card className="glass-panel max-w-4xl mx-auto p-12 text-center border-border/50 shadow-quantum">
-            <h2 className="text-4xl font-bold mb-6 glow-text bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-              Únete al Futuro Digital
-            </h2>
-            <p className="text-xl text-muted-foreground mb-8">
-              Forma parte del ecosistema civilizatorio digital más avanzado de México y Latinoamérica
-            </p>
-            <Link to="/dashboard">
-              <Button size="lg" className="bg-quantum-gradient shadow-quantum hover:shadow-glow transition-all duration-300 hover:scale-105 text-lg px-12">
-                Comenzar Ahora
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </Link>
-          </Card>
-        </div>
-      </section>
+      </div>
     </div>
   );
 };
