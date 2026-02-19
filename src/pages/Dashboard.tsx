@@ -1,105 +1,125 @@
-import Navigation from "@/components/Navigation";
-import ParticleField from "@/components/ParticleField";
+import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sparkles, TrendingUp, Users, Zap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
+import { StoriesCarousel } from "@/components/social/StoriesCarousel";
+import { SocialFeedPost, MOCK_POSTS } from "@/components/social/SocialFeedPost";
+import {
+  TrendingUp, Users, Sparkles, Zap, Activity, Eye,
+  ArrowRight, Radio, MessageCircle, Bell, BarChart3
+} from "lucide-react";
 
-const Dashboard = () => {
-  const stats = [
-    { label: "Usuarios Activos", value: "12.5K", icon: Users, color: "from-primary to-primary-glow" },
-    { label: "Dream Spaces", value: "234", icon: Sparkles, color: "from-secondary to-secondary-glow" },
-    { label: "Engagement", value: "+45%", icon: TrendingUp, color: "from-accent to-accent-glow" },
-    { label: "Energy Level", value: "98%", icon: Zap, color: "from-primary via-secondary to-accent" },
-  ];
+const STATS = [
+  { label: "Usuarios Activos", value: "12.5K", change: "+18%", icon: Users, color: "text-primary" },
+  { label: "Posts Hoy", value: "3.2K", change: "+45%", icon: Activity, color: "text-emerald-400" },
+  { label: "Lives Ahora", value: "23", change: "", icon: Radio, color: "text-red-400" },
+  { label: "Coherencia", value: "98%", change: "+5%", icon: Zap, color: "text-amber-400" },
+];
 
-  return (
-    <div className="min-h-screen bg-background">
-      <ParticleField />
-      <Navigation />
-      
-      <main className="container mx-auto px-6 pt-32 pb-20 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-12 animate-slide-in-up">
-            <h1 className="text-5xl font-bold mb-4 glow-text bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-              Centro de Control TAMV
-            </h1>
-            <p className="text-xl text-muted-foreground">
-              Bienvenido al ecosistema digital civilizatorio
-            </p>
+const Dashboard = () => (
+  <div className="min-h-screen bg-background">
+    <div className="max-w-7xl mx-auto px-4 pt-6 pb-20">
+      {/* Welcome */}
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+        <h1 className="text-2xl font-bold mb-1">Centro de Control</h1>
+        <p className="text-sm text-muted-foreground">Bienvenido al ecosistema TAMV MD-X4™</p>
+      </motion.div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+        {STATS.map((stat, i) => {
+          const Icon = stat.icon;
+          return (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.08 }}
+              className="bg-card/40 backdrop-blur border border-border/20 rounded-xl p-4"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <Icon className={`w-5 h-5 ${stat.color}`} />
+                {stat.change && (
+                  <Badge variant="secondary" className="text-[10px] bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                    <TrendingUp className="w-3 h-3 mr-0.5" />{stat.change}
+                  </Badge>
+                )}
+              </div>
+              <p className="text-2xl font-bold">{stat.value}</p>
+              <p className="text-xs text-muted-foreground">{stat.label}</p>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+        <div className="space-y-4">
+          {/* Stories */}
+          <div className="bg-card/30 border border-border/20 rounded-2xl px-3 py-1">
+            <StoriesCarousel />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {stats.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <Card
-                  key={index}
-                  className="glass-panel p-6 hover:shadow-quantum transition-all duration-300 hover:scale-105 animate-scale-in border-border/50"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-glow`}>
-                      <Icon className="w-6 h-6 text-white" />
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-3xl font-bold mb-1">{stat.value}</p>
-                    <p className="text-sm text-muted-foreground">{stat.label}</p>
-                  </div>
-                </Card>
-              );
-            })}
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <Card className="glass-panel p-8 lg:col-span-2 border-border/50">
-              <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                <Sparkles className="w-6 h-6 text-primary" />
-                Actividad Reciente
-              </h2>
-              <div className="space-y-4">
-                {[
-                  { title: "Nuevo Dream Space creado", time: "Hace 5 min", user: "Usuario #1234" },
-                  { title: "Evento comunitario iniciado", time: "Hace 15 min", user: "Moderador" },
-                  { title: "Isabella AI actualizada", time: "Hace 1 hora", user: "Sistema" },
-                  { title: "Nuevo contenido publicado", time: "Hace 2 horas", user: "Creador Pro" },
-                ].map((activity, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-4 rounded-lg bg-card/50 hover:bg-card/80 transition-colors border border-border/30"
-                  >
-                    <div>
-                      <p className="font-medium">{activity.title}</p>
-                      <p className="text-sm text-muted-foreground">{activity.user}</p>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{activity.time}</p>
-                  </div>
-                ))}
-              </div>
-            </Card>
-
-            <Card className="glass-panel p-8 border-border/50">
-              <h2 className="text-2xl font-bold mb-6">Acciones Rápidas</h2>
-              <div className="space-y-3">
-                <Button className="w-full bg-primary hover:bg-primary/90 shadow-quantum">
-                  Crear Dream Space
-                </Button>
-                <Button variant="outline" className="w-full border-primary/50 hover:bg-primary/20">
-                  Ver Comunidad
-                </Button>
-                <Button variant="outline" className="w-full border-secondary/50 hover:bg-secondary/20">
-                  Chat Isabella AI
-                </Button>
-                <Button variant="outline" className="w-full border-accent/50 hover:bg-accent/20">
-                  Documentación Pro
-                </Button>
-              </div>
-            </Card>
+          {/* Activity Feed */}
+          <div>
+            <h2 className="font-bold text-sm mb-3 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-primary" />
+              Actividad Reciente
+            </h2>
+            <div className="space-y-3">
+              {MOCK_POSTS.slice(0, 4).map((post, i) => (
+                <SocialFeedPost key={post.id} post={post} index={i} />
+              ))}
+            </div>
           </div>
         </div>
-      </main>
+
+        {/* Sidebar */}
+        <aside className="space-y-4">
+          <Card className="bg-card/40 backdrop-blur border border-border/20 rounded-xl p-4">
+            <h3 className="font-bold text-sm mb-3 flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-primary" />
+              Acciones Rápidas
+            </h3>
+            <div className="space-y-2">
+              {[
+                { label: "Crear Dream Space", path: "/dream-spaces", icon: Sparkles },
+                { label: "Ver Comunidad", path: "/community", icon: Users },
+                { label: "Chat Isabella AI", path: "/isabella", icon: MessageCircle },
+                { label: "Gobernanza DAO", path: "/governance", icon: Eye },
+                { label: "Universidad", path: "/university", icon: ArrowRight },
+              ].map(({ label, path, icon: Icon }) => (
+                <Link key={path} to={path}>
+                  <Button variant="ghost" className="w-full justify-start gap-2 text-sm h-9">
+                    <Icon className="w-4 h-4 text-primary" />{label}
+                  </Button>
+                </Link>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="bg-card/40 backdrop-blur border border-border/20 rounded-xl p-4">
+            <h3 className="font-bold text-sm mb-3 flex items-center gap-2">
+              <Bell className="w-4 h-4 text-amber-400" />
+              Notificaciones
+            </h3>
+            <div className="space-y-2">
+              {[
+                "Isabella AI procesó 340 análisis emocionales",
+                "Nuevo evento: Hackathon TAMV 2026",
+                "Tu propuesta DAO recibió 45 votos",
+                "Certificación Quantum completada"
+              ].map((n, i) => (
+                <div key={i} className="text-xs text-muted-foreground p-2 rounded-lg bg-muted/20 hover:bg-muted/30 transition-colors cursor-pointer">
+                  {n}
+                </div>
+              ))}
+            </div>
+          </Card>
+        </aside>
+      </div>
     </div>
-  );
-};
+  </div>
+);
 
 export default Dashboard;
