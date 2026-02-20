@@ -1,6 +1,6 @@
 // ============================================================================
-// TAMV MD-X4â"¢ - Landing Page
-// Elegant, sophisticated landing with unified design
+// TAMV MD-X4™ - Immersive Social Landing
+// 85% visual / 15% text · Next-Gen Social Interaction Ecosystem
 // ============================================================================
 
 import { useState, useEffect } from "react";
@@ -8,101 +8,91 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  ArrowRight, Sparkles, Globe, Users, Zap, Brain, Shield, 
-  Headphones, BookOpen, Vote, DollarSign, Layers, Star,
-  Compass, Tv, GraduationCap, Music, Gamepad2, ShoppingBag,
-  Users as UsersIcon, Radio, Play, Flame
+import {
+  ArrowRight, Sparkles, Globe, Users, Brain, Shield,
+  Play, Music, Gamepad2, ShoppingBag, Radio, GraduationCap,
+  Compass, Heart, MessageCircle, Share2, Eye, Flame,
+  TrendingUp, Video, Headphones, Star, Zap,
 } from "lucide-react";
 import { CinematicIntro } from "@/components/CinematicIntro";
 import { useBackgroundControl } from "@/components/UnifiedBackground";
-import { federationManager } from "@/systems/FederationSystem";
 import { motion } from "framer-motion";
+import { StoriesCarousel } from "@/components/social/StoriesCarousel";
+import logoImg from "@/assets/LOGOTAMV2.jpg";
 
 // ============================================================================
-// Quick Navigation Configuration
+// Media Content Configuration (massive multimedia)
 // ============================================================================
 
 const QUICK_NAV = [
-  { icon: Compass, label: "Explorar", path: "/ecosystem", color: "text-cyan-400" },
-  { icon: Tv, label: "Videos", path: "/dream-spaces", color: "text-red-400" },
+  { icon: Compass, label: "Explorar", path: "/ecosystem", color: "text-primary" },
+  { icon: Video, label: "Videos", path: "/dream-spaces", color: "text-red-400" },
   { icon: Radio, label: "Lives", path: "/kaos", color: "text-green-400" },
-  { icon: Music, label: "MÃºsica", path: "/kaos", color: "text-purple-400" },
+  { icon: Music, label: "Música", path: "/kaos", color: "text-violet-400" },
   { icon: GraduationCap, label: "Cursos", path: "/university", color: "text-amber-400" },
-  { icon: UsersIcon, label: "Grupos", path: "/community", color: "text-blue-400" },
+  { icon: Users, label: "Grupos", path: "/community", color: "text-blue-400" },
   { icon: ShoppingBag, label: "Market", path: "/monetization", color: "text-pink-400" },
   { icon: Gamepad2, label: "Games", path: "/dream-spaces", color: "text-emerald-400" },
 ];
 
-const FEATURED_REELS = [
-  { id: 1, img: "https://picsum.photos/seed/reel1/300/530", user: "MarÃ­a R.", views: "12.4K" },
-  { id: 2, img: "https://picsum.photos/seed/reel2/300/530", user: "Carlos M.", views: "8.2K" },
-  { id: 3, img: "https://picsum.photos/seed/reel3/300/530", user: "TAMV", views: "45.1K" },
-  { id: 4, img: "https://picsum.photos/seed/reel4/300/530", user: "Isabella", views: "23.7K" },
-  { id: 5, img: "https://picsum.photos/seed/reel5/300/530", user: "UTAMV", views: "5.6K" },
-  { id: 6, img: "https://picsum.photos/seed/reel6/300/530", user: "Ana T.", views: "9.3K" },
+const FEATURED_VIDEOS = [
+  { id: 1, title: "TAMV Quantum Experience", thumb: "https://picsum.photos/seed/tv1/640/360", views: "125K", duration: "4:32", category: "Tech" },
+  { id: 2, title: "DreamSpaces XR Tour", thumb: "https://picsum.photos/seed/tv2/640/360", views: "89K", duration: "12:08", category: "XR" },
+  { id: 3, title: "Isabella AI Demo", thumb: "https://picsum.photos/seed/tv3/640/360", views: "234K", duration: "8:15", category: "AI" },
+  { id: 4, title: "KAOS Audio Binaural", thumb: "https://picsum.photos/seed/tv4/640/360", views: "67K", duration: "45:00", category: "Music" },
 ];
 
-// ============================================================================
-// Feature Cards Configuration
-// ============================================================================
-
-const coreFeatures = [
+const TRENDING_POSTS = [
   {
-    icon: Sparkles,
-    title: "Dream Spaces 4D",
-    description: "Espacios inmersivos multisensoriales con audio espacial binaural",
-    link: "/dream-spaces",
-    federation: "DREAMSPACES",
-    gradient: "from-rose-500 to-rose-700",
+    id: 1, user: "María R.", avatar: "https://i.pravatar.cc/100?img=1",
+    img: "https://picsum.photos/seed/post1/800/600",
+    text: "Mi primer DreamSpace en TAMV 🚀✨",
+    likes: 1243, comments: 89, shares: 34, time: "2h",
   },
   {
-    icon: Brain,
-    title: "Isabella AI",
-    description: "Asistente multimodal con memoria cuÃ¡ntica y orientaciÃ³n emocional",
-    link: "/isabella",
-    federation: "ISABELLA",
-    gradient: "from-cyan-500 to-blue-600",
+    id: 2, user: "Carlos M.", avatar: "https://i.pravatar.cc/100?img=3",
+    img: "https://picsum.photos/seed/post2/800/800",
+    text: "Sesión binaural KAOS · frecuencias 432Hz 🎵",
+    likes: 892, comments: 56, shares: 21, time: "4h",
   },
   {
-    icon: Users,
-    title: "Comunidad Global",
-    description: "Red social inmersiva con grupos, canales y streaming 4D",
-    link: "/community",
-    federation: "HARMONY",
-    gradient: "from-pink-500 to-pink-700",
+    id: 3, user: "TAMV Official", avatar: "",
+    img: "https://picsum.photos/seed/post3/800/500",
+    text: "Nuevo módulo de Universidad TAMV disponible 🎓",
+    likes: 3421, comments: 234, shares: 156, time: "6h",
+    verified: true,
   },
   {
-    icon: Shield,
-    title: "Anubis Security",
-    description: "Sistema de seguridad post-cuÃ¡ntica DEKATEOTL de 11 capas",
-    link: "/anubis",
-    federation: "ANUBIS",
-    gradient: "from-red-500 to-red-700",
+    id: 4, user: "Ana T.", avatar: "https://i.pravatar.cc/100?img=5",
+    img: "https://picsum.photos/seed/post4/800/700",
+    text: "Mi certificación BookPI verificada en blockchain 🔐",
+    likes: 567, comments: 45, shares: 12, time: "8h",
   },
 ];
 
-const ecosystemFeatures = [
-  { icon: Headphones, label: "KAOS Audio", desc: "Audio 4D", link: "/kaos" },
-  { icon: BookOpen, label: "Universidad", desc: "Certificaciones", link: "/university" },
-  { icon: Vote, label: "Gobernanza", desc: "DAO HÃ­brida", link: "/governance" },
-  { icon: DollarSign, label: "EconomÃ­a", desc: "MSR/TCEP", link: "/economy" },
-  { icon: Layers, label: "Ecosistema", desc: "21+ Federaciones", link: "/ecosystem" },
-  { icon: Star, label: "ID-NVIDA", desc: "Identidad Digital", link: "/profile" },
+const MUSIC_TRACKS = [
+  { title: "Quantum Drift", artist: "KAOS Studio", duration: "3:42", plays: "45K" },
+  { title: "Neural Waves 432Hz", artist: "Isabella AI", duration: "12:00", plays: "128K" },
+  { title: "Civilizatory Anthem", artist: "TAMV Collective", duration: "5:18", plays: "89K" },
+  { title: "Deep Space Binaural", artist: "DreamSpaces", duration: "45:00", plays: "234K" },
+];
+
+const LIVE_STREAMS = [
+  { user: "DJ Quantum", viewers: "2.3K", thumb: "https://picsum.photos/seed/live1/400/225" },
+  { user: "UTAMV Class", viewers: "456", thumb: "https://picsum.photos/seed/live2/400/225" },
+  { user: "Art XR Studio", viewers: "1.1K", thumb: "https://picsum.photos/seed/live3/400/225" },
 ];
 
 // ============================================================================
-// Main Landing Page Component
+// Main Component
 // ============================================================================
 
 const Index = () => {
   const [showIntro, setShowIntro] = useState(true);
   const { setBackground } = useBackgroundControl();
-  const fedStats = federationManager.getStatistics();
 
   useEffect(() => {
-    // Set quantum background for landing page
-    setBackground('quantum', 0.3);
+    setBackground("matrix", 0.4);
   }, [setBackground]);
 
   if (showIntro) {
@@ -110,116 +100,65 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center px-6">
-        <div className="max-w-5xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <Badge 
-              className="mb-6 px-4 py-2 text-sm border-aqua/30 text-aqua"
-              variant="outline"
-            >
-              <Sparkles className="w-4 h-4 mr-2" />
-              Ecosistema Digital Civilizatorio
-            </Badge>
-            
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              <span 
-                style={{
-                  background: 'linear-gradient(135deg, #00D9FF, #3E7EA3, #C1CBD5)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
-              >
-                TAMV MD-X4â"¢
-              </span>
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              La primera plataforma digital civilizatoria de LatinoamÃ©rica. 
-              Un ecosistema completo de IA, economÃ­a, educaciÃ³n y metaverso.
-            </p>
-            
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link to="/dashboard">
-                <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-8"
-                >
-                  Comenzar Ahora
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </Link>
-              <Link to="/docs">
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="border-aqua/30 text-aqua hover:bg-aqua/10 px-8"
-                >
-                  DocumentaciÃ³n
-                </Button>
-              </Link>
+    <div className="min-h-screen pb-20">
+      {/* Quick Nav Bar */}
+      <section className="sticky top-0 z-30 py-3 px-4 border-b border-border/30" style={{ background: "rgba(11,12,17,0.85)", backdropFilter: "blur(12px)" }}>
+        <div className="max-w-6xl mx-auto flex items-center gap-4 overflow-x-auto scrollbar-hide">
+          <Link to="/">
+            <div className="w-9 h-9 rounded-lg overflow-hidden flex-shrink-0 border border-primary/30">
+              <img src={logoImg} alt="TAMV" className="w-full h-full object-cover" />
             </div>
-          </motion.div>
+          </Link>
+          {QUICK_NAV.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <Link key={i} to={item.path}>
+                <motion.div
+                  className="flex flex-col items-center gap-1 px-3 py-1 rounded-lg hover:bg-primary/10 transition-colors cursor-pointer flex-shrink-0"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Icon className={`w-5 h-5 ${item.color}`} />
+                  <span className="text-[10px] text-muted-foreground whitespace-nowrap">{item.label}</span>
+                </motion.div>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
-      {/* Quick Navigation */}
-      <section className="py-8 px-6">
+      {/* Stories */}
+      <section className="py-4 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
-            {QUICK_NAV.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <Link key={index} to={item.path}>
-                  <motion.div
-                    className="flex flex-col items-center p-3 rounded-xl border border-aqua/10 hover:border-aqua/30 transition-all duration-300 cursor-pointer"
-                    style={{ background: 'rgba(11, 12, 17, 0.6)' }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Icon className={`w-5 h-5 ${item.color} mb-1`} />
-                    <span className="text-xs text-muted-foreground">{item.label}</span>
-                  </motion.div>
-                </Link>
-              );
-            })}
-          </div>
+          <StoriesCarousel />
         </div>
       </section>
 
-      {/* Featured Reels */}
-      <section className="py-8 px-6">
+      {/* LIVE Streams */}
+      <section className="py-4 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold flex items-center gap-2">
-              <Play className="w-5 h-5 text-aqua" />
-              Reels Destacados
-            </h2>
-            <Link to="/community" className="text-sm text-aqua hover:underline">
-              Ver todos
-            </Link>
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+            <h2 className="text-sm font-bold">EN VIVO</h2>
           </div>
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-            {FEATURED_REELS.map((reel) => (
+            {LIVE_STREAMS.map((stream, i) => (
               <motion.div
-                key={reel.id}
-                className="relative flex-shrink-0 w-28 h-48 rounded-xl overflow-hidden cursor-pointer"
-                whileHover={{ scale: 1.05 }}
+                key={i}
+                className="relative flex-shrink-0 w-52 h-28 rounded-xl overflow-hidden cursor-pointer group"
+                whileHover={{ scale: 1.03 }}
               >
-                <img 
-                  src={reel.img} 
-                  alt={`Reel by ${reel.user}`}
-                  className="w-full h-full object-cover"
-                />
+                <img src={stream.thumb} alt={stream.user} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                <Badge className="absolute top-2 left-2 bg-red-600 text-white text-[10px] px-1.5 py-0.5">LIVE</Badge>
                 <div className="absolute bottom-2 left-2 right-2">
-                  <p className="text-xs font-medium truncate">{reel.user}</p>
-                  <p className="text-xs text-muted-foreground">{reel.views} vistas</p>
+                  <p className="text-xs font-bold truncate">{stream.user}</p>
+                  <p className="text-[10px] text-muted-foreground flex items-center gap-1">
+                    <Eye className="w-3 h-3" /> {stream.viewers}
+                  </p>
+                </div>
+                <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Play className="w-8 h-8 text-white" />
                 </div>
               </motion.div>
             ))}
@@ -227,184 +166,164 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Core Features Grid */}
-      <section className="py-16 px-6">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Pilares del Ecosistema
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Cuatro sistemas integrados que forman la base de la civilizaciÃ³n digital TAMV
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {coreFeatures.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <Link key={index} to={feature.link}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <Card 
-                      className="p-6 border-aqua/20 hover:border-aqua/40 transition-all duration-300 group cursor-pointer"
-                      style={{
-                        background: 'rgba(11, 12, 17, 0.6)',
-                        backdropFilter: 'blur(10px)',
-                      }}
-                    >
-                      <div className="flex items-start gap-4">
-                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                          <Icon className="w-6 h-6 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-xl font-bold mb-2 group-hover:text-aqua transition-colors">
-                            {feature.title}
-                          </h3>
-                          <p className="text-muted-foreground text-sm">
-                            {feature.description}
-                          </p>
-                          <Badge variant="outline" className="mt-3 text-xs border-aqua/20 text-aqua">
-                            {feature.federation}
-                          </Badge>
-                        </div>
-                        <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-aqua group-hover:translate-x-1 transition-all" />
-                      </div>
-                    </Card>
-                  </motion.div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Ecosystem Features */}
-      <section className="py-16 px-6">
-        <div className="max-w-6xl mx-auto">
-          <Card 
-            className="p-8 border-aqua/20"
-            style={{
-              background: 'rgba(11, 12, 17, 0.6)',
-              backdropFilter: 'blur(10px)',
-            }}
-          >
-            <h3 className="text-xl font-bold mb-6 text-center">Explora el Ecosistema</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              {ecosystemFeatures.map((feature, index) => {
-                const Icon = feature.icon;
-                return (
-                  <Link key={index} to={feature.link}>
-                    <motion.div
-                      className="flex flex-col items-center p-4 rounded-lg border border-aqua/10 hover:border-aqua/30 transition-all cursor-pointer"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      <Icon className="w-6 h-6 text-aqua mb-2" />
-                      <span className="text-sm font-medium">{feature.label}</span>
-                      <span className="text-xs text-muted-foreground">{feature.desc}</span>
-                    </motion.div>
-                  </Link>
-                );
-              })}
+      <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Feed Column */}
+        <div className="lg:col-span-2 space-y-4">
+          {/* Featured Video */}
+          <Card className="overflow-hidden border-border/30" style={{ background: "rgba(11,12,17,0.7)" }}>
+            <div className="relative aspect-video cursor-pointer group">
+              <img src={FEATURED_VIDEOS[0].thumb} alt={FEATURED_VIDEOS[0].title} className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                <motion.div
+                  className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center"
+                  whileHover={{ scale: 1.1 }}
+                >
+                  <Play className="w-7 h-7 text-primary-foreground ml-1" />
+                </motion.div>
+              </div>
+              <Badge className="absolute top-3 left-3 bg-primary/80 text-primary-foreground">{FEATURED_VIDEOS[0].category}</Badge>
+              <span className="absolute bottom-3 right-3 text-xs bg-black/70 px-2 py-1 rounded">{FEATURED_VIDEOS[0].duration}</span>
+            </div>
+            <div className="p-4">
+              <h3 className="font-bold text-lg">{FEATURED_VIDEOS[0].title}</h3>
+              <p className="text-sm text-muted-foreground">{FEATURED_VIDEOS[0].views} vistas</p>
             </div>
           </Card>
+
+          {/* Social Posts Feed */}
+          {TRENDING_POSTS.map((post) => (
+            <Card key={post.id} className="overflow-hidden border-border/30" style={{ background: "rgba(11,12,17,0.7)" }}>
+              {/* Post Header */}
+              <div className="flex items-center gap-3 p-4 pb-2">
+                <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/30 flex-shrink-0">
+                  {post.avatar ? (
+                    <img src={post.avatar} alt={post.user} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                      <Sparkles className="w-5 h-5 text-primary-foreground" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-bold truncate">{post.user}</span>
+                    {post.verified && <Zap className="w-3.5 h-3.5 text-primary flex-shrink-0" />}
+                  </div>
+                  <span className="text-xs text-muted-foreground">{post.time}</span>
+                </div>
+              </div>
+
+              {/* Post Text */}
+              <p className="px-4 pb-3 text-sm">{post.text}</p>
+
+              {/* Post Image */}
+              <div className="relative">
+                <img src={post.img} alt="" className="w-full object-cover max-h-[500px]" loading="lazy" />
+              </div>
+
+              {/* Post Actions */}
+              <div className="flex items-center justify-between px-4 py-3">
+                <div className="flex items-center gap-5">
+                  <button className="flex items-center gap-1.5 text-muted-foreground hover:text-red-400 transition-colors">
+                    <Heart className="w-5 h-5" />
+                    <span className="text-xs">{post.likes.toLocaleString()}</span>
+                  </button>
+                  <button className="flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors">
+                    <MessageCircle className="w-5 h-5" />
+                    <span className="text-xs">{post.comments}</span>
+                  </button>
+                  <button className="flex items-center gap-1.5 text-muted-foreground hover:text-green-400 transition-colors">
+                    <Share2 className="w-5 h-5" />
+                    <span className="text-xs">{post.shares}</span>
+                  </button>
+                </div>
+              </div>
+            </Card>
+          ))}
         </div>
-      </section>
 
-      {/* Federation Stats */}
-      <section className="py-16 px-6">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-8"
-          >
-            <h2 className="text-2xl font-bold mb-2">Estado de las Federaciones</h2>
-            <p className="text-muted-foreground">21+ sistemas integrados operando en sincronÃ­a</p>
-          </motion.div>
+        {/* Sidebar */}
+        <div className="space-y-4">
+          {/* Video Grid */}
+          <Card className="p-4 border-border/30" style={{ background: "rgba(11,12,17,0.7)" }}>
+            <h3 className="text-sm font-bold mb-3 flex items-center gap-2">
+              <Video className="w-4 h-4 text-primary" /> Videos Trending
+            </h3>
+            <div className="space-y-3">
+              {FEATURED_VIDEOS.slice(1).map((vid) => (
+                <div key={vid.id} className="flex gap-3 cursor-pointer group">
+                  <div className="relative w-28 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                    <img src={vid.thumb} alt={vid.title} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                      <Play className="w-5 h-5 text-white opacity-80" />
+                    </div>
+                    <span className="absolute bottom-1 right-1 text-[10px] bg-black/70 px-1 rounded">{vid.duration}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium truncate group-hover:text-primary transition-colors">{vid.title}</p>
+                    <p className="text-[10px] text-muted-foreground mt-1">{vid.views} vistas</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card 
-              className="p-6 text-center border-aqua/20"
-              style={{ background: 'rgba(11, 12, 17, 0.6)' }}
-            >
-              <p className="text-4xl font-bold text-aqua mb-1">{fedStats.total}</p>
-              <p className="text-sm text-muted-foreground">Federaciones</p>
-            </Card>
-            <Card 
-              className="p-6 text-center border-emerald-500/20"
-              style={{ background: 'rgba(11, 12, 17, 0.6)' }}
-            >
-              <p className="text-4xl font-bold text-emerald-400 mb-1">{fedStats.active}</p>
-              <p className="text-sm text-muted-foreground">Activas</p>
-            </Card>
-            <Card 
-              className="p-6 text-center border-amber-500/20"
-              style={{ background: 'rgba(11, 12, 17, 0.6)' }}
-            >
-              <p className="text-4xl font-bold text-amber-400 mb-1">{fedStats.development}</p>
-              <p className="text-sm text-muted-foreground">En Desarrollo</p>
-            </Card>
-            <Card 
-              className="p-6 text-center border-violet-500/20"
-              style={{ background: 'rgba(11, 12, 17, 0.6)' }}
-            >
-              <p className="text-4xl font-bold text-violet-400 mb-1">{fedStats.quantumEnabled}</p>
-              <p className="text-sm text-muted-foreground">Quantum Ready</p>
-            </Card>
-          </div>
-        </div>
-      </section>
+          {/* Music Player */}
+          <Card className="p-4 border-border/30" style={{ background: "rgba(11,12,17,0.7)" }}>
+            <h3 className="text-sm font-bold mb-3 flex items-center gap-2">
+              <Headphones className="w-4 h-4 text-primary" /> KAOS Music
+            </h3>
+            <div className="space-y-2">
+              {MUSIC_TRACKS.map((track, i) => (
+                <div key={i} className="flex items-center gap-3 p-2 rounded-lg hover:bg-primary/10 transition-colors cursor-pointer group">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center flex-shrink-0">
+                    <Music className="w-4 h-4 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium truncate">{track.title}</p>
+                    <p className="text-[10px] text-muted-foreground">{track.artist}</p>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <p className="text-[10px] text-muted-foreground">{track.duration}</p>
+                    <p className="text-[10px] text-primary">{track.plays}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
 
-      {/* CTA Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Ãšnete a la CivilizaciÃ³n Digital
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              LatinoamÃ©rica estÃ¡ despertando. SÃ© parte de la revoluciÃ³n digital 
-              que estÃ¡ transformando nuestra regiÃ³n.
-            </p>
+          {/* Trending Topics */}
+          <Card className="p-4 border-border/30" style={{ background: "rgba(11,12,17,0.7)" }}>
+            <h3 className="text-sm font-bold mb-3 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-primary" /> Trending
+            </h3>
+            <div className="space-y-2">
+              {["#TAMVQuantum", "#DreamSpacesXR", "#IsabellaAI", "#NuevaEraDigital", "#UTAMV", "#KAOSAudio"].map((tag, i) => (
+                <div key={i} className="flex items-center justify-between py-1.5 cursor-pointer hover:text-primary transition-colors">
+                  <span className="text-xs font-medium">{tag}</span>
+                  <span className="text-[10px] text-muted-foreground">{Math.floor(Math.random() * 50 + 10)}K posts</span>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* CTA */}
+          <Card className="p-5 border-primary/20 text-center" style={{ background: "linear-gradient(135deg, rgba(0,217,255,0.08), rgba(62,126,163,0.08))" }}>
+            <Flame className="w-8 h-8 text-primary mx-auto mb-2" />
+            <h3 className="text-sm font-bold mb-1">Únete a TAMV</h3>
+            <p className="text-[10px] text-muted-foreground mb-3">Ecosistema Civilizatorio Next-Gen</p>
             <Link to="/auth">
-              <Button 
-                size="lg"
-                className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-12 py-6 text-lg"
-              >
-                Crear Cuenta Gratuita
-                <ArrowRight className="w-5 h-5 ml-2" />
+              <Button size="sm" className="w-full bg-gradient-to-r from-primary to-secondary text-primary-foreground">
+                Crear Cuenta <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </Link>
-          </motion.div>
+          </Card>
         </div>
-      </section>
+      </div>
 
       {/* Footer */}
-      <footer className="py-8 px-6 border-t border-aqua/10">
-        <div className="max-w-6xl mx-auto text-center">
-          <p className="text-sm text-muted-foreground">
-            Â© 2025 TAMV MD-X4â"¢ â€" Ecosistema Digital Civilizatorio
-          </p>
-          <p className="text-xs text-muted-foreground mt-2">
-            Hecho con â¤ï¸ en LatinoamÃ©rica
-          </p>
-        </div>
+      <footer className="mt-16 py-6 px-4 border-t border-border/20 text-center">
+        <p className="text-xs text-muted-foreground">© 2025 TAMV MD-X4™ — Ecosistema Digital Civilizatorio · Hecho con ❤️ en Latinoamérica</p>
       </footer>
     </div>
   );

@@ -69,8 +69,8 @@ const App = () => (
         {/* Root Container */}
         <div className="relative min-h-screen w-full bg-background overflow-hidden">
           
-          {/* UNIFIED BACKGROUND - Single elegant background system */}
-          <UnifiedBackground mode="quantum" intensity={0.35} />
+          {/* UNIFIED BACKGROUND - Matrix rain + quantum particles */}
+          <UnifiedBackground mode="matrix" intensity={0.45} />
           
           {/* Civilizatory Sidebar Navigation */}
           <CivilizatorySidebar />
