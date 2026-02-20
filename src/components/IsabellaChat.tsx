@@ -22,7 +22,7 @@ type EmotionKey = "alegría" | "tristeza" | "poder" | "duda" | "neutral";
 
 export const IsabellaChat = () => {
   const [input, setInput] = useState("");
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
 

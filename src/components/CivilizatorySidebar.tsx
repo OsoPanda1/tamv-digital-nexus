@@ -98,7 +98,7 @@ const navSections: NavSection[] = [
 // ============================================================================
 
 export const CivilizatorySidebar = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const location = useLocation();
 
   const isActive = (path: string) => location.pathname === path;
