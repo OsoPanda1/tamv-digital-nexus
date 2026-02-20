@@ -75,15 +75,16 @@ export const IsabellaChat = () => {
     if (!messages.length) return;
 
     const lastMessage = messages[messages.length - 1];
+    const msgKey = `${lastMessage?.content?.slice(0, 50)}-${messages.length}`;
     if (
       lastMessage?.role !== "assistant" ||
       !lastMessage.content ||
-      lastMessage.id === lastSpokenMessageIdRef.current
+      msgKey === lastSpokenMessageIdRef.current
     ) {
       return;
     }
 
-    lastSpokenMessageIdRef.current = lastMessage.id;
+    lastSpokenMessageIdRef.current = msgKey;
 
     speak({
       text: lastMessage.content,
@@ -192,7 +193,7 @@ export const IsabellaChat = () => {
       {!isMinimized && (
         <>
           {/* Mensajes */}
-          <ScrollArea className="h-[calc(100%-140px)]" viewportRef={scrollContainerRef}>
+          <ScrollArea className="h-[calc(100%-140px)]" ref={scrollContainerRef}>
             <div className="p-4 space-y-4">
               {messages.length === 0 && (
                 <div className="text-center py-8 space-y-3">
@@ -214,7 +215,7 @@ export const IsabellaChat = () => {
 
                 return (
                   <div
-                    key={msg.id ?? idx}
+                    key={idx}
                     className={cn(
                       "flex gap-3 animate-fade-in-up",
                       isUser ? "justify-end" : "justify-start"
