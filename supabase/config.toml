@@ -35,3 +35,6 @@ verify_jwt = false
 
 [functions.tamv-content-sync]
 verify_jwt = false
+
+[functions.tamv-fusion-core]
+verify_jwt = false
