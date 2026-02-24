@@ -3,27 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import { QuantumCanvas } from '@/components/QuantumCanvas';
 import { PIConsentForm } from '@/components/onboarding/PIConsentForm';
-// Si aún no tienes este store, puedes quitarlo y el efecto de redirect
-import { useOnboardingStore } from '@/stores/onboarding';
 
 const Onboarding = () => {
   const navigate = useNavigate();
-  const onboarding = (() => {
-    try {
-      // Evita reventar si aún no existe el store
-      return useOnboardingStore?.();
-    } catch {
-      return { isCompleted: false };
-    }
-  })();
 
-  const isCompleted = onboarding?.isCompleted ?? false;
+  // Si más adelante quieres redirigir tras consentimiento,
+  // hazlo desde dentro de PIConsentForm con navigate('/hub').
 
   useEffect(() => {
-    if (isCompleted) {
-      navigate('/hub'); // o '/dashboard' según tu routing real
-    }
-  }, [isCompleted, navigate]);
+    // Aquí podrías hacer checks simples (ej: token en localStorage)
+    // por ahora no redirige automáticamente.
+  }, []);
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
