@@ -1,5 +1,5 @@
 // ============================================================================
-// TAMV MD-X4â"¢ - Immersive Audio System
+// TAMV MD-X4™ - Immersive Audio System
 // Background music, spatial audio, and voice synthesis with effects
 // ============================================================================
 

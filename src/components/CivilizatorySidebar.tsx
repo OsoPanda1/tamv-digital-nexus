@@ -13,7 +13,7 @@ import {
   BarChart3, Settings, Brain, Zap, ChevronLeft, 
   ChevronRight, Crown, DollarSign, FileText, AlertTriangle,
   Headphones, Palette, Network, Lock, TrendingUp, 
-  Radio, Layers, Star, Heart, Infinity
+  Radio, Layers, Star, Heart, Infinity, User, Crown as VIP, Dna as DNA
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { FEDERATIONS, type FederationId } from '@/systems/FederationSystem';
@@ -68,7 +68,7 @@ const navSections: NavSection[] = [
     items: [
       { icon: DollarSign, label: 'Monetizacion', path: '/monetization', badge: 'Pro' },
       { icon: VIP, label: 'Membresias', path: '/monetization' },
-      { icon: TrendingUp, label: ' Blockchain MSR', path: '/economy', federation: 'MSR', badge: 'TCEP' },
+      { icon: TrendingUp, label: 'Blockchain MSR', path: '/economy', federation: 'MSR', badge: 'TCEP' },
     ],
   },
   {
@@ -159,7 +159,7 @@ export const CivilizatorySidebar = () => {
                   WebkitTextFillColor: 'transparent',
                 }}
               >
-                TAMV MD-X4â"¢
+                TAMV MD-X4™
               </span>
               <span className="text-xs text-muted-foreground">Civilizatory System</span>
             </div>
@@ -252,7 +252,7 @@ export const CivilizatorySidebar = () => {
             {!collapsed && (
               <div className="flex flex-col items-start">
                 <span className="text-sm font-medium">Perfil Usuario</span>
-                <span className="text-xs text-muted-foreground">Nivel CuÃ¡ntico 5</span>
+                <span className="text-xs text-muted-foreground">Nivel Cuántico 5</span>
               </div>
             )}
           </Button>

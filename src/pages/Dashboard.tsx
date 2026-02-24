@@ -1,5 +1,5 @@
 // ============================================================================
-// TAMV MD-X4â"¢ - Dashboard Page
+// TAMV MD-X4™ - Dashboard Page
 // Central control panel with unified design
 // ============================================================================
 
@@ -32,7 +32,7 @@ const quickActions = [
   { label: "Crear Dream Space", icon: Sparkles, path: "/dream-spaces", color: "from-rose-500 to-rose-700" },
   { label: "Chat Isabella AI", icon: Brain, path: "/isabella", color: "from-cyan-500 to-blue-600" },
   { label: "Ver Comunidad", icon: Users, path: "/community", color: "from-pink-500 to-pink-700" },
-  { label: "DocumentaciÃ³n", icon: BookOpen, path: "/docs", color: "from-emerald-500 to-green-600" },
+  { label: "Documentación", icon: BookOpen, path: "/docs", color: "from-emerald-500 to-green-600" },
 ];
 
 const recentActivity = [
@@ -157,7 +157,7 @@ const Dashboard = () => {
                 backdropFilter: 'blur(10px)',
               }}
             >
-              <h2 className="text-xl font-bold mb-6">Acciones RÃ¡pidas</h2>
+              <h2 className="text-xl font-bold mb-6">Acciones Rápidas</h2>
               <div className="space-y-3">
                 {quickActions.map((action, index) => {
                   const Icon = action.icon;

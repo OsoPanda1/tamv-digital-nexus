@@ -1,0 +1,763 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - button [ref=e7] [cursor=pointer]:
+        - img
+      - link [ref=e9] [cursor=pointer]:
+        - /url: /
+        - img [ref=e11]
+      - generic [ref=e16]:
+        - generic [ref=e18]:
+          - link [ref=e19] [cursor=pointer]:
+            - /url: /dashboard
+            - button [ref=e20]:
+              - img
+          - link [ref=e21] [cursor=pointer]:
+            - /url: /isabella
+            - button [ref=e22]:
+              - img
+          - link [ref=e23] [cursor=pointer]:
+            - /url: /anubis
+            - button [ref=e24]:
+              - img
+          - link [ref=e25] [cursor=pointer]:
+            - /url: /profile
+            - button [ref=e26]:
+              - img
+        - generic [ref=e28]:
+          - link [ref=e29] [cursor=pointer]:
+            - /url: /ecosystem
+            - button [ref=e30]:
+              - img
+          - link [ref=e31] [cursor=pointer]:
+            - /url: /dream-spaces
+            - button [ref=e32]:
+              - img
+          - link [ref=e33] [cursor=pointer]:
+            - /url: /kaos
+            - button [ref=e34]:
+              - img
+          - link [ref=e35] [cursor=pointer]:
+            - /url: /community
+            - button [ref=e36]:
+              - img
+        - generic [ref=e38]:
+          - link [ref=e39] [cursor=pointer]:
+            - /url: /university
+            - button [ref=e40]:
+              - img
+          - link [ref=e41] [cursor=pointer]:
+            - /url: /docs
+            - button [ref=e42]:
+              - img
+          - link [ref=e43] [cursor=pointer]:
+            - /url: /dashboard
+            - button [ref=e44]:
+              - img
+        - generic [ref=e46]:
+          - link [ref=e47] [cursor=pointer]:
+            - /url: /monetization
+            - button [ref=e48]:
+              - img
+          - link [ref=e49] [cursor=pointer]:
+            - /url: /monetization
+            - button [ref=e50]:
+              - img
+          - link [ref=e51] [cursor=pointer]:
+            - /url: /economy
+            - button [ref=e52]:
+              - img
+        - generic [ref=e54]:
+          - link [ref=e55] [cursor=pointer]:
+            - /url: /governance
+            - button [ref=e56]:
+              - img
+          - link [ref=e57] [cursor=pointer]:
+            - /url: /bookpi
+            - button [ref=e58]:
+              - img
+          - link [ref=e59] [cursor=pointer]:
+            - /url: /profile
+            - button [ref=e60]:
+              - img
+          - link [ref=e61] [cursor=pointer]:
+            - /url: /crisis
+            - button [ref=e62]:
+              - img
+          - link [ref=e63] [cursor=pointer]:
+            - /url: /admin
+            - button [ref=e64]:
+              - img
+        - generic [ref=e66]:
+          - link [ref=e67] [cursor=pointer]:
+            - /url: /anubis
+            - button [ref=e68]:
+              - img
+          - link [ref=e69] [cursor=pointer]:
+            - /url: /ecosystem
+            - button [ref=e70]:
+              - img
+          - link [ref=e71] [cursor=pointer]:
+            - /url: /economy
+            - button [ref=e72]:
+              - img
+          - link [ref=e73] [cursor=pointer]:
+            - /url: /isabella
+            - button [ref=e74]:
+              - img
+          - link [ref=e75] [cursor=pointer]:
+            - /url: /bookpi
+            - button [ref=e76]:
+              - img
+      - link [ref=e78] [cursor=pointer]:
+        - /url: /profile
+        - button [ref=e79]:
+          - generic [ref=e80]:
+            - img
+    - img [ref=e85] [cursor=pointer]
+    - button [ref=e96] [cursor=pointer]:
+      - img
+    - main [ref=e104]:
+      - generic [ref=e105]:
+        - generic [ref=e106]:
+          - img "TAMV" [ref=e133]
+          - heading "TAMV MD-X4™" [level=1] [ref=e135]:
+            - text: TAMV
+            - generic [ref=e136]: MD-X4™
+          - paragraph [ref=e137]: La evolución federada de las redes sociales. Civilización digital desde Latinoamérica para el mundo.
+          - generic [ref=e138]:
+            - link "Únete a la Civilización" [ref=e139] [cursor=pointer]:
+              - /url: /auth
+              - button "Únete a la Civilización" [ref=e140]:
+                - img
+                - text: Únete a la Civilización
+            - button "Explorar como Viajero" [ref=e141] [cursor=pointer]:
+              - img
+              - text: Explorar como Viajero
+          - generic [ref=e142]:
+            - generic [ref=e143]:
+              - paragraph [ref=e144]: 2.5M+
+              - paragraph [ref=e145]: Pioneros
+            - generic [ref=e146]:
+              - paragraph [ref=e147]: 150K+
+              - paragraph [ref=e148]: DreamSpaces
+            - generic [ref=e149]:
+              - paragraph [ref=e150]: 50K+
+              - paragraph [ref=e151]: En Vivo
+          - img [ref=e153]
+        - generic [ref=e157]:
+          - link "TAMV" [ref=e158] [cursor=pointer]:
+            - /url: /
+            - img "TAMV" [ref=e160]
+          - generic [ref=e161]:
+            - button "Inicio" [ref=e162] [cursor=pointer]:
+              - img [ref=e163]
+              - generic [ref=e166]: Inicio
+            - button "Canales" [ref=e167] [cursor=pointer]:
+              - img [ref=e168]
+              - generic [ref=e171]: Canales
+            - button "Grupos" [ref=e172] [cursor=pointer]:
+              - img [ref=e173]
+              - generic [ref=e178]: Grupos
+            - button "Reels" [ref=e179] [cursor=pointer]:
+              - img [ref=e180]
+              - generic [ref=e182]: Reels
+            - button "En Vivo" [ref=e183] [cursor=pointer]:
+              - img [ref=e184]
+              - generic [ref=e190]: En Vivo
+            - button "DreamSpaces" [ref=e191] [cursor=pointer]:
+              - img [ref=e192]
+              - generic [ref=e194]: DreamSpaces
+          - generic [ref=e195]:
+            - button [ref=e196] [cursor=pointer]:
+              - img
+            - button [ref=e197] [cursor=pointer]:
+              - img
+            - link "Entrar" [ref=e199] [cursor=pointer]:
+              - /url: /auth
+              - button "Entrar" [ref=e200]:
+                - img
+                - text: Entrar
+        - generic [ref=e201]:
+          - generic [ref=e203]:
+            - generic [ref=e204] [cursor=pointer]:
+              - generic [ref=e205]:
+                - img "María R." [ref=e208]
+                - img [ref=e210]
+              - generic [ref=e211]: María
+            - generic [ref=e212] [cursor=pointer]:
+              - img "Carlos M." [ref=e216]
+              - generic [ref=e217]: Carlos
+            - generic [ref=e218] [cursor=pointer]:
+              - img "TAMV Official" [ref=e222]
+              - generic [ref=e223]: TAMV
+            - generic [ref=e224] [cursor=pointer]:
+              - img "Ana T." [ref=e228]
+              - generic [ref=e229]: Ana
+            - generic [ref=e230] [cursor=pointer]:
+              - img "DJ Quantum" [ref=e234]
+              - generic [ref=e235]: DJ
+            - generic [ref=e236] [cursor=pointer]:
+              - img "Isabella AI" [ref=e240]
+              - generic [ref=e241]: Isabella
+            - generic [ref=e242] [cursor=pointer]:
+              - img "Elena Dream" [ref=e246]
+              - generic [ref=e247]: Elena
+            - generic [ref=e248] [cursor=pointer]:
+              - img "Marco XR" [ref=e252]
+              - generic [ref=e253]: Marco
+          - generic [ref=e254]:
+            - generic [ref=e255]:
+              - heading "En Vivo Ahora" [level=2] [ref=e257]:
+                - img [ref=e258]
+                - text: En Vivo Ahora
+              - generic [ref=e264]: 10,489 espectadores
+            - generic [ref=e265]:
+              - generic [ref=e266] [cursor=pointer]:
+                - img "Sesión Quantum Beats 🎵" [ref=e268]
+                - generic [ref=e270]: EN VIVO · 2,340
+                - generic [ref=e272]:
+                  - generic [ref=e273]:
+                    - img "DJ Quantum" [ref=e274]
+                    - generic [ref=e275]: DJ Quantum
+                  - paragraph [ref=e276]: Sesión Quantum Beats 🎵
+                  - generic [ref=e277]: Música
+                - img [ref=e279]
+              - generic [ref=e281] [cursor=pointer]:
+                - 'img "Clase: Introducción al Metaverso" [ref=e283]'
+                - generic [ref=e285]: EN VIVO · 456
+                - generic [ref=e287]:
+                  - generic [ref=e288]:
+                    - img "UTAMV Live" [ref=e289]
+                    - generic [ref=e290]: UTAMV Live
+                  - paragraph [ref=e291]: "Clase: Introducción al Metaverso"
+                  - generic [ref=e292]: Educación
+                - img [ref=e294]
+              - generic [ref=e296] [cursor=pointer]:
+                - img "Pintura Digital en Realidad Extendida" [ref=e298]
+                - generic [ref=e300]: EN VIVO · 1,123
+                - generic [ref=e302]:
+                  - generic [ref=e303]:
+                    - img "Art XR Studio" [ref=e304]
+                    - generic [ref=e305]: Art XR Studio
+                  - paragraph [ref=e306]: Pintura Digital en Realidad Extendida
+                  - generic [ref=e307]: Arte
+                - img [ref=e309]
+              - generic [ref=e311] [cursor=pointer]:
+                - img "Chat en Vivo con Isabella" [ref=e313]
+                - generic [ref=e315]: EN VIVO · 5,678
+                - generic [ref=e317]:
+                  - generic [ref=e318]:
+                    - img "Isabella AI" [ref=e319]
+                    - generic [ref=e320]: Isabella AI
+                  - paragraph [ref=e321]: Chat en Vivo con Isabella
+                  - generic [ref=e322]: IA
+                - img [ref=e324]
+              - generic [ref=e326] [cursor=pointer]:
+                - img "Torneo de Juegos Blockchain" [ref=e328]
+                - generic [ref=e330]: EN VIVO · 892
+                - generic [ref=e332]:
+                  - generic [ref=e333]:
+                    - img "Gaming TAMV" [ref=e334]
+                    - generic [ref=e335]: Gaming TAMV
+                  - paragraph [ref=e336]: Torneo de Juegos Blockchain
+                  - generic [ref=e337]: Gaming
+                - img [ref=e339]
+          - generic [ref=e341]:
+            - generic [ref=e342]:
+              - heading "Canales Destacados" [level=2] [ref=e343]:
+                - img [ref=e344]
+                - text: Canales Destacados
+              - button "Ver todos" [ref=e347] [cursor=pointer]:
+                - text: Ver todos
+                - img
+            - generic [ref=e348]:
+              - generic [ref=e349] [cursor=pointer]:
+                - img "TAMV Official" [ref=e351]
+                - generic [ref=e354]:
+                  - paragraph [ref=e355]: TAMV Official
+                  - paragraph [ref=e356]: 125,000 miembros
+              - generic [ref=e357] [cursor=pointer]:
+                - img "DreamSpaces" [ref=e359]
+                - generic [ref=e360]:
+                  - paragraph [ref=e361]: DreamSpaces
+                  - paragraph [ref=e362]: 45,000 miembros
+              - generic [ref=e363] [cursor=pointer]:
+                - img "Música KAOS" [ref=e365]
+                - generic [ref=e366]:
+                  - paragraph [ref=e367]: Música KAOS
+                  - paragraph [ref=e368]: 67,000 miembros
+              - generic [ref=e369] [cursor=pointer]:
+                - img "Universidad TAMV" [ref=e371]
+                - generic [ref=e372]:
+                  - paragraph [ref=e373]: Universidad TAMV
+                  - paragraph [ref=e374]: 23,000 miembros
+              - generic [ref=e375] [cursor=pointer]:
+                - img "Gaming Hub" [ref=e377]
+                - generic [ref=e378]:
+                  - paragraph [ref=e379]: Gaming Hub
+                  - paragraph [ref=e380]: 89,000 miembros
+              - generic [ref=e381] [cursor=pointer]:
+                - img "Arte Digital" [ref=e383]
+                - generic [ref=e384]:
+                  - paragraph [ref=e385]: Arte Digital
+                  - paragraph [ref=e386]: 34,000 miembros
+              - generic [ref=e387] [cursor=pointer]:
+                - img "Tech Innovators" [ref=e389]
+                - generic [ref=e390]:
+                  - paragraph [ref=e391]: Tech Innovators
+                  - paragraph [ref=e392]: 56,000 miembros
+              - generic [ref=e393] [cursor=pointer]:
+                - img "Comunidad Latina" [ref=e395]
+                - generic [ref=e396]:
+                  - paragraph [ref=e397]: Comunidad Latina
+                  - paragraph [ref=e398]: 78,000 miembros
+          - generic [ref=e399]:
+            - generic [ref=e400]:
+              - heading "Reels Trending" [level=2] [ref=e401]:
+                - img [ref=e402]
+                - text: Reels Trending
+              - generic [ref=e404]: 🔥 Hot
+            - generic [ref=e405]:
+              - generic [ref=e406] [cursor=pointer]:
+                - generic [ref=e409]:
+                  - generic [ref=e410]:
+                    - img "María R." [ref=e411]
+                    - generic [ref=e412]: María R.
+                    - button "Seguir" [ref=e413]
+                  - paragraph [ref=e414]: Mi experiencia en DreamSpaces 😋✨
+                  - generic [ref=e415]:
+                    - generic [ref=e416]:
+                      - img [ref=e417]
+                      - text: 1,234
+                    - generic [ref=e419]:
+                      - img [ref=e420]
+                      - text: Comentarios
+                    - generic [ref=e422]:
+                      - img [ref=e423]
+                      - text: Compartir
+                - generic [ref=e429]:
+                  - button [ref=e430]:
+                    - img [ref=e431]
+                  - button [ref=e433]:
+                    - img [ref=e434]
+                  - button [ref=e436]:
+                    - img [ref=e437]
+              - generic [ref=e443] [cursor=pointer]:
+                - generic [ref=e446]:
+                  - generic [ref=e447]:
+                    - img "Carlos M." [ref=e448]
+                    - generic [ref=e449]: Carlos M.
+                    - button "Seguir" [ref=e450]
+                  - paragraph [ref=e451]: Audio binaural 432Hz 🎵
+                  - generic [ref=e452]:
+                    - generic [ref=e453]:
+                      - img [ref=e454]
+                      - text: "892"
+                    - generic [ref=e456]:
+                      - img [ref=e457]
+                      - text: Comentarios
+                    - generic [ref=e459]:
+                      - img [ref=e460]
+                      - text: Compartir
+                - generic [ref=e466]:
+                  - button [ref=e467]:
+                    - img [ref=e468]
+                  - button [ref=e470]:
+                    - img [ref=e471]
+                  - button [ref=e473]:
+                    - img [ref=e474]
+              - generic [ref=e480] [cursor=pointer]:
+                - generic [ref=e483]:
+                  - generic [ref=e484]:
+                    - img "DJ Quantum" [ref=e485]
+                    - generic [ref=e486]: DJ Quantum
+                    - button "Seguir" [ref=e487]
+                  - paragraph [ref=e488]: Live set desde el metaverso §
+                  - generic [ref=e489]:
+                    - generic [ref=e490]:
+                      - img [ref=e491]
+                      - text: 2,341
+                    - generic [ref=e493]:
+                      - img [ref=e494]
+                      - text: Comentarios
+                    - generic [ref=e496]:
+                      - img [ref=e497]
+                      - text: Compartir
+                - generic [ref=e503]:
+                  - button [ref=e504]:
+                    - img [ref=e505]
+                  - button [ref=e507]:
+                    - img [ref=e508]
+                  - button [ref=e510]:
+                    - img [ref=e511]
+          - generic [ref=e517]:
+            - generic [ref=e518]:
+              - generic [ref=e519]:
+                - img [ref=e520]
+                - heading "Feed Principal" [level=2] [ref=e522]
+                - generic [ref=e523]: EN VIVO
+              - generic [ref=e525]:
+                - generic [ref=e526]:
+                  - generic [ref=e528]:
+                    - generic [ref=e529]:
+                      - generic [ref=e530]: María R.
+                      - generic [ref=e531]: · 2h
+                    - generic [ref=e532]:
+                      - generic [ref=e533] [cursor=pointer]: "#TAMVQuantum"
+                      - generic [ref=e534] [cursor=pointer]: "#NuevaEra"
+                  - button [ref=e535] [cursor=pointer]:
+                    - img
+                - paragraph [ref=e536]: Acabo de crear mi primer DreamSpace en TAMV 🚀✨ La nueva era digital está aquí. Únanse a la revolución civilizatoria.
+                - generic [ref=e539]:
+                  - generic [ref=e540]:
+                    - button "1,243" [ref=e541] [cursor=pointer]:
+                      - img [ref=e542]
+                      - generic [ref=e544]: 1,243
+                    - button "89" [ref=e545] [cursor=pointer]:
+                      - img [ref=e546]
+                      - generic [ref=e548]: "89"
+                    - button "34" [ref=e549] [cursor=pointer]:
+                      - img [ref=e550]
+                      - generic [ref=e556]: "34"
+                  - button [ref=e558] [cursor=pointer]:
+                    - img [ref=e559]
+              - generic [ref=e562]:
+                - generic [ref=e563]:
+                  - generic [ref=e565]:
+                    - generic [ref=e566]:
+                      - generic [ref=e567]: Carlos M.
+                      - generic [ref=e568]: · 4h
+                    - generic [ref=e569]:
+                      - generic [ref=e570] [cursor=pointer]: "#KAOSAudio"
+                      - generic [ref=e571] [cursor=pointer]: "#Frecuencias432Hz"
+                  - button [ref=e572] [cursor=pointer]:
+                    - img
+                - paragraph [ref=e573]: Sesión binaural KAOS · frecuencias 432Hz 🎵 El audio inmersivo cambia todo. Siente las vibraciones de otra dimensión.
+                - generic [ref=e574]:
+                  - generic [ref=e575]:
+                    - button "2,891" [ref=e576] [cursor=pointer]:
+                      - img [ref=e577]
+                      - generic [ref=e579]: 2,891
+                    - button "156" [ref=e580] [cursor=pointer]:
+                      - img [ref=e581]
+                      - generic [ref=e583]: "156"
+                    - button "89" [ref=e584] [cursor=pointer]:
+                      - img [ref=e585]
+                      - generic [ref=e591]: "89"
+                  - button [ref=e593] [cursor=pointer]:
+                    - img [ref=e594]
+              - generic [ref=e597]:
+                - generic [ref=e598]:
+                  - img [ref=e601]
+                  - generic [ref=e603]:
+                    - generic [ref=e604]:
+                      - generic [ref=e605]: TAMV Official
+                      - generic [ref=e606]:
+                        - img [ref=e607]
+                        - text: Official
+                      - generic [ref=e609]: · 6h
+                    - generic [ref=e610]:
+                      - generic [ref=e611] [cursor=pointer]: "#IsabellaAI"
+                      - generic [ref=e612] [cursor=pointer]: "#IAEmocional"
+                  - button [ref=e613] [cursor=pointer]:
+                    - img
+                - paragraph [ref=e614]: Isabella AI ahora tiene emociones avanzadas 🔥 La IA más humana que jamás hayas conocido. Habla con ella ahora.
+                - generic [ref=e615]:
+                  - generic [ref=e616]:
+                    - button "5,672" [ref=e617] [cursor=pointer]:
+                      - img [ref=e618]
+                      - generic [ref=e620]: 5,672
+                    - button "423" [ref=e621] [cursor=pointer]:
+                      - img [ref=e622]
+                      - generic [ref=e624]: "423"
+                    - button "234" [ref=e625] [cursor=pointer]:
+                      - img [ref=e626]
+                      - generic [ref=e632]: "234"
+                  - button [ref=e634] [cursor=pointer]:
+                    - img [ref=e635]
+              - generic [ref=e638]:
+                - generic [ref=e639]:
+                  - generic [ref=e641]:
+                    - generic [ref=e642]:
+                      - generic [ref=e643]: Ana T.
+                      - generic [ref=e644]: · 8h
+                    - generic [ref=e645]:
+                      - generic [ref=e646] [cursor=pointer]: "#BookPI"
+                      - generic [ref=e647] [cursor=pointer]: "#CertificacionBlockchain"
+                  - button [ref=e648] [cursor=pointer]:
+                    - img
+                - paragraph [ref=e649]: "Mi certificación BookPI verificada en blockchain 🔐\x90 Inmutable, auditable y reconocida globally. El futuro de la educación."
+                - generic [ref=e650]:
+                  - generic [ref=e651]:
+                    - button "1,567" [ref=e652] [cursor=pointer]:
+                      - img [ref=e653]
+                      - generic [ref=e655]: 1,567
+                    - button "145" [ref=e656] [cursor=pointer]:
+                      - img [ref=e657]
+                      - generic [ref=e659]: "145"
+                    - button "67" [ref=e660] [cursor=pointer]:
+                      - img [ref=e661]
+                      - generic [ref=e667]: "67"
+                  - button [ref=e669] [cursor=pointer]:
+                    - img [ref=e670]
+              - generic [ref=e673]:
+                - generic [ref=e674]:
+                  - generic [ref=e676]:
+                    - generic [ref=e677]:
+                      - generic [ref=e678]: DJ Quantum
+                      - generic [ref=e679]: · 10h
+                    - generic [ref=e680]:
+                      - generic [ref=e681] [cursor=pointer]: "#MetaversoTAMV"
+                      - generic [ref=e682] [cursor=pointer]: "#EnVivo"
+                  - button [ref=e683] [cursor=pointer]:
+                    - img
+                - paragraph [ref=e684]: Transmisión en vivo desde el Metaverso TAMV 🎮 Explora mundos infinitos con otros travelers de realidad.
+                - generic [ref=e685]:
+                  - generic [ref=e686]:
+                    - button "4,521" [ref=e687] [cursor=pointer]:
+                      - img [ref=e688]
+                      - generic [ref=e690]: 4,521
+                    - button "312" [ref=e691] [cursor=pointer]:
+                      - img [ref=e692]
+                      - generic [ref=e694]: "312"
+                    - button "189" [ref=e695] [cursor=pointer]:
+                      - img [ref=e696]
+                      - generic [ref=e702]: "189"
+                  - button [ref=e704] [cursor=pointer]:
+                    - img [ref=e705]
+              - generic [ref=e707]:
+                - img [ref=e708]
+                - paragraph [ref=e710]: Únete a la civilización digital más avanzada
+                - link "Crear Cuenta Gratis" [ref=e711] [cursor=pointer]:
+                  - /url: /auth
+                  - button "Crear Cuenta Gratis" [ref=e712]:
+                    - img
+                    - text: Crear Cuenta Gratis
+            - generic [ref=e713]:
+              - generic [ref=e714]:
+                - heading "Pulso Civilizatorio" [level=3] [ref=e715]:
+                  - img [ref=e716]
+                  - text: Pulso Civilizatorio
+                - generic [ref=e718]:
+                  - generic [ref=e719]:
+                    - generic [ref=e720]: Usuarios Activos
+                    - generic [ref=e721]: 2.5M+
+                  - generic [ref=e722]:
+                    - generic [ref=e723]: Publicaciones Hoy
+                    - generic [ref=e724]: 156K+
+                  - generic [ref=e725]:
+                    - generic [ref=e726]: En Vivo Ahora
+                    - generic [ref=e727]: "5"
+                  - generic [ref=e728]:
+                    - generic [ref=e729]: Coherencia Quantum
+                    - generic [ref=e730]: 98.7%
+                  - generic [ref=e731]:
+                    - generic [ref=e732]: Nodos Federados
+                    - generic [ref=e733]: "127"
+              - generic [ref=e734]:
+                - generic [ref=e735]:
+                  - heading "Grupos Populares" [level=3] [ref=e736]:
+                    - img [ref=e737]
+                    - text: Grupos Populares
+                  - button "Ver más" [ref=e742] [cursor=pointer]
+                - generic [ref=e743]:
+                  - generic [ref=e744] [cursor=pointer]:
+                    - img "Pioneros del Metaverso" [ref=e745]
+                    - generic [ref=e746]:
+                      - paragraph [ref=e747]: Pioneros del Metaverso
+                      - paragraph [ref=e748]: Exploradores de realidades alternativas
+                      - paragraph [ref=e749]: 12,500 miembros
+                    - button "Unirse" [ref=e750]
+                  - generic [ref=e751] [cursor=pointer]:
+                    - img "Amantes del Audio Binaural" [ref=e752]
+                    - generic [ref=e753]:
+                      - paragraph [ref=e754]: Amantes del Audio Binaural
+                      - paragraph [ref=e755]: Frecuencias para la evolución consciousness
+                      - paragraph [ref=e756]: 8,900 miembros
+                    - button "Unirse" [ref=e757]
+                  - generic [ref=e758] [cursor=pointer]:
+                    - img "Creadores Digitales TAMV" [ref=e759]
+                    - generic [ref=e760]:
+                      - paragraph [ref=e761]: Creadores Digitales TAMV
+                      - paragraph [ref=e762]: Artistas y creadores del nuevo mundo
+                      - paragraph [ref=e763]: 15,600 miembros
+                    - button "Unirse" [ref=e764]
+                  - generic [ref=e765] [cursor=pointer]:
+                    - img "Estudiantes UTAMV" [ref=e766]
+                    - generic [ref=e767]:
+                      - paragraph [ref=e768]: Estudiantes UTAMV
+                      - paragraph [ref=e769]: Futuros certificados blockchain
+                      - paragraph [ref=e770]: 6,700 miembros
+                    - button "Unirse" [ref=e771]
+              - generic [ref=e772]:
+                - heading "Tendencias" [level=3] [ref=e773]:
+                  - img [ref=e774]
+                  - text: Tendencias
+                - generic [ref=e777]:
+                  - generic [ref=e778] [cursor=pointer]:
+                    - generic [ref=e779]: "#TAMVQuantum"
+                    - img [ref=e780]
+                  - generic [ref=e783] [cursor=pointer]:
+                    - generic [ref=e784]: "#DreamSpacesXR"
+                    - img [ref=e785]
+                  - generic [ref=e788] [cursor=pointer]:
+                    - generic [ref=e789]: "#IsabellaAI"
+                    - img [ref=e790]
+                  - generic [ref=e793] [cursor=pointer]:
+                    - generic [ref=e794]: "#NuevaEraDigital"
+                    - img [ref=e795]
+                  - generic [ref=e798] [cursor=pointer]:
+                    - generic [ref=e799]: "#UTAMV2024"
+                    - img [ref=e800]
+                  - generic [ref=e803] [cursor=pointer]:
+                    - generic [ref=e804]: "#KAOSAudio"
+                    - img [ref=e805]
+              - generic [ref=e808]:
+                - heading "Acceso Rápido" [level=3] [ref=e809]:
+                  - img [ref=e810]
+                  - text: Acceso Rápido
+                - generic [ref=e812]:
+                  - link "DreamSpaces" [ref=e813] [cursor=pointer]:
+                    - /url: /dream-spaces
+                    - button "DreamSpaces" [ref=e814]:
+                      - img
+                      - text: DreamSpaces
+                  - link "KAOS Audio" [ref=e815] [cursor=pointer]:
+                    - /url: /kaos
+                    - button "KAOS Audio" [ref=e816]:
+                      - img
+                      - text: KAOS Audio
+                  - link "Universidad" [ref=e817] [cursor=pointer]:
+                    - /url: /university
+                    - button "Universidad" [ref=e818]:
+                      - img
+                      - text: Universidad
+                  - link "Isabella AI" [ref=e819] [cursor=pointer]:
+                    - /url: /isabella
+                    - button "Isabella AI" [ref=e820]:
+                      - img
+                      - text: Isabella AI
+              - generic [ref=e821]:
+                - heading "Galerías de Arte" [level=3] [ref=e822]:
+                  - img [ref=e823]
+                  - text: Galerías de Arte
+                - generic [ref=e829]:
+                  - link "Arte Digital Arte Digital" [ref=e830] [cursor=pointer]:
+                    - /url: /gifts
+                    - generic [ref=e831]:
+                      - img "Arte Digital" [ref=e832]
+                      - generic [ref=e834]: Arte Digital
+                  - link "NFTs NFTs" [ref=e835] [cursor=pointer]:
+                    - /url: /gifts
+                    - generic [ref=e836]:
+                      - img "NFTs" [ref=e837]
+                      - generic [ref=e839]: NFTs
+                  - link "3D Art 3D Art" [ref=e840] [cursor=pointer]:
+                    - /url: /gifts
+                    - generic [ref=e841]:
+                      - img "3D Art" [ref=e842]
+                      - generic [ref=e844]: 3D Art
+                  - link "Música Música" [ref=e845] [cursor=pointer]:
+                    - /url: /gifts
+                    - generic [ref=e846]:
+                      - img "Música" [ref=e847]
+                      - generic [ref=e849]: Música
+              - generic [ref=e850]:
+                - heading "Marketplace" [level=3] [ref=e851]:
+                  - img [ref=e852]
+                  - text: Marketplace
+                - generic [ref=e856]:
+                  - link "Tienda Virtual" [ref=e857] [cursor=pointer]:
+                    - /url: /monetization
+                    - button "Tienda Virtual" [ref=e858]:
+                      - img
+                      - text: Tienda Virtual
+                  - link "Regalos Virtuales" [ref=e859] [cursor=pointer]:
+                    - /url: /gifts
+                    - button "Regalos Virtuales" [ref=e860]:
+                      - img
+                      - text: Regalos Virtuales
+                  - link "Economía TCEP" [ref=e861] [cursor=pointer]:
+                    - /url: /economy
+                    - button "Economía TCEP" [ref=e862]:
+                      - img
+                      - text: Economía TCEP
+              - generic [ref=e863]:
+                - heading "UTAMV Universidad" [level=3] [ref=e864]:
+                  - img [ref=e865]
+                  - text: UTAMV Universidad
+                - generic [ref=e868]:
+                  - link "Cursos Online" [ref=e869] [cursor=pointer]:
+                    - /url: /university
+                    - button "Cursos Online" [ref=e870]:
+                      - img
+                      - text: Cursos Online
+                  - link "Certificaciones BookPI" [ref=e871] [cursor=pointer]:
+                    - /url: /bookpi
+                    - button "Certificaciones BookPI" [ref=e872]:
+                      - img
+                      - text: Certificaciones BookPI
+                  - link "Biblioteca Digital" [ref=e873] [cursor=pointer]:
+                    - /url: /docs
+                    - button "Biblioteca Digital" [ref=e874]:
+                      - img
+                      - text: Biblioteca Digital
+              - generic [ref=e875]:
+                - heading "NubiWallet" [level=3] [ref=e876]:
+                  - img [ref=e877]
+                  - text: NubiWallet
+                - generic [ref=e880]:
+                  - generic [ref=e881]:
+                    - paragraph [ref=e882]: Balance Total
+                    - paragraph [ref=e883]: $12,450.00 TCEP
+                  - generic [ref=e884]:
+                    - link "Depositar" [ref=e885] [cursor=pointer]:
+                      - /url: /monetization
+                      - button "Depositar" [ref=e886]:
+                        - img
+                        - text: Depositar
+                    - link "Retirar" [ref=e887] [cursor=pointer]:
+                      - /url: /monetization
+                      - button "Retirar" [ref=e888]:
+                        - img
+                        - text: Retirar
+                    - link "Historial" [ref=e889] [cursor=pointer]:
+                      - /url: /economy
+                      - button "Historial" [ref=e890]:
+                        - img
+                        - text: Historial
+                    - link "Inversiones" [ref=e891] [cursor=pointer]:
+                      - /url: /monetization
+                      - button "Inversiones" [ref=e892]:
+                        - img
+                        - text: Inversiones
+              - generic [ref=e893]:
+                - heading "Membresías Premium" [level=3] [ref=e894]:
+                  - img [ref=e895]
+                  - text: Membresías Premium
+                - generic [ref=e897]:
+                  - link "TAMV Basic $9.99/mes" [ref=e898] [cursor=pointer]:
+                    - /url: /monetization
+                    - generic [ref=e899]:
+                      - generic [ref=e900]:
+                        - img [ref=e901]
+                        - generic [ref=e903]: TAMV Basic
+                      - paragraph [ref=e904]: $9.99/mes
+                  - link "TAMV Pro $19.99/mes" [ref=e905] [cursor=pointer]:
+                    - /url: /monetization
+                    - generic [ref=e906]:
+                      - generic [ref=e907]:
+                        - img [ref=e908]
+                        - generic [ref=e910]: TAMV Pro
+                      - paragraph [ref=e911]: $19.99/mes
+                  - link "TAMV Enterprise $49.99/mes" [ref=e912] [cursor=pointer]:
+                    - /url: /monetization
+                    - generic [ref=e913]:
+                      - generic [ref=e914]:
+                        - img [ref=e915]
+                        - generic [ref=e917]: TAMV Enterprise
+                      - paragraph [ref=e918]: $49.99/mes
