@@ -20,9 +20,9 @@ interface CinematicIntroProps {
 
 const ISABELLA_LINES: { text: string; duration: number }[] = [
   { text: "PROTOCOLO DE INMERSIÓN ACTIVADO...", duration: 2800 },
-  { text: "BIENVENIDO A UNA NUEVA ERA DIGITAL.", duration: 3500 },
-  { text: "LATINOAMÉRICA HA DESPERTADO.", duration: 3000 },
-  { text: "TAMV MD-X4™ · ECOSISTEMA CIVILIZATORIO NEXT-GEN", duration: 4000 },
+  { text: "TAMV ONLINE ORGULLOSAMENTE LATINOAMERICANOS.", duration: 4500 },
+  { text: "PROYECTO DEDICADO A REINA TREJO SERRANO", duration: 3000 },
+  { text: "SONRIE TU OVEJA NEGRA LO LOGRO, TE QUIERO MA´", duration: 4500 },
 ];
 
 // ============================================================================
@@ -31,7 +31,7 @@ const ISABELLA_LINES: { text: string; duration: number }[] = [
 
 function QuantumParticlesBurst({ phase }: { phase: Phase }) {
   const ref = useRef<THREE.Points>(null);
-  const count = 7000;
+  const count = 7500;
 
   const positions = useRef(new Float32Array(count * 3));
   const velocities = useRef(new Float32Array(count * 3));
@@ -192,12 +192,12 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
   const [displayedLines, setDisplayedLines] = useState<string[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const totalDuration = ISABELLA_LINES.reduce((sum, l) => sum + l.duration, 0) + 5000;
+  const totalDuration = ISABELLA_LINES.reduce((sum, l) => sum + l.duration, 0) + 6000;
 
   const initAudio = useCallback(async () => {
     try {
       const audio = new Audio(introAudio);
-      audio.volume = 0.7;
+      audio.volume = 0.9;
       audio.loop = false;
       audioRef.current = audio;
       await audio.play();
@@ -212,18 +212,18 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
 
     const phases: { name: Phase; delay: number }[] = [
       { name: "start", delay: 0 },
-      { name: "particles", delay: 900 },
-      { name: "explosion", delay: 3700 },
-      { name: "universe", delay: 5500 },
-      { name: "logo", delay: 7500 },
-      { name: "message", delay: 9500 },
+      { name: "particles", delay: 1000 },
+      { name: "explosion", delay: 3900 },
+      { name: "universe", delay: 6500 },
+      { name: "logo", delay: 7800 },
+      { name: "message", delay: 10000 },
     ];
 
     phases.forEach(({ name, delay }) => {
       timeouts.push(window.setTimeout(() => setPhase(name), delay));
     });
 
-    let lineDelay = 9000;
+    let lineDelay = 10000;
     ISABELLA_LINES.forEach((line, index) => {
       timeouts.push(
         window.setTimeout(() => {
@@ -245,7 +245,7 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
-      window.setTimeout(onComplete, 600);
+      window.setTimeout(onComplete, 900);
     }, totalDuration);
 
     return () => {
@@ -278,8 +278,8 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
       <div
         className="absolute inset-0 pointer-events-none mix-blend-screen"
         style={{
-          background: `radial-gradient(circle at 50% 50%, rgba(0,217,255,${
-            phase === "explosion" ? 0.2 : 0.08
+          background: `radial-gradient(circle at 50% 50%, rgba(0,257,255,${
+            phase === "explosion" ? 0.5 : 0.10
           }) 0%, transparent 60%)`,
           transition: "background 1s ease",
         }}
@@ -313,7 +313,7 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
       {/* HUD frame */}
       <div className="absolute inset-0 pointer-events-none z-10">
         <div className="absolute inset-[18px] border border-white/5 rounded-[22px] shadow-[0_0_0_1px_rgba(0,217,255,0.12)]" />
-        <div className="absolute inset-x-[18px] top-[18px] flex justify-between text-[10px] tracking-[0.25em] uppercase text-white/20 px-4">
+        <div className="absolute inset-x-[20px] top-[20px] flex justify-between text-[15px] tracking-[0.25em] uppercase text-white/20 px-4">
           <span>TAMV MD-X4™ · ISABELLA CHANNEL</span>
           <span>PROTOCOL: IMMERSION · STATUS: ONLINE</span>
         </div>
