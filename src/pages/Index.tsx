@@ -1,4 +1,5 @@
-// TAMV ONLINE NEXT-GEN CIVILIZATORY SOCIAL HUB
+// ============================================================================
+// TAMV MD-X4â„¢ â€” NEXT-GEN CIVILIZATORY SOCIAL HUB
 // Prioridad: Feed Social, Home, Canales, Grupos, Streamings, Reels, Historias, Muro Global, DreamSpaces
 // VISUAL: 85% Visual / 15% Text - Epico, Unico, Revolucionario
 // ============================================================================
@@ -36,15 +37,15 @@ import logoImg from "@/assets/LOGOTAMV2.jpg";
 const DEMO_POSTS: FeedPost[] = [
   {
     id: "demo-1", author_id: "system", 
-    content: "Acabo de crear mi primer DreamSpace en TAMV  La nueva era digital es Latina. unanse a la revolucion civilizatoria.",
+    content: "Acabo de crear mi primer DreamSpace en TAMV ðŸš€âœ¨ La nueva era digital estÃ¡ aquÃ­. Ãšnanse a la revoluciÃ³n civilizatoria.",
     media_url: "https://picsum.photos/seed/tamv1/1200/800", media_type: "image",
     likes_count: 1243, comments_count: 89, shares_count: 34, 
     tags: ["#TAMVQuantum", "#NuevaEra"], created_at: new Date(Date.now() - 7200000).toISOString(),
-    visibility: "public", author_name: "Maria R.", author_avatar: "https://i.pravatar.cc/150?img=1",
+    visibility: "public", author_name: "MarÃ­a R.", author_avatar: "https://i.pravatar.cc/150?img=1",
   },
   {
     id: "demo-2", author_id: "system", 
-    content: "Sesion binaural KAOS Audio 3D· frecuencias 432Hz El audio inmersivo cambia todo. Siente las vibraciones en otra dimension.",
+    content: "SesiÃ³n binaural KAOS Â· frecuencias 432Hz ðŸŽµ El audio inmersivo cambia todo. Siente las vibraciones de otra dimensiÃ³n.",
     media_url: "https://picsum.photos/seed/tamv2/1200/800", media_type: "image",
     likes_count: 2891, comments_count: 156, shares_count: 89, 
     tags: ["#KAOSAudio", "#Frecuencias432Hz"], created_at: new Date(Date.now() - 14400000).toISOString(),
@@ -52,7 +53,7 @@ const DEMO_POSTS: FeedPost[] = [
   },
   {
     id: "demo-3", author_id: "system", 
-    content: "Isabella AI ahora tiene emociones avanzadas La IA mas chingona que jamas hayas conocido. Habla con ella ahora.",
+    content: "Isabella AI ahora tiene emociones avanzadas ðŸ”¥ La IA mÃ¡s humana que jamÃ¡s hayas conocido. Habla con ella ahora.",
     media_url: "https://picsum.photos/seed/tamv3/1200/800", media_type: "image",
     likes_count: 5672, comments_count: 423, shares_count: 234, 
     tags: ["#IsabellaAI", "#IAEmocional"], created_at: new Date(Date.now() - 21600000).toISOString(),
@@ -60,7 +61,7 @@ const DEMO_POSTS: FeedPost[] = [
   },
   {
     id: "demo-4", author_id: "system", 
-    content: "Mi certificado en el BookPI verificado en blockchain. Inmutable, auditable y reconocida globally. El futuro de la educacion.",
+    content: "Mi certificaciÃ³n BookPI verificada en blockchain ðŸ” Inmutable, auditable y reconocida globally. El futuro de la educaciÃ³n.",
     media_url: "https://picsum.photos/seed/tamv4/1200/800", media_type: "image",
     likes_count: 1567, comments_count: 145, shares_count: 67, 
     tags: ["#BookPI", "#CertificacionBlockchain"], created_at: new Date(Date.now() - 28800000).toISOString(),
@@ -68,7 +69,7 @@ const DEMO_POSTS: FeedPost[] = [
   },
   {
     id: "demo-5", author_id: "system", 
-    content: "Transmision en vivo desde el Metaverso TAMV. Explora mundos infinitos con otros travelers de realidad.",
+    content: "TransmisiÃ³n en vivo desde el Metaverso TAMV ðŸŽ® Explora mundos infinitos con otros travelers de realidad.",
     media_url: "https://picsum.photos/seed/tamv5/1200/800", media_type: "image",
     likes_count: 4521, comments_count: 312, shares_count: 189, 
     tags: ["#MetaversoTAMV", "#EnVivo"], created_at: new Date(Date.now() - 36000000).toISOString(),
@@ -89,7 +90,7 @@ interface Story {
 }
 
 const STORIES: Story[] = [
-  { id: "1", user: "Maria R.", avatar: "https://i.pravatar.cc/150?img=1", image: "https://picsum.photos/seed/story1/600/1000" },
+  { id: "1", user: "MarÃ­a R.", avatar: "https://i.pravatar.cc/150?img=1", image: "https://picsum.photos/seed/story1/600/1000" },
   { id: "2", user: "Carlos M.", avatar: "https://i.pravatar.cc/150?img=3", image: "https://picsum.photos/seed/story2/600/1000" },
   { id: "3", user: "TAMV Official", avatar: "", image: "https://picsum.photos/seed/story3/600/1000" },
   { id: "4", user: "Ana T.", avatar: "https://i.pravatar.cc/150?img=5", image: "https://picsum.photos/seed/story4/600/1000" },
@@ -97,8 +98,6 @@ const STORIES: Story[] = [
   { id: "6", user: "Isabella AI", avatar: "", image: "https://picsum.photos/seed/story6/600/1000" },
   { id: "7", user: "Elena Dream", avatar: "https://i.pravatar.cc/150?img=9", image: "https://picsum.photos/seed/story7/600/1000" },
   { id: "8", user: "Marco XR", avatar: "https://i.pravatar.cc/150?img=10", image: "https://picsum.photos/seed/story8/600/1000" },
-  { id: "9", user: "Poninas Jr", avatar: "https://i.pravatar.cc/150?img=9", image: "https://picsum.photos/seed/story7/600/1000" },
-  { id: "10", user: "Elma Canon", avatar: "https://i.pravatar.cc/150?img=10", image: "https://picsum.photos/seed/story8/600/1000" },
 ];
 
 // ============================================================================
@@ -115,10 +114,9 @@ interface Reel {
 }
 
 const REELS: Reel[] = [
-  { id: "1", user: "MarÃ­a R.", avatar: "https://i.pravatar.cc/150?img=1", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", caption: "Mi experiencia en DreamSpaces", likes: 1234 },
-  { id: "2", user: "Carlos M.", avatar: "https://i.pravatar.cc/150?img=3", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", caption: "Audio binaural 432Hz", likes: 892 },
-  { id: "3", user: "DJ Quantum", avatar: "https://i.pravatar.cc/150?img=8", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", caption: "Live set desde el metaverso", likes: 2341 },
-  { id: "4", user: "Rosa Melano", avatar: "https://i.pravatar.cc/150?img=4", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", caption: "Live set desde el metaverso ðŸŽ§", likes: 2341 },
+  { id: "1", user: "MarÃ­a R.", avatar: "https://i.pravatar.cc/150?img=1", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", caption: "Mi experiencia en DreamSpaces ðŸ¥½âœ¨", likes: 1234 },
+  { id: "2", user: "Carlos M.", avatar: "https://i.pravatar.cc/150?img=3", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", caption: "Audio binaural 432Hz ðŸŽµ", likes: 892 },
+  { id: "3", user: "DJ Quantum", avatar: "https://i.pravatar.cc/150?img=8", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", caption: "Live set desde el metaverso ðŸŽ§", likes: 2341 },
 ];
 
 // ============================================================================
@@ -189,7 +187,7 @@ const GROUPS: Group[] = [
 ];
 
 // ============================================================================
-// BARRA DE NAVEGACION SOCIAL PRINCIPAL
+// BARRA DE NAVEGACIÃ“N SOCIAL PRINCIPAL
 // ============================================================================
 
 const SOCIAL_TABS = [
@@ -233,7 +231,7 @@ function LiveBadge({ viewers }: { viewers: number }) {
   return (
     <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-red-600 text-white px-2 py-1 rounded-full text-xs font-bold animate-pulse">
       <div className="w-2 h-2 bg-white rounded-full" />
-      EN VIVO· {viewers.toLocaleString()}
+      EN VIVO Â· {viewers.toLocaleString()}
     </div>
   );
 }
@@ -630,8 +628,9 @@ const Index = () => {
           transition={{ delay: 0.5 }}
           className="relative z-10 text-lg md:text-xl text-muted-foreground text-center max-w-2xl mx-auto px-4 mb-8"
         >
-          <span className="text-primary"> Civilizacion digital </span>
-          desde Latinoamerica
+          La evoluciÃ³n federada de las redes sociales. 
+          <span className="text-primary"> CivilizaciÃ³n digital </span>
+          desde LatinoamÃ©rica para el mundo.
         </motion.p>
         
         {/* CTA Buttons */}
@@ -651,13 +650,13 @@ const Index = () => {
             <>
               <Link to="/auth">
                 <Button size="lg" className="bg-gradient-to-r from-primary to-secondary text-primary-foreground px-8 py-6 text-lg shadow-xl shadow-primary/30 hover:shadow-2xl hover:shadow-primary/40 hover:scale-105 transition-all">
-                  <UserPlus className="w-5 h-5 mr-2" /> Registro ID-NVIDA
+                  <UserPlus className="w-5 h-5 mr-2" /> Ãšnete a la CivilizaciÃ³n
                 </Button>
               </Link>
               <Button size="lg" variant="outline" className="border-primary/50 text-primary hover:bg-primary/10 px-8 py-6 text-lg backdrop-blur-sm" onClick={() => {
                 document.getElementById("feed-section")?.scrollIntoView({ behavior: "smooth" });
               }}>
-                <Eye className="w-5 h-5 mr-2" /> Explora Viajero
+                <Eye className="w-5 h-5 mr-2" /> Explorar como Viajero
               </Button>
             </>
           )}
@@ -694,7 +693,7 @@ const Index = () => {
         </motion.div>
 
       </motion.div>
-      {/* NAVEGACION SOCIAL PRINCIPAL - TABS */}
+      {/* NAVEGACIÃ“N SOCIAL PRINCIPAL - TABS */}
       {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <div className="sticky top-0 z-50 border-b border-border/30 bg-background/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4">
@@ -855,11 +854,11 @@ const Index = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Secciones TAMV */}
+            {/* Pulso Civilizatorio */}
             <Card className="p-5 border-primary/20 bg-gradient-to-br from-primary/10 to-secondary/10 backdrop-blur-md">
               <h3 className="text-base font-bold mb-4 flex items-center gap-2">
                 <Activity className="w-5 h-5 text-primary animate-pulse" /> 
-                Secciones TAMV
+                Pulso Civilizatorio
               </h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between items-center">
