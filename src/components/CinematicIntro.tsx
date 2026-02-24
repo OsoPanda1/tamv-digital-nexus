@@ -1,6 +1,6 @@
 // ============================================================================
-// TAMV MD-X4™ - Epic Quantum Cinematic Intro v3.1
-// Más grande, más largo (+~15–20s), más épico.
+// TAMV MD-X4™ — CINEMATIC GENESIS INTRO v5.0
+// PODER · LIDERAZGO · MAGIA — La Entrada al Mundo TAMV
 // ============================================================================
 
 import { useEffect, useRef, useState, useCallback } from "react";
@@ -11,46 +11,75 @@ import { motion, AnimatePresence } from "framer-motion";
 import introAudio from "@/assets/intro.mp3";
 import logoImg from "@/assets/LOGOTAMV2.jpg";
 
-type Phase = "start" | "particles" | "explosion" | "universe" | "logo" | "message";
+// ─── Phase machine ───────────────────────────────────────────────────────────
+type Phase =
+  | "permission"   // Black screen + button
+  | "awakening"    // Dark pulse / heartbeat
+  | "ignition"     // Energy builds
+  | "explosion"    // Quantum big bang
+  | "cosmos"       // Stars + particles fly
+  | "crown"        // Leadership crown moment
+  | "logo"         // Logo reveal
+  | "message"      // Isabella lines
+  | "done";
 
 interface CinematicIntroProps {
   onComplete: () => void;
   skipEnabled?: boolean;
 }
 
+// ─── Isabella narrative ──────────────────────────────────────────────────────
 const ISABELLA_LINES: { text: string; duration: number }[] = [
-  { text: "PROTOCOLO DE INMERSIÓN ACTIVADO...", duration: 3500 },
-  { text: "TAMV ONLINE · ORGULLOSAMENTE LATINOAMERICANOS.", duration: 5500 },
-  { text: "PROYECTO DEDICADO A REINA TREJO SERRANO.", duration: 4200 },
-  { text: "SONRÍE: TU OVEJA NEGRA LO LOGRÓ. TE QUIERO, MA'.", duration: 5800 },
+  { text: "PROTOCOLO DE INMERSIÓN ACTIVADO...", duration: 3000 },
+  { text: "TAMV ONLINE · ORGULLOSAMENTE LATINOAMERICANOS.", duration: 4500 },
+  { text: "PROYECTO DEDICADO A REINA TREJO SERRANO.", duration: 4000 },
+  { text: "SONRÍE: TU OVEJA NEGRA LO LOGRÓ. TE QUIERO, MA'.", duration: 5000 },
 ];
 
-// ============================================================================
-// 3D Components
-// ============================================================================
+// ─── Color palette ───────────────────────────────────────────────────────────
+const C = {
+  gold:   "#FFD700",
+  cyan:   "#00D9FF",
+  purple: "#9D4EDD",
+  white:  "#FFFFFF",
+  magenta:"#FF2D78",
+};
 
-function QuantumParticlesBurst({ phase }: { phase: Phase }) {
+// ============================================================================
+// 3-D: Quantum Particle Field
+// ============================================================================
+function QuantumField({ phase }: { phase: Phase }) {
   const ref = useRef<THREE.Points>(null);
-  const count = 9000;
-
-  const positions = useRef(new Float32Array(count * 3));
-  const velocities = useRef(new Float32Array(count * 3));
+  const COUNT = 12000;
+  const positions = useRef(new Float32Array(COUNT * 3));
+  const velocities = useRef(new Float32Array(COUNT * 3));
+  const colors = useRef(new Float32Array(COUNT * 3));
 
   useEffect(() => {
-    for (let i = 0; i < count; i++) {
+    const palette = [
+      new THREE.Color(C.cyan),
+      new THREE.Color(C.purple),
+      new THREE.Color(C.gold),
+      new THREE.Color(C.magenta),
+    ];
+    for (let i = 0; i < COUNT; i++) {
       const i3 = i * 3;
       const theta = Math.random() * Math.PI * 2;
-      const phi = Math.random() * Math.PI;
-      const r = 0.25 + Math.random() * 2.8;
-
-      positions.current[i3] = r * Math.sin(phi) * Math.cos(theta);
+      const phi = Math.acos(2 * Math.random() - 1);
+      const r = 0.3 + Math.random() * 3.5;
+      positions.current[i3]     = r * Math.sin(phi) * Math.cos(theta);
       positions.current[i3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       positions.current[i3 + 2] = r * Math.cos(phi);
 
-      const baseVel = 0.06 + Math.random() * 0.08;
-      velocities.current[i3] = (Math.random() - 0.5) * baseVel;
-      velocities.current[i3 + 1] = (Math.random() - 0.5) * baseVel;
-      velocities.current[i3 + 2] = (Math.random() - 0.5) * baseVel;
+      const spd = 0.04 + Math.random() * 0.1;
+      velocities.current[i3]     = (Math.random() - 0.5) * spd;
+      velocities.current[i3 + 1] = (Math.random() - 0.5) * spd;
+      velocities.current[i3 + 2] = (Math.random() - 0.5) * spd;
+
+      const col = palette[Math.floor(Math.random() * palette.length)];
+      colors.current[i3]     = col.r;
+      colors.current[i3 + 1] = col.g;
+      colors.current[i3 + 2] = col.b;
     }
   }, []);
 
@@ -61,365 +90,886 @@ function QuantumParticlesBurst({ phase }: { phase: Phase }) {
     const posAttr = geom.getAttribute("position") as THREE.BufferAttribute;
     const arr = posAttr.array as Float32Array;
 
-    const isExploding =
-      phase === "explosion" || phase === "universe" || phase === "logo" || phase === "message";
+    const flying =
+      phase === "explosion" || phase === "cosmos" || phase === "crown" ||
+      phase === "logo" || phase === "message";
 
-    const speed = isExploding ? 0.27 : 0.018;
+    const speed = flying ? 0.32 : 0.015;
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < COUNT; i++) {
       const i3 = i * 3;
-      arr[i3] += velocities.current[i3] * speed;
+      arr[i3]     += velocities.current[i3]     * speed;
       arr[i3 + 1] += velocities.current[i3 + 1] * speed;
       arr[i3 + 2] += velocities.current[i3 + 2] * speed;
     }
-
     posAttr.needsUpdate = true;
 
-    ref.current.rotation.y = t * 0.2;
-    ref.current.rotation.x = Math.sin(t * 0.5) * 0.25;
+    ref.current.rotation.y = t * 0.18;
+    ref.current.rotation.x = Math.sin(t * 0.4) * 0.22;
   });
 
-  return (
+  const isVisible = phase !== "permission";
+
+  return isVisible ? (
     <Points ref={ref} positions={positions.current} stride={3} frustumCulled={false}>
       <PointMaterial
         transparent
-        color="#8CF7FF"
-        size={0.04}
+        vertexColors
+        size={0.045}
         sizeAttenuation
         depthWrite={false}
-        opacity={0.95}
+        opacity={0.92}
         blending={THREE.AdditiveBlending}
       />
     </Points>
-  );
+  ) : null;
 }
 
-function EnergySphere({ phase }: { phase: Phase }) {
-  const meshRef = useRef<THREE.Mesh>(null);
+// ============================================================================
+// 3-D: Sacred Geometry — icosahedron power core
+// ============================================================================
+function PowerCore({ phase }: { phase: Phase }) {
+  const outer = useRef<THREE.Mesh>(null);
+  const inner = useRef<THREE.Mesh>(null);
+  const ring1 = useRef<THREE.Mesh>(null);
+  const ring2 = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
-    if (!meshRef.current) return;
     const t = state.clock.elapsedTime;
+    if (!outer.current || !inner.current) return;
 
-    const targetScale =
-      phase === "start"
-        ? 0.9
-        : phase === "particles"
-        ? 1.9
-        : phase === "explosion"
-        ? 5
-        : 0;
+    const target =
+      phase === "awakening" ? 0.6
+      : phase === "ignition" ? 1.4
+      : phase === "explosion" ? 7
+      : 0;
 
-    const current = meshRef.current.scale.x || 0.001;
-    const newScale = current + (targetScale - current) * 0.055;
+    const cur = outer.current.scale.x || 0.001;
+    const ns = cur + (target - cur) * 0.06;
+    outer.current.scale.set(ns, ns, ns);
+    inner.current.scale.set(ns * 0.62, ns * 0.62, ns * 0.62);
 
-    meshRef.current.scale.set(newScale, newScale, newScale);
-    meshRef.current.rotation.y = t * 0.75;
-    meshRef.current.rotation.x = t * 0.45;
+    outer.current.rotation.y = t * 0.9;
+    outer.current.rotation.x = t * 0.55;
+    inner.current.rotation.y = -t * 1.2;
+    inner.current.rotation.z = t * 0.7;
+
+    if (ring1.current) {
+      ring1.current.rotation.z = t * 1.3;
+      ring1.current.rotation.x = Math.PI / 4 + Math.sin(t * 0.5) * 0.3;
+    }
+    if (ring2.current) {
+      ring2.current.rotation.z = -t * 0.9;
+      ring2.current.rotation.y = Math.PI / 3 + Math.cos(t * 0.4) * 0.3;
+    }
   });
 
-  if (phase === "universe" || phase === "logo" || phase === "message") return null;
+  if (
+    phase === "permission" || phase === "cosmos" || phase === "crown" ||
+    phase === "logo" || phase === "message" || phase === "done"
+  ) return null;
 
   return (
-    <Float speed={2.6} rotationIntensity={0.8} floatIntensity={0.8}>
-      <mesh ref={meshRef}>
-        <icosahedronGeometry args={[1, 5]} />
+    <Float speed={2} rotationIntensity={0.5} floatIntensity={0.6}>
+      <mesh ref={outer}>
+        <icosahedronGeometry args={[1, 4]} />
         <meshStandardMaterial
-          color="#00D9FF"
-          emissive="#00D9FF"
-          emissiveIntensity={2.3}
+          color={C.gold}
+          emissive={C.gold}
+          emissiveIntensity={2.8}
           wireframe
           transparent
-          opacity={0.6}
+          opacity={0.65}
         />
+      </mesh>
+      <mesh ref={inner}>
+        <octahedronGeometry args={[1, 2]} />
+        <meshStandardMaterial
+          color={C.cyan}
+          emissive={C.cyan}
+          emissiveIntensity={3.5}
+          wireframe
+          transparent
+          opacity={0.8}
+        />
+      </mesh>
+      <mesh ref={ring1}>
+        <torusGeometry args={[1.6, 0.025, 16, 120]} />
+        <meshBasicMaterial color={C.purple} transparent opacity={0.7} />
+      </mesh>
+      <mesh ref={ring2}>
+        <torusGeometry args={[2.1, 0.018, 16, 120]} />
+        <meshBasicMaterial color={C.magenta} transparent opacity={0.55} />
       </mesh>
     </Float>
   );
 }
 
-function Shockwave({ phase }: { phase: Phase }) {
-  const meshRef = useRef<THREE.Mesh>(null);
+// ============================================================================
+// 3-D: Shockwave rings
+// ============================================================================
+function ShockwaveRings({ phase }: { phase: Phase }) {
+  const refs = [
+    useRef<THREE.Mesh>(null),
+    useRef<THREE.Mesh>(null),
+    useRef<THREE.Mesh>(null),
+  ];
+  const offsets = [0, 0.45, 0.9];
 
   useFrame((state) => {
-    if (!meshRef.current) return;
     const t = state.clock.elapsedTime;
-
-    const base = phase === "explosion" ? 1 : 0;
-    const pulse = phase === "explosion" ? 1 + Math.sin(t * 3.2) * 0.18 : 0;
-    const radius = base * 4.3 * pulse;
-
-    meshRef.current.scale.set(radius, radius, radius);
-    // @ts-expect-error - opacity is not in the typed material properties but exists at runtime
-    meshRef.current.material.opacity = phase === "explosion" ? 0.2 : 0;
+    refs.forEach((ref, i) => {
+      if (!ref.current) return;
+      const active = phase === "explosion" || phase === "cosmos";
+      const pulse = active ? 1 + Math.sin(t * 2.8 + offsets[i] * 4) * 0.25 : 0;
+      const s = active ? (1.5 + i * 1.8) * pulse : 0;
+      ref.current.scale.set(s, s, s);
+      // @ts-expect-error runtime opacity access
+      ref.current.material.opacity = active ? 0.18 - i * 0.04 : 0;
+    });
   });
 
-  if (phase !== "explosion") return null;
+  if (phase !== "explosion" && phase !== "cosmos") return null;
 
-  return (
-    <mesh ref={meshRef}>
-      <ringGeometry args={[1.3, 1.5, 72]} />
-      <meshBasicMaterial
-        color="#00D9FF"
-        transparent
-        opacity={0.2}
-        side={THREE.DoubleSide}
-      />
-    </mesh>
-  );
-}
-
-function CinematicScene({ phase }: { phase: Phase }) {
   return (
     <>
-      <ambientLight intensity={0.28} />
-      <pointLight position={[10, 10, 10]} intensity={2.6} color="#00D9FF" />
-      <pointLight position={[-10, -10, -10]} intensity={1.3} color="#3E7EA3" />
-      <Stars radius={140} depth={80} count={10000} factor={4.2} saturation={0} fade speed={1.25} />
-      <QuantumParticlesBurst phase={phase} />
-      <Shockwave phase={phase} />
-      <EnergySphere phase={phase} />
+      {refs.map((ref, i) => (
+        <mesh key={i} ref={ref}>
+          <ringGeometry args={[1.2, 1.38, 80]} />
+          <meshBasicMaterial
+            color={i === 0 ? C.gold : i === 1 ? C.cyan : C.purple}
+            transparent
+            opacity={0.15}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      ))}
     </>
   );
 }
 
 // ============================================================================
-// Main Component
+// 3-D: Crown of Leadership
 // ============================================================================
+function LeadershipCrown({ phase }: { phase: Phase }) {
+  const group = useRef<THREE.Group>(null);
 
+  useFrame((state) => {
+    if (!group.current) return;
+    const t = state.clock.elapsedTime;
+    const visible = phase === "crown" || phase === "logo" || phase === "message";
+    const targetY = visible ? 2.5 : 5;
+    group.current.position.y += (targetY - group.current.position.y) * 0.07;
+    group.current.rotation.y = t * 0.5;
+
+    const s = visible ? 1 : 0;
+    group.current.scale.x += (s - group.current.scale.x) * 0.08;
+    group.current.scale.y += (s - group.current.scale.y) * 0.08;
+    group.current.scale.z += (s - group.current.scale.z) * 0.08;
+  });
+
+  const SPIKE_ANGLES = [0, 60, 120, 180, 240, 300].map((d) => (d * Math.PI) / 180);
+
+  return (
+    <group ref={group} position={[0, 5, 0]}>
+      {/* Crown base ring */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[1.1, 0.09, 16, 80]} />
+        <meshStandardMaterial color={C.gold} emissive={C.gold} emissiveIntensity={4} />
+      </mesh>
+      {/* Crown spikes */}
+      {SPIKE_ANGLES.map((angle, i) => (
+        <mesh
+          key={i}
+          position={[Math.cos(angle) * 1.1, 0.3 + (i % 2 === 0 ? 0.55 : 0.2), Math.sin(angle) * 1.1]}
+        >
+          <coneGeometry args={[0.08, i % 2 === 0 ? 0.9 : 0.5, 8]} />
+          <meshStandardMaterial color={C.gold} emissive={C.gold} emissiveIntensity={3.5} />
+        </mesh>
+      ))}
+      {/* Center gem */}
+      <mesh position={[0, 0.3, 0]}>
+        <octahedronGeometry args={[0.28, 0]} />
+        <meshStandardMaterial
+          color={C.cyan}
+          emissive={C.cyan}
+          emissiveIntensity={5}
+          transparent
+          opacity={0.9}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// ============================================================================
+// 3-D: Magic rune circles
+// ============================================================================
+function MagicRunes({ phase }: { phase: Phase }) {
+  const g1 = useRef<THREE.Mesh>(null);
+  const g2 = useRef<THREE.Mesh>(null);
+  const g3 = useRef<THREE.Mesh>(null);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    const visible =
+      phase === "ignition" || phase === "explosion" || phase === "cosmos" ||
+      phase === "crown" || phase === "logo";
+
+    [g1, g2, g3].forEach((ref, i) => {
+      if (!ref.current) return;
+      const s = visible ? 1 : 0;
+      ref.current.scale.x += (s - ref.current.scale.x) * 0.07;
+      ref.current.scale.y += (s - ref.current.scale.y) * 0.07;
+      ref.current.scale.z += (s - ref.current.scale.z) * 0.07;
+      ref.current.rotation.z = t * (0.4 + i * 0.25) * (i % 2 === 0 ? 1 : -1);
+      ref.current.rotation.x = Math.sin(t * 0.3 + i) * 0.4;
+    });
+  });
+
+  return (
+    <>
+      <mesh ref={g1} position={[0, 0, 0]}>
+        <torusGeometry args={[2.5, 0.018, 12, 200]} />
+        <meshBasicMaterial color={C.gold} transparent opacity={0.45} />
+      </mesh>
+      <mesh ref={g2} position={[0, 0, 0]}>
+        <torusGeometry args={[3.2, 0.013, 12, 200]} />
+        <meshBasicMaterial color={C.purple} transparent opacity={0.35} />
+      </mesh>
+      <mesh ref={g3} position={[0, 0, 0]}>
+        <torusGeometry args={[3.9, 0.01, 12, 200]} />
+        <meshBasicMaterial color={C.cyan} transparent opacity={0.28} />
+      </mesh>
+    </>
+  );
+}
+
+// ============================================================================
+// 3-D Scene root
+// ============================================================================
+function CinematicScene({ phase }: { phase: Phase }) {
+  return (
+    <>
+      <ambientLight intensity={0.2} />
+      <pointLight position={[0, 0, 6]} intensity={4} color={C.gold} />
+      <pointLight position={[8, 8, -4]} intensity={2.5} color={C.cyan} />
+      <pointLight position={[-8, -6, -4]} intensity={2} color={C.purple} />
+      <Stars
+        radius={160}
+        depth={90}
+        count={12000}
+        factor={4.5}
+        saturation={0.2}
+        fade
+        speed={phase === "cosmos" || phase === "crown" ? 2.5 : 0.8}
+      />
+      <QuantumField phase={phase} />
+      <PowerCore phase={phase} />
+      <ShockwaveRings phase={phase} />
+      <LeadershipCrown phase={phase} />
+      <MagicRunes phase={phase} />
+    </>
+  );
+}
+
+// ============================================================================
+// PERMISSION SCREEN — the gate
+// ============================================================================
+function PermissionGate({ onAccept }: { onAccept: () => void }) {
+  const [hovered, setHovered] = useState(false);
+  const [pulse, setPulse] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setPulse((p) => p + 1), 50);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center overflow-hidden"
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 1.2 }}
+    >
+      {/* Breathing ambient glow */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        animate={{
+          background: [
+            "radial-gradient(circle at 50% 50%, rgba(157,78,221,0.04) 0%, transparent 65%)",
+            "radial-gradient(circle at 50% 50%, rgba(0,217,255,0.07) 0%, transparent 65%)",
+            "radial-gradient(circle at 50% 50%, rgba(255,215,0,0.05) 0%, transparent 65%)",
+            "radial-gradient(circle at 50% 50%, rgba(157,78,221,0.04) 0%, transparent 65%)",
+          ],
+        }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* Tiny star field */}
+      {[...Array(80)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full bg-white"
+          style={{
+            width: Math.random() * 2 + 0.5,
+            height: Math.random() * 2 + 0.5,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+          }}
+          animate={{ opacity: [0.05, 0.6, 0.05] }}
+          transition={{
+            duration: 2 + Math.random() * 4,
+            repeat: Infinity,
+            delay: Math.random() * 5,
+          }}
+        />
+      ))}
+
+      {/* Corner brackets — HUD frame */}
+      {["tl", "tr", "bl", "br"].map((pos) => (
+        <div
+          key={pos}
+          className="absolute w-12 h-12 pointer-events-none"
+          style={{
+            top: pos.startsWith("t") ? 24 : "auto",
+            bottom: pos.startsWith("b") ? 24 : "auto",
+            left: pos.endsWith("l") ? 24 : "auto",
+            right: pos.endsWith("r") ? 24 : "auto",
+            borderTop: pos.startsWith("t") ? "1px solid rgba(0,217,255,0.4)" : "none",
+            borderBottom: pos.startsWith("b") ? "1px solid rgba(0,217,255,0.4)" : "none",
+            borderLeft: pos.endsWith("l") ? "1px solid rgba(0,217,255,0.4)" : "none",
+            borderRight: pos.endsWith("r") ? "1px solid rgba(0,217,255,0.4)" : "none",
+          }}
+        />
+      ))}
+
+      {/* Top label */}
+      <motion.div
+        className="absolute top-8 text-[0.65rem] tracking-[0.5em] uppercase text-white/20 text-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8 }}
+      >
+        TAMV MD-X4™ · PROTOCOL GENESIS · v5.0
+      </motion.div>
+
+      {/* TAMV wordmark */}
+      <motion.div
+        className="relative z-10 flex flex-col items-center mb-16"
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 1.2, ease: "easeOut" }}
+      >
+        <motion.div
+          className="w-20 h-20 rounded-2xl overflow-hidden mb-6"
+          style={{
+            boxShadow: hovered
+              ? "0 0 60px rgba(255,215,0,0.5), 0 0 120px rgba(0,217,255,0.3)"
+              : "0 0 30px rgba(0,217,255,0.25)",
+          }}
+        >
+          <img src={logoImg} alt="TAMV" className="w-full h-full object-cover" />
+        </motion.div>
+
+        <motion.h1
+          className="text-5xl md:text-7xl font-black tracking-[0.4em] text-center"
+          style={{
+            background: "linear-gradient(135deg, #FFD700 0%, #00D9FF 45%, #9D4EDD 80%, #FFD700 100%)",
+            backgroundSize: "300% 300%",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+          animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          TAMV
+        </motion.h1>
+
+        <motion.p
+          className="mt-3 text-[0.7rem] md:text-xs tracking-[0.6em] uppercase text-white/35 text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+        >
+          ECOSISTEMA CIVILIZATORIO LATINOAMERICANO
+        </motion.p>
+      </motion.div>
+
+      {/* THE BUTTON */}
+      <motion.div
+        className="relative z-10 flex flex-col items-center gap-6"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.2, duration: 1, ease: "easeOut" }}
+      >
+        {/* Hint text */}
+        <motion.p
+          className="text-xs tracking-[0.4em] uppercase text-white/30 text-center"
+          animate={{ opacity: [0.3, 0.7, 0.3] }}
+          transition={{ duration: 2.5, repeat: Infinity }}
+        >
+          Para iniciar la experiencia de inmersión
+        </motion.p>
+
+        {/* Main CTA button */}
+        <motion.button
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          onClick={onAccept}
+          className="relative group cursor-pointer select-none"
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.94 }}
+        >
+          {/* Outer glow ring */}
+          <motion.div
+            className="absolute -inset-3 rounded-full pointer-events-none"
+            animate={{
+              boxShadow: [
+                "0 0 0px 0px rgba(255,215,0,0)",
+                "0 0 40px 8px rgba(255,215,0,0.35)",
+                "0 0 0px 0px rgba(255,215,0,0)",
+              ],
+            }}
+            transition={{ duration: 2.2, repeat: Infinity }}
+          />
+
+          {/* Button body */}
+          <div
+            className="relative px-10 py-5 rounded-full text-sm md:text-base font-bold tracking-[0.3em] uppercase overflow-hidden"
+            style={{
+              background: hovered
+                ? "linear-gradient(135deg, rgba(255,215,0,0.18) 0%, rgba(0,217,255,0.18) 50%, rgba(157,78,221,0.18) 100%)"
+                : "rgba(255,255,255,0.04)",
+              border: "1px solid",
+              borderColor: hovered ? "rgba(255,215,0,0.8)" : "rgba(255,215,0,0.4)",
+              color: hovered ? "#FFD700" : "rgba(255,255,255,0.7)",
+              backdropFilter: "blur(20px)",
+              boxShadow: hovered
+                ? "0 0 50px rgba(255,215,0,0.4), inset 0 0 30px rgba(255,215,0,0.1)"
+                : "0 0 20px rgba(255,215,0,0.1)",
+              transition: "all 0.3s ease",
+            }}
+          >
+            {/* Shimmer sweep */}
+            <motion.div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%)",
+              }}
+              animate={{ x: ["-100%", "200%"] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+            />
+            <span className="relative z-10 flex items-center gap-3">
+              <motion.span
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                className="text-lg"
+              >
+                ✦
+              </motion.span>
+              ACEPTAR PERMISOS DE INMERSIÓN
+              <motion.span
+                animate={{ rotate: [0, -360] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                className="text-lg"
+              >
+                ✦
+              </motion.span>
+            </span>
+          </div>
+        </motion.button>
+
+        {/* Sub hint */}
+        <motion.p
+          className="text-[0.6rem] tracking-[0.35em] uppercase text-white/18 text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2 }}
+        >
+          Experiencia inmersiva · Audio activado · 3D Habilitado
+        </motion.p>
+      </motion.div>
+
+      {/* Bottom credits */}
+      <motion.div
+        className="absolute bottom-8 flex flex-col items-center gap-1 text-[0.6rem] tracking-[0.4em] uppercase text-white/15"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+      >
+        <span>MSR · THE SOF · UTAMV · LATAM NODE</span>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// ============================================================================
+// MAIN COMPONENT
+// ============================================================================
 export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntroProps) {
-  const [phase, setPhase] = useState<Phase>("start");
+  const [phase, setPhase] = useState<Phase>("permission");
+  const [accepted, setAccepted] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentLineIndex, setCurrentLineIndex] = useState(-1);
   const [displayedLines, setDisplayedLines] = useState<string[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const timeoutsRef = useRef<number[]>([]);
+  const intervalRef = useRef<number | null>(null);
 
-  // Alargado (~+15–20s) respecto a tu versión anterior
-  const totalDuration = ISABELLA_LINES.reduce((sum, l) => sum + l.duration, 0) + 9000;
+  const totalDuration =
+    ISABELLA_LINES.reduce((s, l) => s + l.duration, 0) + 11000;
+
+  const clearAll = useCallback(() => {
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+    if (intervalRef.current) clearInterval(intervalRef.current);
+  }, []);
 
   const initAudio = useCallback(async () => {
     try {
       const audio = new Audio(introAudio);
-      audio.volume = 1.0;
-      audio.loop = false;
+      audio.volume = 0.9;
       audioRef.current = audio;
       await audio.play();
     } catch {
-      console.log("Audio autoplay blocked");
+      // autoplay blocked — silent fail
     }
   }, []);
 
-  useEffect(() => {
+  const handleAccept = useCallback(() => {
+    setAccepted(true);
     initAudio();
-    const timeouts: number[] = [];
 
-    // Fases, cada una extendida entre ~0.5 y ~1.5s
-    const phases: { name: Phase; delay: number }[] = [
-      { name: "start", delay: 0 },
-      { name: "particles", delay: 1500 }, // antes 1200
-      { name: "explosion", delay: 4800 }, // antes 4200
-      { name: "universe", delay: 8300 },  // antes 7200
-      { name: "logo", delay: 10400 },     // antes 9000
-      { name: "message", delay: 13200 },  // antes 11500
-    ];
+    const push = (fn: () => void, delay: number) => {
+      timeoutsRef.current.push(window.setTimeout(fn, delay));
+    };
 
-    phases.forEach(({ name, delay }) => {
-      timeouts.push(window.setTimeout(() => setPhase(name), delay));
-    });
+    // Phase timeline
+    push(() => setPhase("awakening"), 200);
+    push(() => setPhase("ignition"),  2200);
+    push(() => setPhase("explosion"), 4800);
+    push(() => setPhase("cosmos"),    7200);
+    push(() => setPhase("crown"),     9500);
+    push(() => setPhase("logo"),      11800);
+    push(() => setPhase("message"),   14000);
 
-    // Líneas: se desplazan acorde al nuevo timing
-    let lineDelay = 13200;
-    ISABELLA_LINES.forEach((line, index) => {
-      timeouts.push(
-        window.setTimeout(() => {
-          setCurrentLineIndex(index);
-          setDisplayedLines((prev) => [...prev, line.text]);
-        }, lineDelay)
-      );
+    // Isabella narrative
+    let lineDelay = 14000;
+    ISABELLA_LINES.forEach((line, idx) => {
+      push(() => {
+        setCurrentLineIndex(idx);
+        setDisplayedLines((prev) => [...prev, line.text]);
+      }, lineDelay);
       lineDelay += line.duration;
     });
 
-    const progressInterval = window.setInterval(() => {
-      setProgress((prev) => Math.min(prev + 100 / (totalDuration / 50), 100));
+    // Progress bar
+    intervalRef.current = window.setInterval(() => {
+      setProgress((p) => Math.min(p + 100 / (totalDuration / 50), 100));
     }, 50);
 
-    const completeTimeout = window.setTimeout(() => {
-      window.clearInterval(progressInterval);
+    // Completion
+    push(() => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
       setProgress(100);
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-      window.setTimeout(onComplete, 1100);
+      audioRef.current?.pause();
+      window.setTimeout(onComplete, 1000);
     }, totalDuration);
-
-    return () => {
-      timeouts.forEach((id) => window.clearTimeout(id));
-      window.clearInterval(progressInterval);
-      window.clearTimeout(completeTimeout);
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-    };
   }, [initAudio, onComplete, totalDuration]);
 
-  const handleSkip = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
+  const handleSkip = useCallback(() => {
+    clearAll();
+    audioRef.current?.pause();
     onComplete();
-  };
+  }, [clearAll, onComplete]);
+
+  useEffect(() => () => {
+    clearAll();
+    audioRef.current?.pause();
+  }, [clearAll]);
+
+  // ── Render: permission gate
+  if (!accepted) {
+    return (
+      <AnimatePresence>
+        <PermissionGate onAccept={handleAccept} />
+      </AnimatePresence>
+    );
+  }
+
+  // ── Render: cinematic sequence
+  const bgGlow = (() => {
+    if (phase === "awakening") return "rgba(157,78,221,0.15)";
+    if (phase === "ignition")  return "rgba(255,215,0,0.20)";
+    if (phase === "explosion") return "rgba(0,217,255,0.55)";
+    if (phase === "cosmos")    return "rgba(157,78,221,0.30)";
+    if (phase === "crown")     return "rgba(255,215,0,0.35)";
+    return "rgba(0,217,255,0.18)";
+  })();
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black overflow-hidden">
-      {/* 3D Canvas */}
-      <Canvas camera={{ position: [0, 0, 8], fov: 75 }} className="absolute inset-0">
+
+      {/* 3D canvas */}
+      <Canvas camera={{ position: [0, 0, 9], fov: 70 }} className="absolute inset-0">
         <CinematicScene phase={phase} />
       </Canvas>
 
-      {/* Radial glow + chromatic haze */}
-      <div
+      {/* Chromatic radial glow */}
+      <motion.div
         className="absolute inset-0 pointer-events-none mix-blend-screen"
-        style={{
-          background: `radial-gradient(circle at 50% 50%, rgba(0,247,255,${
-            phase === "explosion" ? 0.55 : 0.12
-          }) 0%, transparent 60%)`,
-          transition: "background 1s ease",
-        }}
+        animate={{ background: `radial-gradient(circle at 50% 50%, ${bgGlow} 0%, transparent 60%)` }}
+        transition={{ duration: 1.2 }}
       />
+
+      {/* Secondary colour wash */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-70"
+        className="absolute inset-0 pointer-events-none opacity-60"
         style={{
           background:
-            "radial-gradient(circle at 20% 0%, rgba(0,217,255,0.18) 0%, transparent 40%), radial-gradient(circle at 80% 100%, rgba(62,126,163,0.2) 0%, transparent 35%)",
+            "radial-gradient(circle at 20% 0%, rgba(255,215,0,0.12) 0%, transparent 40%), " +
+            "radial-gradient(circle at 80% 100%, rgba(157,78,221,0.15) 0%, transparent 38%)",
           mixBlendMode: "screen",
         }}
       />
 
-      {/* Scanlines + grain */}
+      {/* CRT scanlines */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.24]"
+        className="absolute inset-0 pointer-events-none opacity-[0.18]"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(to bottom, rgba(255,255,255,0.06) 0, rgba(255,255,255,0.03) 1px, transparent 2px)",
+            "repeating-linear-gradient(to bottom, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.02) 1px, transparent 2px)",
         }}
       />
+
+      {/* Film grain */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.13]"
+        className="absolute inset-0 pointer-events-none opacity-[0.10]"
         style={{
           backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E\")",
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E\")",
           mixBlendMode: "soft-light",
         }}
       />
 
       {/* HUD frame */}
       <div className="absolute inset-0 pointer-events-none z-10">
-        <div className="absolute inset-[18px] border border-white/6 rounded-[22px] shadow-[0_0_0_1px_rgba(0,217,255,0.15)]" />
-        <div className="absolute inset-x-[22px] top-[22px] flex justify-between text-[0.7rem] md:text-xs tracking-[0.35em] uppercase text-white/25 px-4">
-          <span>TAMV MD-X4™ · ISABELLA CHANNEL</span>
-          <span>PROTOCOL: IMMERSION · STATUS: ONLINE</span>
+        <div className="absolute inset-[18px] border border-white/[0.06] rounded-[22px] shadow-[0_0_0_1px_rgba(255,215,0,0.12)]" />
+        <div className="absolute inset-x-[26px] top-[26px] flex justify-between text-[0.65rem] tracking-[0.4em] uppercase text-white/20 px-2">
+          <span>TAMV MD-X4™ · GENESIS PROTOCOL</span>
+          <span>IMMERSION · ACTIVE</span>
         </div>
-        <div className="absolute inset-x-[22px] bottom-[22px] flex justify-between text-[0.6rem] md:text-[0.7rem] tracking-[0.35em] uppercase text-white/25 px-4">
+        <div className="absolute inset-x-[26px] bottom-[26px] flex justify-between text-[0.6rem] tracking-[0.4em] uppercase text-white/20 px-2">
           <span>LATAM NODE</span>
           <span>MSR · THE SOF · UTAMV</span>
         </div>
       </div>
 
-      {/* Logo Phase */}
+      {/* ── AWAKENING: pulsing heartbeat text ── */}
+      <AnimatePresence>
+        {phase === "awakening" && (
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center z-20"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          >
+            <motion.p
+              className="text-[0.8rem] md:text-sm tracking-[1em] uppercase font-mono"
+              style={{ color: "rgba(157,78,221,0.9)", textShadow: "0 0 40px rgba(157,78,221,0.8)" }}
+              animate={{ opacity: [0.3, 1, 0.3], scale: [0.98, 1.02, 0.98] }}
+              transition={{ duration: 1.4, repeat: Infinity }}
+            >
+              INICIALIZANDO...
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── IGNITION: power surge text ── */}
+      <AnimatePresence>
+        {phase === "ignition" && (
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center z-20"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          >
+            <motion.p
+              className="text-lg md:text-2xl tracking-[0.6em] uppercase font-black text-center"
+              style={{
+                background: "linear-gradient(90deg, #FFD700, #00D9FF, #FFD700)",
+                backgroundSize: "200% 100%",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+              animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              PODER · LIDERAZGO · MAGIA
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── EXPLOSION: flash overlay ── */}
+      <AnimatePresence>
+        {phase === "explosion" && (
+          <motion.div
+            className="absolute inset-0 z-30 pointer-events-none"
+            initial={{ opacity: 0.9 }}
+            animate={{ opacity: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.8 }}
+            style={{ background: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.95) 0%, rgba(0,217,255,0.5) 35%, transparent 65%)" }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* ── CROWN: leadership moment text ── */}
+      <AnimatePresence>
+        {phase === "crown" && (
+          <motion.div
+            className="absolute inset-0 flex items-end justify-center pb-56 z-20"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="text-center">
+              <motion.p
+                className="text-2xl md:text-4xl font-black tracking-[0.5em] uppercase"
+                style={{
+                  background: "linear-gradient(135deg, #FFD700 0%, #FFFFFF 50%, #FFD700 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  textShadow: "0 0 60px rgba(255,215,0,0.5)",
+                }}
+                animate={{ scale: [1, 1.04, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                ERES LÍDER
+              </motion.p>
+              <motion.p
+                className="mt-3 text-[0.75rem] tracking-[0.6em] uppercase text-white/40"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+              >
+                El mundo te espera
+              </motion.p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── LOGO PHASE ── */}
       <AnimatePresence>
         {(phase === "logo" || phase === "message") && (
           <motion.div
             className="absolute inset-0 flex flex-col items-center justify-center z-20"
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.88 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 1.1, ease: "easeOut" }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
           >
+            {/* Logo circle */}
             <motion.div
-              className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden mb-8 border-2 shadow-lg relative"
-              style={{
-                borderColor: "rgba(0,217,255,0.8)",
-                boxShadow:
-                  "0 0 40px rgba(0,217,255,0.6), 0 0 90px rgba(0,217,255,0.35), 0 0 160px rgba(0,217,255,0.3)",
-              }}
+              className="relative mb-8"
               animate={{ rotate: [0, 360] }}
-              transition={{ duration: 26, repeat: Infinity, ease: "linear" }}
+              transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
             >
-              <img src={logoImg} alt="TAMV" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 pointer-events-none mix-blend-overlay bg-[radial-gradient(circle_at_30%_0%,rgba(255,255,255,0.3)_0%,transparent_35%)]" />
+              {/* Outer orbit ring */}
+              <div
+                className="absolute -inset-4 rounded-full"
+                style={{
+                  border: "1px solid rgba(255,215,0,0.4)",
+                  boxShadow: "0 0 30px rgba(255,215,0,0.3), 0 0 60px rgba(0,217,255,0.2)",
+                }}
+              />
+              {/* Inner orbit ring */}
+              <div
+                className="absolute -inset-8 rounded-full"
+                style={{ border: "1px solid rgba(0,217,255,0.25)" }}
+              />
+              <motion.div
+                className="w-32 h-32 md:w-44 md:h-44 rounded-full overflow-hidden border-2"
+                style={{
+                  borderColor: "rgba(255,215,0,0.8)",
+                  boxShadow:
+                    "0 0 40px rgba(255,215,0,0.6), 0 0 90px rgba(0,217,255,0.4), 0 0 160px rgba(157,78,221,0.3)",
+                }}
+                animate={{ rotate: [0, -360] }}
+                transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
+              >
+                <img src={logoImg} alt="TAMV" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 pointer-events-none mix-blend-overlay bg-[radial-gradient(circle_at_30%_0%,rgba(255,255,255,0.25)_0%,transparent_40%)]" />
+              </motion.div>
             </motion.div>
 
+            {/* Title */}
             <motion.h1
-              className="text-6xl md:text-8xl font-black tracking-[0.4em] md:tracking-[0.5em] mb-5 text-center"
+              className="text-5xl md:text-8xl font-black tracking-[0.45em] md:tracking-[0.55em] mb-4 text-center"
               style={{
-                background:
-                  "linear-gradient(135deg, #00D9FF 0%, #3E7EA3 35%, #C1CBD5 70%, #FFFFFF 100%)",
+                background: "linear-gradient(135deg, #FFD700 0%, #00D9FF 35%, #9D4EDD 65%, #FFFFFF 100%)",
+                backgroundSize: "200% 200%",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
-                textShadow:
-                  "0 0 50px rgba(0,217,255,0.6), 0 0 120px rgba(0,217,255,0.45), 0 0 200px rgba(0,217,255,0.4)",
+                filter: "drop-shadow(0 0 30px rgba(255,215,0,0.5))",
               }}
+              animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+              transition={{ duration: 4, repeat: Infinity }}
               initial={{ y: 40, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4, duration: 1.0 }}
             >
               TAMV MD-X4™
             </motion.h1>
 
+            {/* Subtitle */}
             <motion.p
-              className="text-sm md:text-base tracking-[0.7em] uppercase text-white/50 text-center"
+              className="text-xs md:text-sm tracking-[0.7em] uppercase text-white/45 text-center"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.0, duration: 1.3 }}
+              transition={{ delay: 0.8, duration: 1.2 }}
             >
               ECOSISTEMA CIVILIZATORIO LATINOAMERICANO · NEXT-GEN
             </motion.p>
 
+            {/* Tag line */}
             <motion.div
-              className="mt-5 flex flex-col items-center gap-2 text-[0.75rem] md:text-sm text-white/35 tracking-[0.35em] uppercase"
-              initial={{ opacity: 0, y: 12 }}
+              className="mt-5 flex flex-col items-center gap-2 text-[0.7rem] md:text-xs text-white/30 tracking-[0.38em] uppercase"
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.4, duration: 0.9 }}
+              transition={{ delay: 1.3, duration: 0.9 }}
             >
-              <div className="flex items-center gap-3">
-                <span className="h-[1px] w-12 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-                <span>LATAM · MSR · THE SOF · UTAMV</span>
-                <span className="h-[1px] w-12 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+              <div className="flex items-center gap-4">
+                <span className="h-px w-10 bg-gradient-to-r from-transparent via-white/35 to-transparent" />
+                <span>PODER · LIDERAZGO · MAGIA</span>
+                <span className="h-px w-10 bg-gradient-to-r from-transparent via-white/35 to-transparent" />
               </div>
-              <span className="text-[0.7rem] md:text-xs tracking-[0.45em] text-white/40">
-                TAMV ONLINE · ORGULLOSAMENTE LATINOAMERICANOS
+              <span className="text-[0.6rem] tracking-[0.45em] text-white/20">
+                LATAM · MSR · THE SOF · UTAMV · ORGULLOSAMENTE LATINOAMERICANOS
               </span>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Isabella Narrative Lines */}
-      <div className="absolute bottom-24 left-0 right-0 z-30 px-8">
+      {/* ── ISABELLA NARRATIVE LINES ── */}
+      <div className="absolute bottom-28 left-0 right-0 z-30 px-8">
         <AnimatePresence>
           {displayedLines.length > 0 && (
             <motion.div
               className="max-w-4xl mx-auto text-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             >
               {displayedLines.map((line, i) => (
                 <motion.p
                   key={i}
                   className={`text-sm md:text-lg font-mono mb-2 md:mb-3 ${
-                    i === currentLineIndex ? "text-cyan-300" : "text-white/30"
+                    i === currentLineIndex ? "text-yellow-300" : "text-white/25"
                   }`}
                   initial={{ opacity: 0, y: 18 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
+                  transition={{ duration: 0.6 }}
                   style={
                     i === currentLineIndex
                       ? {
-                          textShadow:
-                            "0 0 26px rgba(0,217,255,0.75), 0 0 50px rgba(0,217,255,0.5)",
-                          letterSpacing: "0.3em",
+                          textShadow: "0 0 28px rgba(255,215,0,0.8), 0 0 56px rgba(255,215,0,0.45)",
+                          letterSpacing: "0.32em",
                         }
                       : { letterSpacing: "0.22em" }
                   }
@@ -432,42 +982,33 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
         </AnimatePresence>
       </div>
 
-      {/* Progress Bar */}
-      <div className="absolute bottom-8 left-8 right-8 z-30">
-        <div
-          className="h-2 rounded-full overflow-hidden"
-          style={{ background: "rgba(255,255,255,0.08)" }}
-        >
+      {/* ── PROGRESS BAR ── */}
+      <div className="absolute bottom-10 left-10 right-10 z-30">
+        <div className="h-[3px] rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
           <motion.div
             className="h-full rounded-full"
             style={{
               width: `${progress}%`,
-              background:
-                "linear-gradient(90deg, #00D9FF 0%, #3E7EA3 40%, #C1CBD5 80%, #FFFFFF 100%)",
-              boxShadow:
-                "0 0 14px rgba(0,217,255,0.7), 0 0 28px rgba(0,217,255,0.45), 0 0 48px rgba(0,217,255,0.3)",
+              background: "linear-gradient(90deg, #FFD700 0%, #00D9FF 40%, #9D4EDD 75%, #FFFFFF 100%)",
+              boxShadow: "0 0 16px rgba(255,215,0,0.7), 0 0 32px rgba(0,217,255,0.4)",
             }}
           />
         </div>
       </div>
 
-      {/* Skip Button */}
+      {/* ── SKIP BUTTON ── */}
       {skipEnabled && (
         <motion.button
-          className="absolute top-6 right-6 z-50 px-5 py-2.5 rounded-full text-[0.75rem] font-semibold border transition-all"
+          className="absolute top-6 right-6 z-50 px-5 py-2.5 rounded-full text-[0.72rem] font-semibold border transition-all"
           style={{
-            borderColor: "rgba(0,217,255,0.5)",
-            color: "rgba(198,241,255,0.9)",
+            borderColor: "rgba(255,215,0,0.4)",
+            color: "rgba(255,235,180,0.8)",
             background: "rgba(0,0,0,0.7)",
-            backdropFilter: "blur(14px)",
+            backdropFilter: "blur(16px)",
           }}
           onClick={handleSkip}
-          whileHover={{
-            scale: 1.1,
-            borderColor: "rgba(0,217,255,0.95)",
-            boxShadow: "0 0 28px rgba(0,217,255,0.8)",
-          }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.08, borderColor: "rgba(255,215,0,0.9)", boxShadow: "0 0 28px rgba(255,215,0,0.6)" }}
+          whileTap={{ scale: 0.94 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2 }}
