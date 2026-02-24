@@ -53,3 +53,10 @@
 
 ## THE SOF
 - `docs/sofreports/THESOF_STATE_REPORT.md`
+
+## Repo unification y auditoría
+- `docs/repo-unification/UNIFICATION_EXEC_SUMMARY.md`
+- `docs/repo-unification/INTEGRATION_WAVES.md`
+- `docs/repo-unification/REPO_TO_DOMAIN_MATRIX.md`
+- `docs/repo-unification/AUDITORIA_GENERAL_2026-02-24.md`
+
