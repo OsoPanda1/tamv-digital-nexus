@@ -6,30 +6,30 @@
 - `AGENTS.md`
 
 ## 01. Fundacionales
-- `docs/01_filosofia_tamv.md`
+- `docs/01_filosofia_tamv.md` *(pendiente)*
 
 ## 02. Arquitectura
-- `docs/02_arquitectura_tamv_mdx4.md`
+- `docs/02_arquitectura_tamv_mdx4.md` *(pendiente)*
 
 ## 03. Federados
-- `docs/03_federados_tamv.md`
+- `docs/03_federados_tamv.md` *(pendiente)*
 
 ## 07. IA
-- `docs/07_isabella_multiagente_y_boveda.md`
+- `docs/07_isabella_multiagente_y_boveda.md` *(pendiente)*
 
 ## 08. Seguridad
-- `docs/08_seguridad_sentinel_y_radares.md`
+- `docs/08_seguridad_sentinel_y_radares.md` *(pendiente)*
 
 ## 09. Motor visual
-- `docs/09_motor_mdx4_y_pipelines.md`
+- `docs/09_motor_mdx4_y_pipelines.md` *(pendiente)*
 
 ## 12–13. Jurídico y económico
-- `docs/12_juridico_tamv.md`
-- `docs/13_economico_financiero_tamv.md`
+- `docs/12_juridico_tamv.md` *(pendiente)*
+- `docs/13_economico_financiero_tamv.md` *(pendiente)*
 
 ## 20–21. Glosario y atlas
-- `docs/20_glosario_tamv.md`
-- `docs/21_atlas_tamv.md`
+- `docs/20_glosario_tamv.md` *(pendiente)*
+- `docs/21_atlas_tamv.md` *(pendiente)*
 
 ## DevHub
 - `docs/devhub/README.md`
@@ -53,9 +53,3 @@
 
 ## THE SOF
 - `docs/sofreports/THESOF_STATE_REPORT.md`
-
-## Unificación 177 repos
-- `docs/repo-unification/REPO_REGISTRY_177.csv`
-- `docs/repo-unification/REPO_TO_DOMAIN_MATRIX.md`
-- `docs/repo-unification/INTEGRATION_WAVES.md`
-- `docs/repo-unification/UNIFICATION_EXEC_SUMMARY.md`

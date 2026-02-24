@@ -18,3 +18,4 @@
 ## MD-X4 (estado actual en este repo)
 - Evidencia funcional parcial en componentes de render/escena (`QuantumCanvas`, `ThreeSceneManager`, `Metaverse`).
 - Requiere consolidar contrato formal de pipeline dual (datos/sensorial) en siguientes iteraciones.
+Documento en construcción según el Master Canon TAMV.

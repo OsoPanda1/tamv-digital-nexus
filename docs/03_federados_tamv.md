@@ -26,3 +26,4 @@ Este documento define la base de federación TAMV para convergencia de repositor
 - No inventar sistemas sin fuente verificable.
 - Cada alta de sistema requiere: owner, repositorio fuente, interfaz y riesgo.
 - Los sistemas conceptuales quedan marcados explícitamente como `conceptual`.
+Documento en construcción según el Master Canon TAMV.
