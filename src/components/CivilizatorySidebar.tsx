@@ -1,5 +1,5 @@
 // ============================================================================
-// TAMV MD-X4â"¢ - Civilizatory Sidebar
+// TAMV ONLINE - Civilizatory Sidebar
 // Elegant navigation with 21+ Federations
 // ============================================================================
 
@@ -38,12 +38,12 @@ interface NavSection {
 
 const navSections: NavSection[] = [
   {
-    title: 'NÃºcleo Central',
+    title: 'Nucleo Central',
     items: [
       { icon: Home, label: 'Dashboard', path: '/dashboard' },
       { icon: Brain, label: 'Isabella AI', path: '/isabella', federation: 'ISABELLA', highlight: true },
       { icon: Shield, label: 'Anubis Sentinel', path: '/anubis', federation: 'ANUBIS' },
-      { icon: Sparkles, label: 'Identidad CuÃ¡ntica', path: '/profile' },
+      { icon: User, label: 'Perfil de Usuario', path: '/profile' },
     ],
   },
   {
@@ -59,16 +59,16 @@ const navSections: NavSection[] = [
     title: 'Universidad',
     items: [
       { icon: BookOpen, label: 'Academia', path: '/university', federation: 'UTAMV' },
-      { icon: FileText, label: 'DocumentaciÃ³n', path: '/docs', federation: 'CRYSTAL' },
+      { icon: FileText, label: 'Documentacion', path: '/docs', federation: 'CRYSTAL' },
       { icon: BarChart3, label: 'Analytics', path: '/dashboard', federation: 'NOVA' },
     ],
   },
   {
-    title: 'EconomÃ­a',
+    title: 'Economia',
     items: [
-      { icon: DollarSign, label: 'MonetizaciÃ³n', path: '/monetization', badge: 'Pro' },
-      { icon: Crown, label: 'MembresÃ­as', path: '/monetization' },
-      { icon: TrendingUp, label: 'EconomÃ­a MSR', path: '/economy', federation: 'MSR', badge: 'TCEP' },
+      { icon: DollarSign, label: 'Monetizacion', path: '/monetization', badge: 'Pro' },
+      { icon: VIP, label: 'Membresias', path: '/monetization' },
+      { icon: TrendingUp, label: ' Blockchain MSR', path: '/economy', federation: 'MSR', badge: 'TCEP' },
     ],
   },
   {
@@ -76,7 +76,7 @@ const navSections: NavSection[] = [
     items: [
       { icon: Network, label: 'CITEMESH DAO', path: '/governance', federation: 'CITEMESH', highlight: true },
       { icon: FileText, label: 'BookPI', path: '/bookpi', federation: 'BOOKPI' },
-      { icon: Star, label: 'ID-NVIDA', path: '/profile', federation: 'STELLAR' },
+      { icon: DNA, label: 'ID-NVIDA', path: '/profile', federation: 'STELLAR' },
       { icon: AlertTriangle, label: 'Crisis Panel', path: '/crisis' },
       { icon: Settings, label: 'Admin', path: '/admin', badge: 'Admin' },
     ],
