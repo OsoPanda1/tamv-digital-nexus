@@ -1,3 +1,13 @@
+# TAMV Digital Nexus
+
+Repositorio objetivo para la convergencia funcional y documental del ecosistema TAMV (177 repos federados) en una base unificada, con gobierno por canon, trazabilidad y hardening operativo.
+
+## Estado de unificación
+- Se añadió base canónica en `docs/` para iniciar convergencia por olas sin romper módulos críticos.
+- Se incorporaron `SOUL.md` y `AGENTS.md` para bloquear desvíos de arquitectura/documentación.
+
+---
+
 # Welcome to your Lovable project
 
 ## Project info
