@@ -292,7 +292,7 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
         className="absolute inset-0 pointer-events-none opacity-70"
         style={{
           background:
-            "radial-gradient(circle at 20% 0%, rgba(0,217,255,0.18) 0%, transparent 40%), radial-gradient(circle at 80% 100%, rgba(62,126,163,0.2) 0%, transparent 45%)",
+            "radial-gradient(circle at 20% 0%, rgba(0,217,255,0.18) 0%, transparent 40%), radial-gradient(circle at 80% 100%, rgba(62,126,163,0.2) 0%, transparent 35%)",
           mixBlendMode: "screen",
         }}
       />
