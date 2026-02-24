@@ -993,7 +993,7 @@ const Index = () => {
               <div className="space-y-3">
                 <Link to="/monetization">
                   <Button variant="outline" size="sm" className="w-full border-green-500/30 text-green-400 hover:bg-green-500/20">
-                    <BuildingStore className="w-4 h-4 mr-2" /> Tienda Virtual
+                    <Store className="w-4 h-4 mr-2" /> Tienda Virtual
                   </Button>
                 </Link>
                 <Link to="/gifts">
