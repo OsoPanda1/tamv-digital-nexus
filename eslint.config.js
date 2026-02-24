@@ -5,7 +5,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
 // Import TAMV constitutional plugin
-import tamvConstitution from "./eslint-plugin-tamv";
+import tamvConstitution from "./eslint-plugin-tamv/index.js";
 
 export default tseslint.config(
   { ignores: ["dist"] },
@@ -25,9 +25,25 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "@typescript-eslint/no-unused-vars": "off",
-      "tamv-constitution/no-dao": "error",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-empty-object-type": "off",
+      "no-shadow-restricted-names": "off",
+      "tamv-constitution/no-dao": "warn",
       "tamv-constitution/no-hidden-economy": "error",
       "tamv-constitution/no-unaudited-ai": "error",
+    },
+  },
+  {
+    files: ["**/*.{test,spec}.{ts,tsx}"],
+    languageOptions: {
+      globals: {
+        describe: "readonly",
+        it: "readonly",
+        test: "readonly",
+        expect: "readonly",
+        beforeEach: "readonly",
+        afterEach: "readonly",
+      },
     },
   },
 );

@@ -51,7 +51,7 @@ const effectBase: Record<Effect, string> = {
  * Si usas objetos QuantumOptions, puedes usar temas, efectos, etc.
  */
 export function cn(...inputs: (ClassValue | QuantumOptions)[]): string {
-  let classes: ClassValue[] = [];
+  const classes: ClassValue[] = [];
   for (const input of inputs) {
     if (typeof input === "object" && !Array.isArray(input) && input !== null && "theme" in input) {
       const opts = input as QuantumOptions;

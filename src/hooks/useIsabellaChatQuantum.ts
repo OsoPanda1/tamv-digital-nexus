@@ -83,7 +83,6 @@ export function useIsabellaChatQuantum() {
         const decoder = new TextDecoder();
         let assistantMessage = "";
         let buffer = "";
-        let currentWordIndex = 0;
         const words: string[] = [];
 
         // Crear mensaje asistente inicial
