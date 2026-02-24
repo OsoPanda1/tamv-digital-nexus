@@ -1,62 +1,107 @@
 # TAMV_DOCUMENTATION_INDEX
 
+> **Última actualización:** 2026-02-24 · **Estado:** en construcción iterativa
+
 ## 00. Canon y gobierno documental
-- `docs/MASTER_CANON_OPENCLAW_TAMV.md`
-- `SOUL.md`
-- `AGENTS.md`
+- `docs/MASTER_CANON_OPENCLAW_TAMV.md` ✅ canon
+- `SOUL.md` ✅ canon
+- `AGENTS.md` ✅ canon
 
 ## 01. Fundacionales
 - `docs/01_filosofia_tamv.md` *(pendiente)*
 
-## 02. Arquitectura
-- `docs/02_arquitectura_tamv_mdx4.md` *(pendiente)*
+## 02. Arquitectura MD-X4
+- `docs/02_arquitectura_tamv_mdx4.md` ✅ stable — **vista completa: dominios, cells, MSR, Fusion Core, Nexus, flujos**
 
 ## 03. Federados
-- `docs/03_federados_tamv.md` *(pendiente)*
+- `docs/03_federados_tamv.md` ✅ draft
 
-## 07. IA
+## 07. IA / Isabella / THE SOF
 - `docs/07_isabella_multiagente_y_boveda.md` *(pendiente)*
+- `docs/modules/ia/ia_summary.md` ✅ draft
+- `docs/modules/ia/ia_internal.md` ✅ draft
+- `docs/modules/ia/ia_public.md` ✅ stable
+- `02_MODULOS/M05_IA_TAMVAI/INTERNO/ISABELLA-PRIME-SPEC.md` ✅ draft
+- `02_MODULOS/M05_IA_TAMVAI/INTERNO/QC-TAMV-01-v1.1.md` ✅ stable
 
-## 08. Seguridad
+## 08. Seguridad / Guardianías
 - `docs/08_seguridad_sentinel_y_radares.md` *(pendiente)*
+- `docs/modules/guardianias/guardianias_summary.md` ✅ stable
+- `docs/modules/guardianias/guardianias_internal.md` ✅ draft
+- `docs/modules/guardianias/guardianias_public.md` ✅ stable
 
-## 09. Motor visual
+## 09. Motor MD-X4 y pipelines
 - `docs/09_motor_mdx4_y_pipelines.md` *(pendiente)*
+- `docs/modules/render/render_summary.md` ✅ draft
+- `docs/modules/render/render_internal.md` ✅ draft
+- `docs/modules/render/render_public.md` ✅ stable
+- `02_MODULOS/M03_XR/INTERNO/XR-PERFORMANCE-GUIDELINES.md` ✅ draft
 
 ## 12–13. Jurídico y económico
 - `docs/12_juridico_tamv.md` *(pendiente)*
 - `docs/13_economico_financiero_tamv.md` *(pendiente)*
+- `docs/modules/msr/msr_summary.md` ✅ draft
+- `docs/modules/msr/msr_internal.md` ✅ draft
+- `docs/modules/msr/msr_public.md` ✅ stable
+- `02_MODULOS/M04_ECONOMIA/INTERNO/MARKETPLACE-TAU-SPEC.md` ✅ draft
 
 ## 20–21. Glosario y atlas
 - `docs/20_glosario_tamv.md` *(pendiente)*
 - `docs/21_atlas_tamv.md` *(pendiente)*
 
+## Social
+- `02_MODULOS/M02_SOCIAL/INTERNO/MANUAL-SOCIAL.md` ✅ draft
+
+## QA y TEE
+- `02_MODULOS/M01_QC/INTERNO/TEE-AUDIT-RUNBOOK.md` ✅ draft
+
+## Content Sync / DigyTAMV
+- `02_MODULOS/M06_CONTENT/INTERNO/CONTENT-SYNC-SPEC.md` ✅ draft
+
 ## DevHub
-- `docs/devhub/README.md`
-- `docs/devhub/tamv_api.md`
-- `docs/devhub/tamvai_api.md`
-- `docs/devhub/bookpi_api.md`
+- `docs/devhub/README.md` ✅
+- `docs/devhub/tamv_api.md` ✅ validated
+- `docs/devhub/tamvai_api.md` ✅ validated
+- `docs/devhub/bookpi_api.md` ✅ draft
 
 ## Módulos por sistema
-- `docs/modules/guardianias/*`
-- `docs/modules/radares/*`
-- `docs/modules/msr/*`
-- `docs/modules/ia/*`
-- `docs/modules/render/*`
+- `docs/modules/guardianias/` ✅ (3 docs)
+- `docs/modules/ia/` ✅ (3 docs)
+- `docs/modules/msr/` ✅ (3 docs)
+- `docs/modules/render/` ✅ (3 docs)
+- `docs/modules/radares/` *(pendiente)*
 
 ## TAMV ONLINE
-- `docs/online/TAMV_ONLINE_ATLAS.md`
-- `docs/online/journeys/JOURNEYS_OVERVIEW.md`
+- `docs/online/TAMV_ONLINE_ATLAS.md` ✅
+- `docs/online/journeys/JOURNEYS_OVERVIEW.md` *(pendiente)*
 
 ## CEO
-- `docs/ceo/edwin_anubis_villasenor_biografia.md`
+- `docs/ceo/edwin_anubis_villasenor_biografia.md` ✅
 
 ## THE SOF
-- `docs/sofreports/THESOF_STATE_REPORT.md`
+- `docs/sofreports/THESOF_STATE_REPORT.md` ✅
 
 ## Repo unification y auditoría
-- `docs/repo-unification/UNIFICATION_EXEC_SUMMARY.md`
-- `docs/repo-unification/INTEGRATION_WAVES.md`
-- `docs/repo-unification/REPO_TO_DOMAIN_MATRIX.md`
-- `docs/repo-unification/AUDITORIA_GENERAL_2026-02-24.md`
+- `docs/repo-unification/UNIFICATION_EXEC_SUMMARY.md` ✅
+- `docs/repo-unification/INTEGRATION_WAVES.md` ✅
+- `docs/repo-unification/REPO_TO_DOMAIN_MATRIX.md` ✅
+- `docs/repo-unification/AUDITORIA_GENERAL_2026-02-24.md` ✅
+- `docs/repo-unification/REPO_REGISTRY_177.csv` ✅
 
+## Código fuente — contratos y módulos
+
+### Stores (Zustand)
+- `src/stores/tamvStore.ts` — store global principal
+- `src/stores/socialStore.ts` ✅ nuevo — DM-X4-01 Social
+- `src/stores/securityStore.ts` ✅ nuevo — DM-X4-03 Security
+- `src/stores/xrStore.ts` ✅ nuevo — DM-X4-06 XR
+
+### Hooks sociales
+- `src/hooks/useSocialFeed.ts` ✅ nuevo
+- `src/hooks/useCreatePost.ts` ✅ nuevo
+- `src/hooks/useUserPresence.ts` ✅ nuevo
+
+### Lib / MSR
+- `src/lib/msr.ts` ✅ nuevo — contratos, dominios, rutas, esquemas DB
+- `src/lib/constitutionEngine.ts` ✅ nuevo — runtime checker
+- `src/lib/nexus.ts` ✅ nuevo — barrel de exportaciones Nexus
