@@ -12,6 +12,7 @@
 
 ## 02. Arquitectura MD-X4
 - `docs/02_arquitectura_tamv_mdx4.md` ✅ stable — **vista completa: dominios, cells, MSR, Fusion Core, Nexus, flujos**
+- `docs/MDX4_FUNCTIONAL_ARCHITECTURE_MAP.md` ✅ **OPERACIONAL** — mapa funcional completo: rutas, stores, sistemas, hooks, Edge Functions
 
 ## 03. Federados
 - `docs/03_federados_tamv.md` ✅ draft
