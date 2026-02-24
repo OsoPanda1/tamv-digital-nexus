@@ -21,7 +21,8 @@ import {
   ChevronRight, ChevronLeft, Wifi, WifiOff, Volume2, VolumeX,
   Maximize2, Minimize2, MoreHorizontal, Bookmark, Flag, UserPlus,
   LogIn, Star, Crown, Diamond, Wallet, Activity, Headphones,
-  Wifi as LiveIcon, Ghost, Sparkle, Rocket, Aurora, Waves, Brain
+  Wifi as LiveIcon, Ghost, Sparkle, Rocket, Aurora, Waves, Brain,
+  ShoppingCart, Store, GraduationCap, PiggyBank, CreditCard, Gem, Palette
 } from "lucide-react";
 import { CinematicIntro } from "@/components/CinematicIntro";
 import { useBackgroundControl } from "@/components/UnifiedBackground";
@@ -941,6 +942,167 @@ const Index = () => {
                   <Button variant="outline" size="sm" className="w-full border-violet-500/30 text-violet-400 hover:bg-violet-500/20 text-xs">
                     <Brain className="w-3 h-3 mr-1" /> Isabella AI
                   </Button>
+                </Link>
+              </div>
+            </Card>
+
+            {/* Galerías de Arte */}
+            <Card className="p-5 border-border/30 bg-black/20 backdrop-blur-md">
+              <h3 className="text-base font-bold mb-4 flex items-center gap-2">
+                <Palette className="w-5 h-5 text-pink-400 animate-pulse" /> 
+                Galerías de Arte
+              </h3>
+              <div className="grid grid-cols-2 gap-2">
+                <Link to="/gifts">
+                  <div className="relative rounded-lg overflow-hidden group cursor-pointer">
+                    <img src="https://picsum.photos/seed/gallery1/200/150" alt="Arte Digital" className="w-full h-20 object-cover group-hover:scale-110 transition-transform" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                    <span className="absolute bottom-1 left-2 text-xs font-bold text-white">Arte Digital</span>
+                  </div>
+                </Link>
+                <Link to="/gifts">
+                  <div className="relative rounded-lg overflow-hidden group cursor-pointer">
+                    <img src="https://picsum.photos/seed/gallery2/200/150" alt="NFTs" className="w-full h-20 object-cover group-hover:scale-110 transition-transform" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                    <span className="absolute bottom-1 left-2 text-xs font-bold text-white">NFTs</span>
+                  </div>
+                </Link>
+                <Link to="/gifts">
+                  <div className="relative rounded-lg overflow-hidden group cursor-pointer">
+                    <img src="https://picsum.photos/seed/gallery3/200/150" alt="3D Art" className="w-full h-20 object-cover group-hover:scale-110 transition-transform" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                    <span className="absolute bottom-1 left-2 text-xs font-bold text-white">3D Art</span>
+                  </div>
+                </Link>
+                <Link to="/gifts">
+                  <div className="relative rounded-lg overflow-hidden group cursor-pointer">
+                    <img src="https://picsum.photos/seed/gallery4/200/150" alt="Música" className="w-full h-20 object-cover group-hover:scale-110 transition-transform" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                    <span className="absolute bottom-1 left-2 text-xs font-bold text-white">Música</span>
+                  </div>
+                </Link>
+              </div>
+            </Card>
+
+            {/* Tienda Virtual / Marketplace */}
+            <Card className="p-5 border-border/30 bg-black/20 backdrop-blur-md">
+              <h3 className="text-base font-bold mb-4 flex items-center gap-2">
+                <ShoppingCart className="w-5 h-5 text-green-400" /> 
+                Marketplace
+              </h3>
+              <div className="space-y-3">
+                <Link to="/monetization">
+                  <Button variant="outline" size="sm" className="w-full border-green-500/30 text-green-400 hover:bg-green-500/20">
+                    <BuildingStore className="w-4 h-4 mr-2" /> Tienda Virtual
+                  </Button>
+                </Link>
+                <Link to="/gifts">
+                  <Button variant="outline" size="sm" className="w-full border-amber-500/30 text-amber-400 hover:bg-amber-500/20">
+                    <Gift className="w-4 h-4 mr-2" /> Regalos Virtuales
+                  </Button>
+                </Link>
+                <Link to="/economy">
+                  <Button variant="outline" size="sm" className="w-full border-blue-500/30 text-blue-400 hover:bg-blue-500/20">
+                    <PiggyBank className="w-4 h-4 mr-2" /> Economía TCEP
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+
+            {/* UTAMV - Universidad */}
+            <Card className="p-5 border-border/30 bg-black/20 backdrop-blur-md">
+              <h3 className="text-base font-bold mb-4 flex items-center gap-2">
+                <GraduationCap className="w-5 h-5 text-amber-400" /> 
+                UTAMV Universidad
+              </h3>
+              <div className="space-y-3">
+                <Link to="/university">
+                  <Button variant="outline" size="sm" className="w-full border-amber-500/30 text-amber-400 hover:bg-amber-500/20">
+                    <GraduationCap className="w-4 h-4 mr-2" /> Cursos Online
+                  </Button>
+                </Link>
+                <Link to="/bookpi">
+                  <Button variant="outline" size="sm" className="w-full border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20">
+                    <Diamond className="w-4 h-4 mr-2" /> Certificaciones BookPI
+                  </Button>
+                </Link>
+                <Link to="/docs">
+                  <Button variant="outline" size="sm" className="w-full border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20">
+                    <Sparkle className="w-4 h-4 mr-2" /> Biblioteca Digital
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+
+            {/* NubiWallet - Billetera Digital */}
+            <Card className="p-5 border-border/30 bg-black/20 backdrop-blur-md">
+              <h3 className="text-base font-bold mb-4 flex items-center gap-2">
+                <Wallet className="w-5 h-5 text-cyan-400 animate-pulse" /> 
+                NubiWallet
+              </h3>
+              <div className="space-y-3">
+                <div className="p-3 rounded-lg bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20">
+                  <p className="text-xs text-muted-foreground">Balance Total</p>
+                  <p className="text-xl font-bold text-cyan-400">$12,450.00 TCEP</p>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <Link to="/monetization">
+                    <Button variant="outline" size="sm" className="w-full border-green-500/30 text-green-400 hover:bg-green-500/20 text-xs">
+                      <CreditCard className="w-3 h-3 mr-1" /> Depositar
+                    </Button>
+                  </Link>
+                  <Link to="/monetization">
+                    <Button variant="outline" size="sm" className="w-full border-red-500/30 text-red-400 hover:bg-red-500/20 text-xs">
+                      <CreditCard className="w-3 h-3 mr-1" /> Retirar
+                    </Button>
+                  </Link>
+                  <Link to="/economy">
+                    <Button variant="outline" size="sm" className="w-full border-blue-500/30 text-blue-400 hover:bg-blue-500/20 text-xs">
+                      <Activity className="w-3 h-3 mr-1" /> Historial
+                    </Button>
+                  </Link>
+                  <Link to="/monetization">
+                    <Button variant="outline" size="sm" className="w-full border-purple-500/30 text-purple-400 hover:bg-purple-500/20 text-xs">
+                      <Sparkles className="w-3 h-3 mr-1" /> Inversiones
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </Card>
+
+            {/* Membresías de Pago */}
+            <Card className="p-5 border-border/30 bg-black/20 backdrop-blur-md">
+              <h3 className="text-base font-bold mb-4 flex items-center gap-2">
+                <Crown className="w-5 h-5 text-yellow-400 animate-pulse" /> 
+                Membresías Premium
+              </h3>
+              <div className="space-y-3">
+                <Link to="/monetization">
+                  <div className="p-3 rounded-lg bg-gradient-to-r from-yellow-500/10 to-amber-500/10 border border-yellow-500/20 cursor-pointer hover:border-yellow-500/50 transition-all group">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Crown className="w-4 h-4 text-yellow-400" />
+                      <span className="font-bold text-sm text-yellow-400 group-hover:text-yellow-300">TAMV Basic</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">$9.99/mes</p>
+                  </div>
+                </Link>
+                <Link to="/monetization">
+                  <div className="p-3 rounded-lg bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 cursor-pointer hover:border-purple-500/50 transition-all group">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Diamond className="w-4 h-4 text-purple-400" />
+                      <span className="font-bold text-sm text-purple-400 group-hover:text-purple-300">TAMV Pro</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">$19.99/mes</p>
+                  </div>
+                </Link>
+                <Link to="/monetization">
+                  <div className="p-3 rounded-lg bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 cursor-pointer hover:border-cyan-500/50 transition-all group">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Sparkles className="w-4 h-4 text-cyan-400" />
+                      <span className="font-bold text-sm text-cyan-400 group-hover:text-cyan-300">TAMV Enterprise</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">$49.99/mes</p>
+                  </div>
                 </Link>
               </div>
             </Card>
