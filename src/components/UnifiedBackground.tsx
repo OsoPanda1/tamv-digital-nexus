@@ -1,5 +1,5 @@
 // ============================================================================
-// TAMV MD-X4â"¢ - Unified Background System
+// TAMV MD-X4™ - Unified Background System
 // Single, elegant background system that prevents visual overlapping
 // ============================================================================
 

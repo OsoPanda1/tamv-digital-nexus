@@ -337,7 +337,7 @@ class CognitiveCoherenceLayer {
     /\.\.\.+/g,  // Ellipsis repetidos
     /\b\w+\s+\w+\s+\w+\s+\w+\s+\w+$/, // Palabras sin puntuación al final
     /^[a-z]+\s+[a-z]+\s+[a-z]+\s+[a-z]+$/i, // Palabras inconexas
-    /[\?!]{3,}/g, // Signos de puntuación repetidos
+    /[?!]{3,}/g, // Signos de puntuación repetidos
   ];
 
   static checkCoherence(input: string): { 

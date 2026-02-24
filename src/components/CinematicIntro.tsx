@@ -22,7 +22,7 @@ const ISABELLA_LINES: { text: string; duration: number }[] = [
   { text: "PROTOCOLO DE INMERSIÓN ACTIVADO...", duration: 3500 },
   { text: "TAMV ONLINE · ORGULLOSAMENTE LATINOAMERICANOS.", duration: 5500 },
   { text: "PROYECTO DEDICADO A REINA TREJO SERRANO.", duration: 4200 },
-  { text: "SONRÍE: TU OVEJA NEGRA LO LOGRÓ. TE QUIERO, MA´.", duration: 5800 },
+  { text: "SONRÍE: TU OVEJA NEGRA LO LOGRÓ. TE QUIERO, MA'.", duration: 5800 },
 ];
 
 // ============================================================================
@@ -149,7 +149,7 @@ function Shockwave({ phase }: { phase: Phase }) {
     const radius = base * 4.3 * pulse;
 
     meshRef.current.scale.set(radius, radius, radius);
-    // @ts-expect-error
+    // @ts-expect-error - opacity is not in the typed material properties but exists at runtime
     meshRef.current.material.opacity = phase === "explosion" ? 0.2 : 0;
   });
 

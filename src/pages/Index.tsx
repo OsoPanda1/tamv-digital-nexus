@@ -1,5 +1,5 @@
 // ============================================================================
-// TAMV MD-X4â„¢ â€” NEXT-GEN CIVILIZATORY SOCIAL HUB
+// TAMV MD-X4™ "” NEXT-GEN CIVILIZATORY SOCIAL HUB
 // Prioridad: Feed Social, Home, Canales, Grupos, Streamings, Reels, Historias, Muro Global, DreamSpaces
 // VISUAL: 85% Visual / 15% Text - Epico, Unico, Revolucionario
 // ============================================================================
@@ -37,15 +37,15 @@ import logoImg from "@/assets/LOGOTAMV2.jpg";
 const DEMO_POSTS: FeedPost[] = [
   {
     id: "demo-1", author_id: "system", 
-    content: "Acabo de crear mi primer DreamSpace en TAMV ðŸš€âœ¨ La nueva era digital estÃ¡ aquÃ­. Ãšnanse a la revoluciÃ³n civilizatoria.",
+    content: "Acabo de crear mi primer DreamSpace en TAMV 🚀✨ La nueva era digital está aquí. Únanse a la revolución civilizatoria.",
     media_url: "https://picsum.photos/seed/tamv1/1200/800", media_type: "image",
     likes_count: 1243, comments_count: 89, shares_count: 34, 
     tags: ["#TAMVQuantum", "#NuevaEra"], created_at: new Date(Date.now() - 7200000).toISOString(),
-    visibility: "public", author_name: "MarÃ­a R.", author_avatar: "https://i.pravatar.cc/150?img=1",
+    visibility: "public", author_name: "María R.", author_avatar: "https://i.pravatar.cc/150?img=1",
   },
   {
     id: "demo-2", author_id: "system", 
-    content: "SesiÃ³n binaural KAOS Â· frecuencias 432Hz ðŸŽµ El audio inmersivo cambia todo. Siente las vibraciones de otra dimensiÃ³n.",
+    content: "Sesión binaural KAOS · frecuencias 432Hz 🎵 El audio inmersivo cambia todo. Siente las vibraciones de otra dimensión.",
     media_url: "https://picsum.photos/seed/tamv2/1200/800", media_type: "image",
     likes_count: 2891, comments_count: 156, shares_count: 89, 
     tags: ["#KAOSAudio", "#Frecuencias432Hz"], created_at: new Date(Date.now() - 14400000).toISOString(),
@@ -53,7 +53,7 @@ const DEMO_POSTS: FeedPost[] = [
   },
   {
     id: "demo-3", author_id: "system", 
-    content: "Isabella AI ahora tiene emociones avanzadas ðŸ”¥ La IA mÃ¡s humana que jamÃ¡s hayas conocido. Habla con ella ahora.",
+    content: "Isabella AI ahora tiene emociones avanzadas 🔥 La IA más humana que jamás hayas conocido. Habla con ella ahora.",
     media_url: "https://picsum.photos/seed/tamv3/1200/800", media_type: "image",
     likes_count: 5672, comments_count: 423, shares_count: 234, 
     tags: ["#IsabellaAI", "#IAEmocional"], created_at: new Date(Date.now() - 21600000).toISOString(),
@@ -61,7 +61,7 @@ const DEMO_POSTS: FeedPost[] = [
   },
   {
     id: "demo-4", author_id: "system", 
-    content: "Mi certificaciÃ³n BookPI verificada en blockchain ðŸ” Inmutable, auditable y reconocida globally. El futuro de la educaciÃ³n.",
+    content: "Mi certificación BookPI verificada en blockchain 🔐 Inmutable, auditable y reconocida globally. El futuro de la educación.",
     media_url: "https://picsum.photos/seed/tamv4/1200/800", media_type: "image",
     likes_count: 1567, comments_count: 145, shares_count: 67, 
     tags: ["#BookPI", "#CertificacionBlockchain"], created_at: new Date(Date.now() - 28800000).toISOString(),
@@ -69,7 +69,7 @@ const DEMO_POSTS: FeedPost[] = [
   },
   {
     id: "demo-5", author_id: "system", 
-    content: "TransmisiÃ³n en vivo desde el Metaverso TAMV ðŸŽ® Explora mundos infinitos con otros travelers de realidad.",
+    content: "Transmisión en vivo desde el Metaverso TAMV 🎮 Explora mundos infinitos con otros travelers de realidad.",
     media_url: "https://picsum.photos/seed/tamv5/1200/800", media_type: "image",
     likes_count: 4521, comments_count: 312, shares_count: 189, 
     tags: ["#MetaversoTAMV", "#EnVivo"], created_at: new Date(Date.now() - 36000000).toISOString(),
@@ -90,7 +90,7 @@ interface Story {
 }
 
 const STORIES: Story[] = [
-  { id: "1", user: "MarÃ­a R.", avatar: "https://i.pravatar.cc/150?img=1", image: "https://picsum.photos/seed/story1/600/1000" },
+  { id: "1", user: "María R.", avatar: "https://i.pravatar.cc/150?img=1", image: "https://picsum.photos/seed/story1/600/1000" },
   { id: "2", user: "Carlos M.", avatar: "https://i.pravatar.cc/150?img=3", image: "https://picsum.photos/seed/story2/600/1000" },
   { id: "3", user: "TAMV Official", avatar: "", image: "https://picsum.photos/seed/story3/600/1000" },
   { id: "4", user: "Ana T.", avatar: "https://i.pravatar.cc/150?img=5", image: "https://picsum.photos/seed/story4/600/1000" },
@@ -114,9 +114,9 @@ interface Reel {
 }
 
 const REELS: Reel[] = [
-  { id: "1", user: "MarÃ­a R.", avatar: "https://i.pravatar.cc/150?img=1", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", caption: "Mi experiencia en DreamSpaces ðŸ¥½âœ¨", likes: 1234 },
-  { id: "2", user: "Carlos M.", avatar: "https://i.pravatar.cc/150?img=3", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", caption: "Audio binaural 432Hz ðŸŽµ", likes: 892 },
-  { id: "3", user: "DJ Quantum", avatar: "https://i.pravatar.cc/150?img=8", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", caption: "Live set desde el metaverso ðŸŽ§", likes: 2341 },
+  { id: "1", user: "María R.", avatar: "https://i.pravatar.cc/150?img=1", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", caption: "Mi experiencia en DreamSpaces 😋✨", likes: 1234 },
+  { id: "2", user: "Carlos M.", avatar: "https://i.pravatar.cc/150?img=3", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", caption: "Audio binaural 432Hz 🎵", likes: 892 },
+  { id: "3", user: "DJ Quantum", avatar: "https://i.pravatar.cc/150?img=8", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", caption: "Live set desde el metaverso §", likes: 2341 },
 ];
 
 // ============================================================================
@@ -134,8 +134,8 @@ interface LiveStream {
 }
 
 const LIVE_STREAMS: LiveStream[] = [
-  { id: "1", user: "DJ Quantum", avatar: "https://i.pravatar.cc/150?img=8", thumbnail: "https://picsum.photos/seed/live1/640/360", viewers: 2340, title: "SesiÃ³n Quantum Beats ðŸŽµ", category: "MÃºsica" },
-  { id: "2", user: "UTAMV Live", avatar: "", thumbnail: "https://picsum.photos/seed/live2/640/360", viewers: 456, title: "Clase: IntroducciÃ³n al Metaverso", category: "EducaciÃ³n" },
+  { id: "1", user: "DJ Quantum", avatar: "https://i.pravatar.cc/150?img=8", thumbnail: "https://picsum.photos/seed/live1/640/360", viewers: 2340, title: "Sesión Quantum Beats 🎵", category: "Música" },
+  { id: "2", user: "UTAMV Live", avatar: "", thumbnail: "https://picsum.photos/seed/live2/640/360", viewers: 456, title: "Clase: Introducción al Metaverso", category: "Educación" },
   { id: "3", user: "Art XR Studio", avatar: "https://i.pravatar.cc/150?img=12", thumbnail: "https://picsum.photos/seed/live3/640/360", viewers: 1123, title: "Pintura Digital en Realidad Extendida", category: "Arte" },
   { id: "4", user: "Isabella AI", avatar: "", thumbnail: "https://picsum.photos/seed/live4/640/360", viewers: 5678, title: "Chat en Vivo con Isabella", category: "IA" },
   { id: "5", user: "Gaming TAMV", avatar: "https://i.pravatar.cc/150?img=15", thumbnail: "https://picsum.photos/seed/live5/640/360", viewers: 892, title: "Torneo de Juegos Blockchain", category: "Gaming" },
@@ -157,11 +157,11 @@ interface Channel {
 const CHANNELS: Channel[] = [
   { id: "1", name: "TAMV Official", image: "https://picsum.photos/seed/ch1/200/200", members: 125000, category: "Official", isLive: true },
   { id: "2", name: "DreamSpaces", image: "https://picsum.photos/seed/ch2/200/200", members: 45000, category: "Metaverso" },
-  { id: "3", name: "MÃºsica KAOS", image: "https://picsum.photos/seed/ch3/200/200", members: 67000, category: "Audio" },
-  { id: "4", name: "Universidad TAMV", image: "https://picsum.photos/seed/ch4/200/200", members: 23000, category: "EducaciÃ³n" },
+  { id: "3", name: "Música KAOS", image: "https://picsum.photos/seed/ch3/200/200", members: 67000, category: "Audio" },
+  { id: "4", name: "Universidad TAMV", image: "https://picsum.photos/seed/ch4/200/200", members: 23000, category: "Educación" },
   { id: "5", name: "Gaming Hub", image: "https://picsum.photos/seed/ch5/200/200", members: 89000, category: "Gaming" },
   { id: "6", name: "Arte Digital", image: "https://picsum.photos/seed/ch6/200/200", members: 34000, category: "Arte" },
-  { id: "7", name: "Tech Innovators", image: "https://picsum.photos/seed/ch7/200/200", members: 56000, category: "TecnologÃ­a" },
+  { id: "7", name: "Tech Innovators", image: "https://picsum.photos/seed/ch7/200/200", members: 56000, category: "Tecnología" },
   { id: "8", name: "Comunidad Latina", image: "https://picsum.photos/seed/ch8/200/200", members: 78000, category: "Comunidad" },
 ];
 
@@ -179,15 +179,15 @@ interface Group {
 
 const GROUPS: Group[] = [
   { id: "1", name: "Pioneros del Metaverso", image: "https://picsum.photos/seed/g1/200/200", members: 12500, description: "Exploradores de realidades alternativas" },
-  { id: "2", name: "Amantes del Audio Binaural", image: "https://picsum.photos/seed/g2/200/200", members: 8900, description: "Frecuencias para la evoluciÃ³n consciousness" },
+  { id: "2", name: "Amantes del Audio Binaural", image: "https://picsum.photos/seed/g2/200/200", members: 8900, description: "Frecuencias para la evolución consciousness" },
   { id: "3", name: "Creadores Digitales TAMV", image: "https://picsum.photos/seed/g3/200/200", members: 15600, description: "Artistas y creadores del nuevo mundo" },
   { id: "4", name: "Estudiantes UTAMV", image: "https://picsum.photos/seed/g4/200/200", members: 6700, description: "Futuros certificados blockchain" },
-  { id: "5", name: "Gamers Quantum", image: "https://picsum.photos/seed/g5/200/200", members: 23400, description: "Juegos con tecnologÃ­a cuÃ¡ntica" },
-  { id: "6", name: "Comunidad Zen", image: "https://picsum.photos/seed/g6/200/200", members: 4500, description: "MeditaciÃ³n y bienestar digital" },
+  { id: "5", name: "Gamers Quantum", image: "https://picsum.photos/seed/g5/200/200", members: 23400, description: "Juegos con tecnología cuántica" },
+  { id: "6", name: "Comunidad Zen", image: "https://picsum.photos/seed/g6/200/200", members: 4500, description: "Meditación y bienestar digital" },
 ];
 
 // ============================================================================
-// BARRA DE NAVEGACIÃ“N SOCIAL PRINCIPAL
+// BARRA DE NAVEGACIí“N SOCIAL PRINCIPAL
 // ============================================================================
 
 const SOCIAL_TABS = [
@@ -231,7 +231,7 @@ function LiveBadge({ viewers }: { viewers: number }) {
   return (
     <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-red-600 text-white px-2 py-1 rounded-full text-xs font-bold animate-pulse">
       <div className="w-2 h-2 bg-white rounded-full" />
-      EN VIVO Â· {viewers.toLocaleString()}
+      EN VIVO · {viewers.toLocaleString()}
     </div>
   );
 }
@@ -289,7 +289,7 @@ function PostCard({ post, index }: { post: FeedPost; index: number }) {
                   <Zap className="w-3 h-3 mr-1" />Official
                 </Badge>
               )}
-              <span className="text-xs text-muted-foreground">Â· {timeAgo}</span>
+              <span className="text-xs text-muted-foreground">· {timeAgo}</span>
             </div>
             {post.tags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-1 mt-1">
@@ -368,7 +368,7 @@ function PostComposer({ onPost }: { onPost: (content: string) => void }) {
           <Textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Â¿QuÃ© estÃ¡s pensando, pionero de la civilizaciÃ³n?"
+            placeholder="Â¿Qué estás pensando, pionero de la civilización?"
             className="bg-transparent border-border/30 resize-none min-h-[80px] text-base placeholder:text-muted-foreground/50 focus:border-primary/50"
           />
           <div className="flex justify-between items-center mt-3">
@@ -558,9 +558,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen pb-24">
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
       {/* HERO EPICO - FULL VISUAL IMMERSION */}
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
       <motion.div 
         style={{ opacity: heroOpacity, scale: heroScale }}
         className="relative min-h-[50vh] flex flex-col items-center justify-center overflow-hidden"
@@ -618,7 +618,7 @@ const Index = () => {
             TAMV
           </span>
           <span className="block text-2xl md:text-4xl font-light text-muted-foreground mt-2">
-            MD-X4â„¢
+            MD-X4™
           </span>
         </motion.h1>
         
@@ -628,9 +628,9 @@ const Index = () => {
           transition={{ delay: 0.5 }}
           className="relative z-10 text-lg md:text-xl text-muted-foreground text-center max-w-2xl mx-auto px-4 mb-8"
         >
-          La evoluciÃ³n federada de las redes sociales. 
-          <span className="text-primary"> CivilizaciÃ³n digital </span>
-          desde LatinoamÃ©rica para el mundo.
+          La evolución federada de las redes sociales. 
+          <span className="text-primary"> Civilización digital </span>
+          desde Latinoamérica para el mundo.
         </motion.p>
         
         {/* CTA Buttons */}
@@ -650,7 +650,7 @@ const Index = () => {
             <>
               <Link to="/auth">
                 <Button size="lg" className="bg-gradient-to-r from-primary to-secondary text-primary-foreground px-8 py-6 text-lg shadow-xl shadow-primary/30 hover:shadow-2xl hover:shadow-primary/40 hover:scale-105 transition-all">
-                  <UserPlus className="w-5 h-5 mr-2" /> Ãšnete a la CivilizaciÃ³n
+                  <UserPlus className="w-5 h-5 mr-2" /> Únete a la Civilización
                 </Button>
               </Link>
               <Button size="lg" variant="outline" className="border-primary/50 text-primary hover:bg-primary/10 px-8 py-6 text-lg backdrop-blur-sm" onClick={() => {
@@ -693,8 +693,8 @@ const Index = () => {
         </motion.div>
 
       </motion.div>
-      {/* NAVEGACIÃ“N SOCIAL PRINCIPAL - TABS */}
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      {/* NAVEGACIí“N SOCIAL PRINCIPAL - TABS */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
       <div className="sticky top-0 z-50 border-b border-border/30 bg-background/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between gap-4 py-3 overflow-x-auto">
@@ -748,9 +748,9 @@ const Index = () => {
         </div>
       </div>
 
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
       {/* CONTENIDO PRINCIPAL */}
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      {/* ═══════════════════════════════════════════════════════════════════ */}
       <div id="feed-section" className="max-w-7xl mx-auto px-4 py-6">
         
         {/* STORIES - CARRUSEL HORIZONTAL */}
@@ -762,9 +762,9 @@ const Index = () => {
           </div>
         </section>
 
-        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+        {/* ═══════════════════════════════════════════════════════════════════ */}
         {/* EN VIVO - LIVE STREAMS */}
-        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+        {/* ═══════════════════════════════════════════════════════════════════ */}
         <section className="mb-8">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
@@ -781,9 +781,9 @@ const Index = () => {
           </div>
         </section>
 
-        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+        {/* ═══════════════════════════════════════════════════════════════════ */}
         {/* CANALES DESTACADOS */}
-        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+        {/* ═══════════════════════════════════════════════════════════════════ */}
         <section className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold flex items-center gap-2">
@@ -799,16 +799,16 @@ const Index = () => {
           </div>
         </section>
 
-        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+        {/* ═══════════════════════════════════════════════════════════════════ */}
         {/* REELS - VIDEOS VERTICALES */}
-        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+        {/* ═══════════════════════════════════════════════════════════════════ */}
         <section className="mb-8">
           <div className="flex items-center gap-2 mb-4">
             <h2 className="text-xl font-bold flex items-center gap-2">
               <Play className="w-5 h-5 text-pink-500" /> 
               Reels Trending
             </h2>
-            <Badge variant="outline" className="border-pink-500/30 text-pink-400">ðŸ”¥ Hot</Badge>
+            <Badge variant="outline" className="border-pink-500/30 text-pink-400">🔥 Hot</Badge>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {REELS.map((reel, i) => (
@@ -817,9 +817,9 @@ const Index = () => {
           </div>
         </section>
 
-        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+        {/* ═══════════════════════════════════════════════════════════════════ */}
         {/* FEED PRINCIPAL - PUBLICACIONES */}
-        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+        {/* ═══════════════════════════════════════════════════════════════════ */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Feed */}
           <div className="lg:col-span-2 space-y-6">
@@ -842,7 +842,7 @@ const Index = () => {
             {!isAuthenticated && (
               <Card className="p-8 text-center border-primary/30 bg-gradient-to-r from-primary/5 to-secondary/5">
                 <Sparkles className="w-12 h-12 mx-auto mb-4 text-primary" />
-                <p className="text-lg mb-4">Ãšnete a la civilizaciÃ³n digital mÃ¡s avanzada</p>
+                <p className="text-lg mb-4">Únete a la civilización digital más avanzada</p>
                 <Link to="/auth">
                   <Button size="lg" className="bg-gradient-to-r from-primary to-secondary text-primary-foreground">
                     <UserPlus className="w-5 h-5 mr-2" /> Crear Cuenta Gratis
@@ -891,7 +891,7 @@ const Index = () => {
                   <Users className="w-5 h-5 text-primary" /> 
                   Grupos Populares
                 </h3>
-                <Button variant="ghost" size="sm" className="text-xs text-primary">Ver mÃ¡s</Button>
+                <Button variant="ghost" size="sm" className="text-xs text-primary">Ver más</Button>
               </div>
               <div className="space-y-2">
                 {GROUPS.slice(0, 4).map((group, i) => (
@@ -920,7 +920,7 @@ const Index = () => {
             <Card className="p-5 border-border/30 bg-black/20 backdrop-blur-md">
               <h3 className="text-base font-bold mb-4 flex items-center gap-2">
                 <Zap className="w-5 h-5 text-yellow-400" /> 
-                Acceso RÃ¡pido
+                Acceso Rápido
               </h3>
               <div className="grid grid-cols-2 gap-2">
                 <Link to="/dream-spaces">
@@ -946,11 +946,11 @@ const Index = () => {
               </div>
             </Card>
 
-            {/* GalerÃ­as de Arte */}
+            {/* Galerías de Arte */}
             <Card className="p-5 border-border/30 bg-black/20 backdrop-blur-md">
               <h3 className="text-base font-bold mb-4 flex items-center gap-2">
                 <Palette className="w-5 h-5 text-pink-400 animate-pulse" /> 
-                GalerÃ­as de Arte
+                Galerías de Arte
               </h3>
               <div className="grid grid-cols-2 gap-2">
                 <Link to="/gifts">
@@ -976,9 +976,9 @@ const Index = () => {
                 </Link>
                 <Link to="/gifts">
                   <div className="relative rounded-lg overflow-hidden group cursor-pointer">
-                    <img src="https://picsum.photos/seed/gallery4/200/150" alt="MÃºsica" className="w-full h-20 object-cover group-hover:scale-110 transition-transform" />
+                    <img src="https://picsum.photos/seed/gallery4/200/150" alt="Música" className="w-full h-20 object-cover group-hover:scale-110 transition-transform" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                    <span className="absolute bottom-1 left-2 text-xs font-bold text-white">MÃºsica</span>
+                    <span className="absolute bottom-1 left-2 text-xs font-bold text-white">Música</span>
                   </div>
                 </Link>
               </div>
@@ -1003,7 +1003,7 @@ const Index = () => {
                 </Link>
                 <Link to="/economy">
                   <Button variant="outline" size="sm" className="w-full border-blue-500/30 text-blue-400 hover:bg-blue-500/20">
-                    <PiggyBank className="w-4 h-4 mr-2" /> EconomÃ­a TCEP
+                    <PiggyBank className="w-4 h-4 mr-2" /> Economía TCEP
                   </Button>
                 </Link>
               </div>
@@ -1070,11 +1070,11 @@ const Index = () => {
               </div>
             </Card>
 
-            {/* MembresÃ­as de Pago */}
+            {/* Membresías de Pago */}
             <Card className="p-5 border-border/30 bg-black/20 backdrop-blur-md">
               <h3 className="text-base font-bold mb-4 flex items-center gap-2">
                 <Crown className="w-5 h-5 text-yellow-400 animate-pulse" /> 
-                MembresÃ­as Premium
+                Membresías Premium
               </h3>
               <div className="space-y-3">
                 <Link to="/monetization">

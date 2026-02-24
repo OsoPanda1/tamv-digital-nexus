@@ -1,5 +1,5 @@
 // ============================================================================
-// TAMV MD-X4â"¢ - Main Application Entry
+// TAMV MD-X4™ - Main Application Entry
 // Ecosystem Civilizatory Digital Mexicano
 // ============================================================================
 
