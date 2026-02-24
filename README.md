@@ -1,73 +1,94 @@
-# Welcome to your Lovable project
+# TAMV Digital Nexus
 
-## Project info
+Repositorio unificado del ecosistema TAMV para consolidar módulos 3D/XR/AI, economía digital, gobernanza y servicios federados en una sola base operativa.
 
-**URL**: https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b
+> Meta estratégica: unificar progresivamente los repositorios del ecosistema en una arquitectura mantenible y desplegable desde este núcleo.
 
-## How can I edit this code?
+## Estado actual del repositorio
 
-There are several ways of editing your application.
+El proyecto ya contiene piezas clave en producción técnica:
+- Frontend React + Vite + TypeScript con componentes inmersivos.
+- Integración con Supabase (cliente, tipos, funciones edge y migraciones).
+- Módulos funcionales de social, economía, universidad, crisis y sistemas de seguridad.
+- Base de QA constitucional (lint + scanner semántico + checker de arquitectura).
+- Protocolo operativo MD-X5 con auditoría Deca-V ejecutable.
 
-**Use Lovable**
+## Comandos principales
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+npm install
 npm run dev
+npm run lint
+npm run typecheck
+npm run test
+npm run build
 ```
 
-**Edit a file directly in GitHub**
+## Escudo de calidad MD-X5 (Deca-V)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Ejecución integral de validación antes de despliegue:
 
-**Use GitHub Codespaces**
+```bash
+npm run audit:deca-v
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Por defecto corre 10 ciclos de:
+- `npm run lint`
+- `npm run typecheck`
+- `npm run test`
+- `npm run build`
 
-## What technologies are used for this project?
+Modo rápido para iteración local:
 
-This project is built with:
+```bash
+DECA_V_CYCLES=2 npm run audit:deca-v
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Referencia operativa detallada: `MDX5_OPERATIONAL_PROTOCOL.md`.
 
-## How can I deploy this project?
+## Roadmap de unificación (177 repos → 1 núcleo)
 
-Simply open [Lovable](https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b) and click on Share -> Publish.
+Para que la unificación sea real y sostenible, el plan técnico se divide en fases:
 
-## Can I connect a custom domain to my Lovable project?
+1. **Inventario y clasificación**
+   - Catalogar los repos por dominio: identidad, economía, social, XR/3D, IA, seguridad, infra.
+   - Marcar estado de cada repo: activo, legado, redundante, fusionable.
 
-Yes, you can!
+2. **Normalización de contratos**
+   - Definir contratos de API y eventos entre módulos (tipos compartidos).
+   - Homologar convenciones de carpetas, naming y versionado.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+3. **Migración por federaciones**
+   - Integrar primero repos de alto acoplamiento funcional (auth, wallet, social feed).
+   - Reemplazar duplicados por módulos únicos mantenidos en este monorepo lógico.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+4. **Consolidación CI/CD**
+   - Aplicar gates comunes (lint/typecheck/test/build/deca-v) a todo módulo integrado.
+   - Bloquear merges con regresiones arquitectónicas o constitucionales.
+
+5. **Cierre y deprecación**
+   - Congelar repos externos migrados.
+   - Mantener este repositorio como fuente única de verdad operativa.
+
+## Estructura de alto nivel
+
+- `src/` — aplicación web, componentes, hooks, sistemas y páginas.
+- `supabase/` — funciones edge, migraciones y configuración backend.
+- `scripts/` — automatizaciones de chequeo arquitectónico, semántico y Deca-V.
+- `eslint-plugin-tamv/` — plugin constitucional de reglas TAMV.
+
+## Notas de despliegue
+
+- El build de frontend se genera con `npm run build`.
+- Las funciones de Supabase deben desplegarse con su pipeline correspondiente.
+- Antes de publicar, ejecutar `npm run audit:deca-v` para validar integridad mínima.
+
+## Enlace del proyecto en Lovable
+
+- https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b?view=codeEditor
+
+## Estado de sincronización de rama
+
+- Rama actual esperada para integración directa: `main`.
+- Si trabajas desde otro entorno, confirma con `git branch --show-current`.
+- Para reflejar cambios en remoto: configura `origin` y ejecuta `git push origin main`.

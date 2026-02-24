@@ -33,4 +33,17 @@ export default tseslint.config(
       "tamv-constitution/no-unaudited-ai": "error",
     },
   },
+  {
+    files: ["**/*.{test,spec}.{ts,tsx}"],
+    languageOptions: {
+      globals: {
+        describe: "readonly",
+        it: "readonly",
+        test: "readonly",
+        expect: "readonly",
+        beforeEach: "readonly",
+        afterEach: "readonly",
+      },
+    },
+  },
 );
