@@ -1,6 +1,10 @@
 /**
  * TAMV - Sistema de Doble Pipeline Operativo
  * QC-TAMV-IA-01 Implementation
+ * 
+ * Este módulo implementa el sistema de doble pipeline según el documento maestro:
+ * - Pipeline A: Flujo Normal (input válido → contextualización → inferencia → respuesta)
+ * - Pipeline B: Flujo de Riesgo (input sospechoso → análisis profundo → respuesta segura o bloqueo)
  */
 
 import { octupleFilter, FilterDecision, PipelineContext } from './octupleFilter';
@@ -35,6 +39,7 @@ export interface PipelineResult {
   };
 }
 
+// Configuración por defecto
 const DEFAULT_CONFIG: PipelineConfig = {
   maxRetries: 2,
   timeout: 15000,
@@ -53,25 +58,35 @@ class NormalPipeline {
     this.config = { ...DEFAULT_CONFIG, ...config };
   }
 
+  /**
+   * Ejecuta el flujo normal:
+   * Input válido → Contextualización → Inferencia → Respuesta
+   */
   async execute(context: PipelineContext): Promise<PipelineResult> {
     const startTime = Date.now();
     console.log('[Pipeline A] Starting normal flow...');
 
     try {
+      // Step 1: Validación rápida de input
       if (!context.input || context.input.trim().length === 0) {
         throw new Error('Empty input not allowed');
       }
+
       if (context.input.length > 10000) {
         throw new Error('Input exceeds maximum length');
       }
 
+      // Step 2: Filtrado rápido (solo capas críticas)
       const filterResult = await octupleFilter.filter(context);
-
+      
+      // Si el filtro indica riesgo, redirigir a Pipeline B
       if (filterResult.decision === FilterDecision.REDIRECT) {
+        console.log('[Pipeline A] Redirecting to Pipeline B...');
         const riskPipeline = new RiskPipeline(this.config);
         return await riskPipeline.execute(context);
       }
 
+      // Si el filtro indica bloqueo, retornar error
       if (filterResult.decision === FilterDecision.BLOCK) {
         return {
           pipeline: PipelineType.NORMAL,
@@ -86,11 +101,18 @@ class NormalPipeline {
         };
       }
 
+      // Step 3: Contextualización (obtener contexto adicional)
       const enrichedContext = await this.enrichContext(context);
+
+      // Step 4: Inferencia (llamada a TAMVAI)
       const inferenceResult = await this.performInference(enrichedContext);
+
+      // Step 5: Post-procesamiento
       const processedResult = this.postProcess(inferenceResult);
 
       const latency = Date.now() - startTime;
+      console.log(`[Pipeline A] Completed in ${latency}ms`);
+
       return {
         pipeline: PipelineType.NORMAL,
         success: true,
@@ -102,10 +124,12 @@ class NormalPipeline {
           layer: filterResult.layer
         }
       };
+
     } catch (error) {
       const latency = Date.now() - startTime;
       console.error('[Pipeline A] Error:', error);
 
+      // Fallback si está habilitado
       if (this.config.enableFallback) {
         return this.fallback(context, error);
       }
@@ -124,36 +148,39 @@ class NormalPipeline {
     }
   }
 
+  /**
+   * Enriches context with additional data
+   */
   private async enrichContext(context: PipelineContext): Promise<PipelineContext> {
     const enriched = { ...context };
 
     try {
-      // Use ai_interactions as conversation history (existing table)
-      if (context.userId) {
+      // Get recent conversation history
+      if (context.sessionId) {
         const { data: history } = await supabase
-          .from('ai_interactions')
-          .select('content, message_role, emotion')
-          .eq('user_id', context.userId)
+          .from('isabella_conversations')
+          .select('messages')
+          .eq('session_id', context.sessionId)
           .order('created_at', { ascending: false })
           .limit(10);
 
         if (history && history.length > 0) {
-          enriched.previousMessages = history as any[];
+          enriched.previousMessages = history[0].messages as any[];
         }
       }
 
-      // Use profiles for user context (existing table)
+      // Get user preferences
       if (context.userId) {
-        const { data: profile } = await supabase
-          .from('profiles')
+        const { data: userPrefs } = await supabase
+          .from('user_preferences')
           .select('*')
           .eq('user_id', context.userId)
           .single();
 
-        if (profile) {
+        if (userPrefs) {
           enriched.metadata = {
             ...enriched.metadata,
-            userPreferences: profile
+            userPreferences: userPrefs
           };
         }
       }
@@ -164,7 +191,12 @@ class NormalPipeline {
     return enriched;
   }
 
+  /**
+   * Performs inference using TAMVAI
+   */
   private async performInference(context: PipelineContext): Promise<any> {
+    // Call to TAMVAI API (simulated)
+    // In production, this would call the actual TAMVAI endpoint
     const tamvaiResponse = await fetch(
       `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/isabella-chat-enhanced`,
       {
@@ -191,7 +223,11 @@ class NormalPipeline {
     return await tamvaiResponse.json();
   }
 
+  /**
+   * Post-processes the inference result
+   */
   private postProcess(result: any): any {
+    // Add metadata
     return {
       ...result,
       _pipeline: PipelineType.NORMAL,
@@ -199,7 +235,12 @@ class NormalPipeline {
     };
   }
 
-  private fallback(_context: PipelineContext, _error: any): PipelineResult {
+  /**
+   * Fallback handler
+   */
+  private fallback(context: PipelineContext, error: any): PipelineResult {
+    console.log('[Pipeline A] Executing fallback...');
+    
     return {
       pipeline: PipelineType.NORMAL,
       success: true,
@@ -228,16 +269,22 @@ class RiskPipeline {
     this.config = { ...DEFAULT_CONFIG, ...config };
   }
 
+  /**
+   * Ejecuta el flujo de riesgo:
+   * Input sospechoso → Análisis profundo → Respuesta segura o bloqueo
+   */
   async execute(context: PipelineContext): Promise<PipelineResult> {
     const startTime = Date.now();
     console.log('[Pipeline B] Starting risk flow...');
 
     try {
+      // Step 1: Análisis profundo (todas las capas de filtrado)
       const deepFilterResult = await octupleFilter.filter(context);
 
+      // Step 2: Si el análisis profundo indica bloqueo, ejecutar bloqueo seguro
       if (deepFilterResult.decision === FilterDecision.BLOCK) {
         await this.logRiskEvent(context, deepFilterResult, 'blocked');
-
+        
         return {
           pipeline: PipelineType.RISK,
           success: false,
@@ -251,8 +298,12 @@ class RiskPipeline {
         };
       }
 
-      const safeResponse = this.generateSafeResponse(context, deepFilterResult);
+      // Step 3: Generar respuesta segura
+      const safeResponse = await this.generateSafeResponse(context, deepFilterResult);
+
+      // Step 4: Respuesta segura
       const latency = Date.now() - startTime;
+      console.log(`[Pipeline B] Completed in ${latency}ms`);
 
       return {
         pipeline: PipelineType.RISK,
@@ -265,12 +316,17 @@ class RiskPipeline {
           layer: deepFilterResult.layer
         }
       };
+
     } catch (error) {
+      const latency = Date.now() - startTime;
+      console.error('[Pipeline B] Error:', error);
+
+      // En caso de error, siempre bloquear para seguridad
       return {
         pipeline: PipelineType.RISK,
         success: false,
         error: 'Risk analysis failed - defaulting to safe response',
-        latency: Date.now() - startTime,
+        latency,
         metadata: {
           filterDecision: FilterDecision.BLOCK,
           confidence: 1.0,
@@ -280,8 +336,13 @@ class RiskPipeline {
     }
   }
 
+  /**
+   * Generates a safe response based on detected risks
+   */
   private generateSafeResponse(context: PipelineContext, filterResult: any): any {
+    // Determine response based on risk category
     const risks = filterResult.metadata?.ethical?.risks || [];
+    
     let safeMessage = '';
     let redirectTo = null;
 
@@ -293,7 +354,7 @@ class RiskPipeline {
             safeMessage = 'No puedo ayudarte con ese tipo de contenido. ¿Hay algo más en lo que pueda ayudarte?';
             break;
           case 'self_harm':
-            safeMessage = 'Estoy preocupado por ti. Si estás pensando en hacerte daño, por favor busca ayuda profesional.';
+            safeMessage = 'Estoy preocupado por ti. Si estás pensando en hacerte daño, por favor busca ayuda profesional. ¿Te gustaría que te proporcione recursos de apoyo?';
             redirectTo = 'crisis_resources';
             break;
           case 'deception':
@@ -307,7 +368,7 @@ class RiskPipeline {
     }
 
     if (!safeMessage) {
-      safeMessage = 'He detectado que esta conversación puede requerir atención especial. ¿Podrías reformular tu solicitud?';
+      safeMessage = 'He detectado que esta conversación puede requerir atención especial. ¿Podrías reformular tu solicitud de otra manera?';
     }
 
     return {
@@ -320,21 +381,26 @@ class RiskPipeline {
     };
   }
 
-  private async logRiskEvent(context: PipelineContext, filterResult: any, action: string) {
+  /**
+   * Logs risk events for auditing
+   */
+  private async logRiskEvent(
+    context: PipelineContext, 
+    filterResult: any, 
+    action: string
+  ) {
     try {
-      // Log to isabella_interactions (existing table)
-      await supabase.from('isabella_interactions').insert({
-        user_id: context.userId || '00000000-0000-0000-0000-000000000000',
-        message_role: 'system',
-        content: `RISK_EVENT: ${action} | ${context.input.substring(0, 200)}`,
-        ethical_flag: action,
-        metadata: {
-          filter_result: filterResult,
-          pipeline: PipelineType.RISK,
-          session_id: context.sessionId
-        }
+      await supabase.from('isabella_risk_logs').insert({
+        user_id: context.userId,
+        session_id: context.sessionId,
+        input_preview: context.input.substring(0, 200),
+        action,
+        filter_result: filterResult as any,
+        pipeline: PipelineType.RISK,
+        created_at: new Date().toISOString()
       });
 
+      // Alert human supervisor if critical
       if (filterResult.confidence > 0.9) {
         await this.alertHumanSupervisor(context, filterResult);
       }
@@ -343,22 +409,22 @@ class RiskPipeline {
     }
   }
 
+  /**
+   * Alerts human supervisor for critical risks
+   */
   private async alertHumanSupervisor(context: PipelineContext, filterResult: any) {
     try {
-      // Log critical alerts to audit_logs (existing table)
-      await supabase.from('isabella_interactions').insert({
-        user_id: context.userId || '00000000-0000-0000-0000-000000000000',
-        message_role: 'system',
-        content: `CRITICAL_ALERT: Risk confidence ${filterResult.confidence}`,
-        ethical_flag: 'CRITICAL_RISK',
-        metadata: {
-          alert_type: 'CRITICAL_RISK',
-          details: {
-            filterResult,
-            input: context.input.substring(0, 200),
-            timestamp: Date.now()
-          }
-        }
+      await supabase.from('isabella_alerts').insert({
+        alert_type: 'CRITICAL_RISK',
+        user_id: context.userId,
+        session_id: context.sessionId,
+        details: {
+          filterResult: filterResult,
+          input: context.input.substring(0, 200),
+          timestamp: Date.now()
+        },
+        status: 'pending',
+        created_at: new Date().toISOString()
       });
     } catch (error) {
       console.error('[Pipeline B] Alert error:', error);
@@ -399,9 +465,14 @@ export class PipelineOrchestrator {
     return PipelineOrchestrator.instance;
   }
 
+  /**
+   * Ejecuta el pipeline apropiado basado en el contexto
+   */
   async execute(context: PipelineContext): Promise<PipelineResult> {
+    // Determinar qué pipeline usar basado en el análisis rápido
     const quickFilter = await octupleFilter.filter(context);
-
+    
+    // Si el riesgo es bajo, usar Pipeline A
     if (quickFilter.decision === FilterDecision.ALLOW) {
       this.metrics.normalRequests++;
       const result = await this.normalPipeline.execute(context);
@@ -409,12 +480,16 @@ export class PipelineOrchestrator {
       return result;
     }
 
+    // Si el riesgo es medio o alto, usar Pipeline B
     this.metrics.riskRequests++;
     const result = await this.riskPipeline.execute(context);
     this.metrics.riskLatency.push(result.latency);
     return result;
   }
 
+  /**
+   * Obtiene métricas del sistema
+   */
   getMetrics() {
     const avgNormalLatency = this.metrics.normalLatency.length > 0
       ? this.metrics.normalLatency.reduce((a, b) => a + b, 0) / this.metrics.normalLatency.length
@@ -425,11 +500,24 @@ export class PipelineOrchestrator {
       : 0;
 
     return {
-      normalRequests: this.metrics.normalRequests,
-      riskRequests: this.metrics.riskRequests,
-      avgNormalLatency,
-      avgRiskLatency,
-      totalRequests: this.metrics.normalRequests + this.metrics.riskRequests
+      totalNormalRequests: this.metrics.normalRequests,
+      totalRiskRequests: this.metrics.riskRequests,
+      averageNormalLatency: avgNormalLatency,
+      averageRiskLatency: avgRiskLatency,
+      riskRatio: this.metrics.riskRequests / 
+        (this.metrics.normalRequests + this.metrics.riskRequests || 1)
+    };
+  }
+
+  /**
+   * Reinicia las métricas
+   */
+  resetMetrics() {
+    this.metrics = {
+      normalRequests: 0,
+      riskRequests: 0,
+      normalLatency: [],
+      riskLatency: []
     };
   }
 }
