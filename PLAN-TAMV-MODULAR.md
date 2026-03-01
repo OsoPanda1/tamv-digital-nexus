@@ -352,18 +352,21 @@ graph TD
 
 ## 14. Estado del Proyecto
 
-| Módulo | Estado |
-|--------|--------|
-| QA Constitucional | ✅ Implementado |
-| Social Core + Presencia | ⚠️ En progreso |
-| WebSocket Unificado + Chat | ⚠️ En progreso |
-| Isabella Prime | ✅ Implementado |
-| DreamSpaces/HyperReal | ✅ Implementado |
-| Marketplace/Stripe/TAU | ✅ Implementado |
-| Content Sync + DigyTAMV | ❌ Pendiente |
-| NOTITAMV + Gifts | ✅ Implementado |
-| Paleta/Visual | ✅ Implementado |
-| Auditoría TEE | ❌ Pendiente |
+| Módulo | Estado | Wiki Doc |
+|--------|--------|---------|
+| QA Constitucional | ✅ Implementado | `02_MODULOS/M01_QC/INTERNO/QC-TAMV-01-v1.1.md` |
+| Social Core + Presencia | ✅ Hooks+Schema documentados | `docs/05_social_core_schema_ui.md` |
+| WebSocket Unificado + Chat | ⚠️ En progreso | `02_MODULOS/M02_SOCIAL/INTERNO/MANUAL-SOCIAL.md` |
+| Isabella Prime | ✅ Implementado | `02_MODULOS/M05_IA_TAMVAI/INTERNO/ISABELLA-PRIME-SPEC.md` |
+| DreamSpaces/HyperReal | ✅ Implementado | `02_MODULOS/M03_XR/INTERNO/XR-PERFORMANCE-GUIDELINES.md` |
+| Marketplace/Stripe/TAU | ✅ Implementado | `02_MODULOS/M04_ECONOMIA/INTERNO/MARKETPLACE-TAU-SPEC.md` |
+| Auth & Memberships | ✅ Documentado | `docs/04_auth_memberships_access_control.md` |
+| Federated Certification | ✅ Documentado | `docs/06_federated_certification.md` |
+| Deployment Templates | ✅ Documentado | `docs/deployment_templates.md` |
+| Content Sync + DigyTAMV | ⚠️ Spec escrita | `02_MODULOS/M06_CONTENT/INTERNO/CONTENT-SYNC-SPEC.md` |
+| NOTITAMV + Gifts | ✅ Implementado | — |
+| Paleta/Visual | ✅ Implementado | — |
+| Auditoría TEE | ⚠️ Runbook escrito | `02_MODULOS/M01_QC/INTERNO/TEE-AUDIT-RUNBOOK.md` |
 
 ***
 

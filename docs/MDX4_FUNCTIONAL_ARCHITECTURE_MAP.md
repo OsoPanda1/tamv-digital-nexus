@@ -338,18 +338,54 @@ interface InfraState {
 
 ### Tablas Confirmadas
 
-| Tabla | Dominio | Descripción | Columnas Clave |
-|-------|---------|-------------|----------------|
-| `posts` | Social | Publicaciones del feed | id, user_id, content, created_at, likes, shares |
-| `profiles` | Core | Perfiles de usuario | id, email, name, avatar, role, dignity_score |
-| `transactions` | Economía | Historial de transacciones | id, user_id, type, amount, currency, status, created_at |
-| `tcep_wallets` | Economía | Billeteras TCEP | user_id, balance, locked_balance, lifetime_earned |
-| `analytics_events` | Infra | Eventos analíticos | id, user_id, event_type, payload, created_at |
-| `dream_spaces` | XR | Espacios inmersivos | id, owner_id, name, environment, participants, max_participants |
-| `courses` | Educación | Cursos disponibles | id, title, description, difficulty, duration, certification |
-| `enrollments` | Educación | Matrículas | user_id, course_id, progress, completed, certificate_url |
-| `security_events` | Seguridad | Eventos de seguridad | id, user_id, event_type, threat_level, details, created_at |
-| `notifications` | Infra | Notificaciones | id, user_id, type, title, message, read, created_at |
+| Tabla | Dominio | Descripción | Columnas Clave | RLS |
+|-------|---------|-------------|----------------|-----|
+| `posts` | Social | Publicaciones del feed | id, author_id, content, visibility, likes_count, tags, created_at | ✅ |
+| `profiles` | Core | Perfiles de usuario | user_id, email, display_name, avatar_url, role, dignity_score, trust_level | ✅ |
+| `transactions` | Economía | Historial de transacciones | id, user_id, type, amount, currency, status, created_at | ✅ |
+| `tcep_wallets` | Economía | Billeteras TCEP/TAU | user_id, balance_tcep, balance_tau, locked_balance, membership_tier, lifetime_earned | ✅ |
+| `analytics_events` | Infra | Eventos analíticos | id, user_id, event_name, event_type, properties, timestamp | ✅ |
+| `dream_spaces` | XR | Espacios inmersivos | id, owner_id, name, environment, participants, max_participants | ✅ |
+| `courses` | Educación | Cursos disponibles | id, title, level, category, is_free, price, certification_included, prerequisites | ✅ |
+| `enrollments` | Educación | Matrículas + progreso | user_id, course_id, status, progress, completed_lessons, certificate_url | ✅ |
+| `certificates` | Educación | Certificados federados | id, user_id, course_id, verification_url, blockchain_tx_hash, ipfs_hash, status | ✅ |
+| `security_events` | Seguridad | Eventos de seguridad | id, user_id, event_type, threat_level, details, created_at | ✅ |
+| `notifications` | Infra | Notificaciones | id, user_id, type, title, message, read, created_at | ✅ |
+| `processed_stripe_events` | Economía | Idempotencia webhooks | stripe_event_id, processed_at, event_type | ✅ |
+| `tts_cache` | IA | Cache TTS Isabella | cache_key, audio_url, text_hash, voice_id, char_count, created_at | ✅ |
+
+### Auth & Memberships
+
+| Tier | Descripción | Acceso |
+|------|-------------|--------|
+| `free` | Ciudadano TAMV | Dashboard, feed, universidad básica |
+| `premium` | Explorador | DreamSpaces completo, Isabella extendida |
+| `vip` | Guardián | Features avanzadas, prioridad soporte |
+| `elite` | Arquitecto | Herramientas creación, gobernanza básica |
+| `celestial` | Civilizador | Acceso total + gobernanza avanzada |
+| `enterprise` | Federado | API extendida, planes corporativos |
+
+**Referencia completa:** `docs/04_auth_memberships_access_control.md`
+
+### Social Core Schema
+
+Schema detallado de `posts` con RLS y visibilidad:
+- `visibility`: `public` | `community` | `private`
+- Feed paginado via `useSocialFeed` (20 posts/página)
+- Realtime via canal `social-feed-realtime`
+- Presencia via canal `tamv-presence` (Supabase Presence)
+
+**Referencia completa:** `docs/05_social_core_schema_ui.md`
+
+### Federated Certifications Schema
+
+Sistema de certificaciones con trazabilidad blockchain:
+- `courses`: catálogo de cursos disponibles
+- `enrollments`: progreso por usuario/curso
+- `certificates`: certificados emitidos con hash blockchain e IPFS
+- Verificación pública via `bookpi-verify` Edge fn (pendiente)
+
+**Referencia completa:** `docs/06_federated_certification.md`
 
 ---
 
@@ -612,6 +648,17 @@ src/App.tsx
 - `src/App.tsx` — Componente raíz y rutas
 - `src/stores/tamvStore.ts` — Estado global MSR
 
+## 12. WIKI MD-X4 — REFERENCIAS ACTUALIZADAS (2026-03-01)
+
+| Documento | Cobertura | Estado |
+|-----------|-----------|--------|
+| `docs/04_auth_memberships_access_control.md` | Auth flows, membership tiers, RLS, roles, route guards | ✅ stable |
+| `docs/05_social_core_schema_ui.md` | Posts schema, hooks sociales, UI components, flujos realtime | ✅ stable |
+| `docs/06_federated_certification.md` | Courses/enrollments/certificates schema, BookPI, federation checks | ✅ stable |
+| `docs/deployment_templates.md` | Vercel/Netlify/Fly.io templates, CI/CD pipeline, checklist | ✅ stable |
+| `DEPLOYMENT_GUIDE.md` | Guía completa de despliegue y configuración de tablas | ✅ stable |
+| `MDX5_OPERATIONAL_PROTOCOL.md` | Protocolo Deca-V (10 ciclos de validación) | ✅ stable |
+
 ---
 
-*Documento generado automáticamente como parte del mapeo funcional MD-X4*
+*Documento generado como parte del mapeo funcional MD-X4 · Actualizado: MD-X4 Wiki Master Update 2026-03-01*
