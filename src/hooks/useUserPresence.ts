@@ -63,7 +63,7 @@ export function useUserPresence(): UseUserPresenceReturn {
       })
       .on('presence', { event: 'join' }, ({ newPresences }) => {
         setOnlineUsers((prev) => {
-          const incoming = (newPresences as Array<{ key: string; status: PresenceState['status']; onlineAt: string }>).map((p) => ({
+          const incoming = (newPresences as unknown as Array<{ key: string; status: PresenceState['status']; onlineAt: string }>).map((p) => ({
             userId: p.key,
             onlineAt: p.onlineAt ?? new Date().toISOString(),
             status: p.status ?? 'online' as PresenceState['status'],
@@ -74,7 +74,7 @@ export function useUserPresence(): UseUserPresenceReturn {
       })
       .on('presence', { event: 'leave' }, ({ leftPresences }) => {
         const leftIds = new Set(
-          (leftPresences as Array<{ key: string }>).map((p) => p.key)
+          (leftPresences as unknown as Array<{ key: string }>).map((p) => p.key)
         );
         setOnlineUsers((prev) =>
           prev.map((u) =>

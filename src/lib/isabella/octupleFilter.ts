@@ -656,15 +656,19 @@ export class OctupleFilterSystem {
 
   private async logFilterResult(context: PipelineContext, result: FilterResult) {
     try {
-      const { error } = await supabase.from('isabella_filter_logs').insert({
-        user_id: context.userId,
-        session_id: context.sessionId,
-        input_preview: context.input.substring(0, 200),
-        decision: result.decision,
-        layer: result.layer,
-        confidence: result.confidence,
-        reasons: result.reasons as any,
-        created_at: new Date().toISOString()
+      const { error } = await supabase.from('isabella_interactions').insert({
+        user_id: context.userId || '00000000-0000-0000-0000-000000000000',
+        message_role: 'system',
+        content: `FILTER: ${result.decision} (layer ${result.layer})`,
+        ethical_flag: result.decision,
+        metadata: {
+          session_id: context.sessionId,
+          input_preview: context.input.substring(0, 200),
+          decision: result.decision,
+          layer: result.layer,
+          confidence: result.confidence,
+          reasons: result.reasons
+        }
       });
 
       if (error) {

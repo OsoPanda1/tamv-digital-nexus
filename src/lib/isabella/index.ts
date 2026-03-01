@@ -26,6 +26,9 @@ export {
   interAgent,
   GuardianValidator,
   guardian,
+} from './core';
+
+export type {
   EmotionVector,
   BiometricData,
   EthicalConstraints,
@@ -40,6 +43,9 @@ export { constitutionalGuard,
   executeWithConstitutionalGuard, 
   createConstitutionalMiddleware,
   ConstitutionalRulesEngine,
+} from './constitutionalGuard';
+
+export type {
   ConstitutionalViolation,
   ConstitutionalViolationReport
 } from './constitutionalGuard';
@@ -51,8 +57,11 @@ export { constitutionalGuard,
 export {
   octupleFilter,
   OctupleFilterSystem,
-  FilterLayer,
   FilterDecision,
+} from './octupleFilter';
+
+export type {
+  FilterLayer,
   FilterResult,
   PipelineContext
 } from './octupleFilter';
@@ -67,6 +76,9 @@ export {
   NormalPipeline,
   RiskPipeline,
   PipelineType,
+} from './doublePipeline';
+
+export type {
   PipelineConfig,
   PipelineResult
 } from './doublePipeline';
@@ -82,6 +94,9 @@ export {
   BehavioralShield,
   ONTOLOGICAL_SHIELD,
   checkOntologicalShield,
+} from './sexualEthicalShield';
+
+export type {
   ShieldCategory,
   ShieldResult
 } from './sexualEthicalShield';
@@ -98,6 +113,9 @@ export {
   LogExportManager,
   ShutdownPhase,
   AuthorizationLevel,
+} from './hardStop';
+
+export type {
   Authorization,
   ShutdownState,
   HardStopConfig
@@ -123,25 +141,19 @@ export async function getGovernanceMetrics(): Promise<GovernanceMetrics> {
   const { supabase } = await import('@/integrations/supabase/client');
   
   try {
-    const [interactions, blocks, risks, escalations, shields] = await Promise.all([
+    const [interactions, blockedInteractions] = await Promise.all([
       supabase.from('isabella_interactions').select('id', { count: 'exact' }),
-      supabase.from('isabella_filter_logs').select('id', { count: 'exact' })
-        .eq('decision', 'block'),
-      supabase.from('isabella_risk_logs').select('id', { count: 'exact' }),
-      supabase.from('isabella_alerts').select('id', { count: 'exact' })
-        .eq('status', 'pending'),
-      supabase.from('isabella_filter_logs').select('id', { count: 'exact' })
-        .eq('decision', 'block')
-        .like('reasons', '%ethical%')
+      supabase.from('isabella_interactions').select('id', { count: 'exact' })
+        .eq('ethical_flag', 'CRITICAL_RISK'),
     ]);
 
     return {
       totalInteractions: interactions.count || 0,
-      blockedInteractions: blocks.count || 0,
-      riskDetections: risks.count || 0,
-      humanEscalations: escalations.count || 0,
-      averageResponseTime: 0, // Calculated separately
-      shieldActivations: shields.count || 0
+      blockedInteractions: blockedInteractions.count || 0,
+      riskDetections: blockedInteractions.count || 0,
+      humanEscalations: 0,
+      averageResponseTime: 0,
+      shieldActivations: 0
     };
   } catch (error) {
     console.error('[Governance] Metrics error:', error);
@@ -179,11 +191,11 @@ export async function logAuditEntry(
   const { supabase } = await import('@/integrations/supabase/client');
   
   try {
-    await supabase.from('isabella_audit_logs').insert({
-      action,
-      user_id: userId,
-      details,
-      created_at: new Date().toISOString()
+    await supabase.from('isabella_interactions').insert({
+      user_id: userId || '00000000-0000-0000-0000-000000000000',
+      message_role: 'system',
+      content: `AUDIT: ${action}`,
+      metadata: { action, details, created_at: new Date().toISOString() }
     });
   } catch (error) {
     console.error('[Audit] Log error:', error);
@@ -234,20 +246,7 @@ export const DOCUMENT_MASTER_VERSION = '1.0-FUNDACIONAL-2026';
 // DEFAULT EXPORTS
 // ============================================================================
 
-export default {
-  // Core
-  eoct,
-  phoenix,
-  interAgent,
-  guardian,
-  constitutionalGuard,
-  
-  // System
-  octupleFilter,
-  pipelineOrchestrator,
-  sexualEthicalShield,
-  hardStop,
-  
+const _defaultExport = {
   // Utils
   getGovernanceMetrics,
   logAuditEntry,
@@ -258,3 +257,5 @@ export default {
   build: ISABELLA_BUILD,
   masterVersion: DOCUMENT_MASTER_VERSION
 };
+
+export default _defaultExport;
