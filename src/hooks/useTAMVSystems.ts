@@ -1,5 +1,5 @@
 // ============================================================================
-// TAMV MD-X4â"¢ - Custom Hooks for System Integration
+// TAMV MD-X4™ - Custom Hooks for System Integration
 // React hooks for accessing all TAMV systems
 // ============================================================================
 

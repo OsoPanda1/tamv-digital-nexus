@@ -6,7 +6,10 @@
  * It ensures that AI actions comply with the SCAO (Stewarded & Constitutional Autonomous Organization) framework.
  */
 
-import { logger } from '@/lib/utils';
+const logger = {
+  error: (...args: any[]) => console.error('[TAMV Constitutional]', ...args),
+  warn: (...args: any[]) => console.warn('[TAMV Constitutional]', ...args),
+};
 
 // Constitutional violation types
 export enum ConstitutionalViolation {

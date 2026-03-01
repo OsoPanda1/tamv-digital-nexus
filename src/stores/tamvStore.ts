@@ -1,5 +1,5 @@
 // ============================================================================
-// TAMV MD-X4â"¢ - Global State Management Store
+// TAMV MD-X4™ - Global State Management Store
 // Centralized Zustand store for the entire ecosystem
 // ============================================================================
 
@@ -51,7 +51,7 @@ export interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: number;
-  emotion?: 'neutral' | 'alegrÃ­a' | 'tristeza' | 'poder' | 'duda';
+  emotion?: 'neutral' | 'alegría' | 'tristeza' | 'poder' | 'duda';
 }
 
 export interface Wallet {

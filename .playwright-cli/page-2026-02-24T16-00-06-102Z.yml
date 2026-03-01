@@ -1,0 +1,132 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - button [ref=e7] [cursor=pointer]:
+        - img
+      - link [ref=e9] [cursor=pointer]:
+        - /url: /
+        - img [ref=e11]
+      - generic [ref=e16]:
+        - generic [ref=e18]:
+          - link [ref=e19] [cursor=pointer]:
+            - /url: /dashboard
+            - button [ref=e20]:
+              - img
+          - link [ref=e21] [cursor=pointer]:
+            - /url: /isabella
+            - button [ref=e22]:
+              - img
+          - link [ref=e23] [cursor=pointer]:
+            - /url: /anubis
+            - button [ref=e24]:
+              - img
+          - link [ref=e25] [cursor=pointer]:
+            - /url: /profile
+            - button [ref=e26]:
+              - img
+        - generic [ref=e28]:
+          - link [ref=e29] [cursor=pointer]:
+            - /url: /ecosystem
+            - button [ref=e30]:
+              - img
+          - link [ref=e31] [cursor=pointer]:
+            - /url: /dream-spaces
+            - button [ref=e32]:
+              - img
+          - link [ref=e33] [cursor=pointer]:
+            - /url: /kaos
+            - button [ref=e34]:
+              - img
+          - link [ref=e35] [cursor=pointer]:
+            - /url: /community
+            - button [ref=e36]:
+              - img
+        - generic [ref=e38]:
+          - link [ref=e39] [cursor=pointer]:
+            - /url: /university
+            - button [ref=e40]:
+              - img
+          - link [ref=e41] [cursor=pointer]:
+            - /url: /docs
+            - button [ref=e42]:
+              - img
+          - link [ref=e43] [cursor=pointer]:
+            - /url: /dashboard
+            - button [ref=e44]:
+              - img
+        - generic [ref=e46]:
+          - link [ref=e47] [cursor=pointer]:
+            - /url: /monetization
+            - button [ref=e48]:
+              - img
+          - link [ref=e49] [cursor=pointer]:
+            - /url: /monetization
+            - button [ref=e50]:
+              - img
+          - link [ref=e51] [cursor=pointer]:
+            - /url: /economy
+            - button [ref=e52]:
+              - img
+        - generic [ref=e54]:
+          - link [ref=e55] [cursor=pointer]:
+            - /url: /governance
+            - button [ref=e56]:
+              - img
+          - link [ref=e57] [cursor=pointer]:
+            - /url: /bookpi
+            - button [ref=e58]:
+              - img
+          - link [ref=e59] [cursor=pointer]:
+            - /url: /profile
+            - button [ref=e60]:
+              - img
+          - link [ref=e61] [cursor=pointer]:
+            - /url: /crisis
+            - button [ref=e62]:
+              - img
+          - link [ref=e63] [cursor=pointer]:
+            - /url: /admin
+            - button [ref=e64]:
+              - img
+        - generic [ref=e66]:
+          - link [ref=e67] [cursor=pointer]:
+            - /url: /anubis
+            - button [ref=e68]:
+              - img
+          - link [ref=e69] [cursor=pointer]:
+            - /url: /ecosystem
+            - button [ref=e70]:
+              - img
+          - link [ref=e71] [cursor=pointer]:
+            - /url: /economy
+            - button [ref=e72]:
+              - img
+          - link [ref=e73] [cursor=pointer]:
+            - /url: /isabella
+            - button [ref=e74]:
+              - img
+          - link [ref=e75] [cursor=pointer]:
+            - /url: /bookpi
+            - button [ref=e76]:
+              - img
+      - link [ref=e78] [cursor=pointer]:
+        - /url: /profile
+        - button [ref=e79]:
+          - generic [ref=e80]:
+            - img
+    - img [ref=e85] [cursor=pointer]
+    - button [ref=e96] [cursor=pointer]:
+      - img
+    - main:
+      - generic [ref=e97]:
+        - generic:
+          - generic:
+            - generic: TAMV MD-X4™ · ISABELLA CHANNEL
+            - generic: "PROTOCOL: IMMERSION · STATUS: ONLINE"
+          - generic:
+            - generic: LATAM NODE
+            - generic: MSR · THE SOF · UTAMV
+        - button "SKIP →" [ref=e103] [cursor=pointer]

@@ -1,5 +1,5 @@
 // ============================================================================
-// TAMV MD-X4â"¢ - Anubis Security System
+// TAMV MD-X4™ - Anubis Security System
 // Post-Quantum Security with DEKATEOTL 11-Layer Protection
 // ============================================================================
 
