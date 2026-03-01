@@ -1,5 +1,5 @@
 // ============================================================================
-// TAMV MD-X4™ — CINEMATIC GENESIS INTRO v5.0
+// TAMV MD-X4™ — CINEMATIC GENESIS INTRO v6.0 (Full File)
 // PODER · LIDERAZGO · MAGIA — La Entrada al Mundo TAMV
 // ============================================================================
 
@@ -13,14 +13,14 @@ import logoImg from "@/assets/LOGOTAMV2.jpg";
 
 // ─── Phase machine ───────────────────────────────────────────────────────────
 type Phase =
-  | "permission"   // Black screen + button
-  | "awakening"    // Dark pulse / heartbeat
-  | "ignition"     // Energy builds
-  | "explosion"    // Quantum big bang
-  | "cosmos"       // Stars + particles fly
-  | "crown"        // Leadership crown moment
-  | "logo"         // Logo reveal
-  | "message"      // Isabella lines
+  | "permission" // Black screen + button
+  | "awakening"  // Dark pulse / heartbeat
+  | "ignition"   // Energy builds
+  | "explosion"  // Quantum big bang
+  | "cosmos"     // Stars + particles fly
+  | "crown"      // Leadership crown moment
+  | "logo"       // Logo reveal
+  | "message"    // Isabella lines
   | "done";
 
 interface CinematicIntroProps {
@@ -38,48 +38,121 @@ const ISABELLA_LINES: { text: string; duration: number }[] = [
 
 // ─── Color palette ───────────────────────────────────────────────────────────
 const C = {
-  gold:   "#FFD700",
-  cyan:   "#00D9FF",
+  gold: "#FFD700",
+  cyan: "#00D9FF",
   purple: "#9D4EDD",
-  white:  "#FFFFFF",
-  magenta:"#FF2D78",
+  white: "#FFFFFF",
+  magenta: "#FF2D78",
 };
 
 // ============================================================================
-// 3-D: Quantum Particle Field
+// 3-D: Camera rig with parallax and shake
+// ============================================================================
+function useCinematicCamera(phase: Phase) {
+  const group = useRef<THREE.Group>(null);
+
+  useFrame(({ mouse, clock, camera }) => {
+    const t = clock.elapsedTime;
+
+    const targetX = THREE.MathUtils.lerp(-0.4, 0.4, (mouse.x + 1) / 2);
+    const targetY = THREE.MathUtils.lerp(-0.25, 0.25, (mouse.y + 1) / 2);
+
+    // Parallax suave
+    camera.position.x += (targetX - camera.position.x) * 0.06;
+    camera.position.y += (targetY - camera.position.y) * 0.06;
+
+    // Shake ligero en explosión
+    if (phase === "explosion") {
+      const shake = 0.08;
+      camera.position.x += (Math.random() - 0.5) * shake;
+      camera.position.y += (Math.random() - 0.5) * shake;
+    }
+
+    camera.lookAt(0, 0, 0);
+
+    if (group.current) {
+      group.current.rotation.y = Math.sin(t * 0.1) * 0.1;
+      group.current.rotation.x = Math.cos(t * 0.08) * 0.08;
+    }
+  });
+
+  return group;
+}
+
+// ============================================================================
+// 3-D: Nebula fog and light halo
+// ============================================================================
+function NebulaFog({ phase }: { phase: Phase }) {
+  const matRef = useRef<THREE.MeshStandardMaterial>(null);
+
+  useFrame(({ clock }) => {
+    if (!matRef.current) return;
+    const t = clock.elapsedTime;
+    const intensity =
+      phase === "cosmos" || phase === "crown" || phase === "logo" ? 0.35 : 0.14;
+    matRef.current.opacity = intensity + Math.sin(t * 0.3) * 0.05;
+  });
+
+  return (
+    <group>
+      {[26, 34, 42].map((r, idx) => (
+        <mesh key={idx}>
+          <sphereGeometry args={[r, 48, 48]} />
+          <meshStandardMaterial
+            ref={idx === 0 ? matRef : undefined}
+            transparent
+            depthWrite={false}
+            side={THREE.BackSide}
+            color={idx === 0 ? C.purple : idx === 1 ? C.cyan : C.magenta}
+            opacity={0.2}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+function LightHalo() {
+  return (
+    <group position={[0, 0, 0]}>
+      <mesh position={[0, 0, -4]}>
+        <planeGeometry args={[10, 10]} />
+        <meshBasicMaterial
+          transparent
+          depthWrite={false}
+          opacity={0.22}
+          color={C.gold}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// ============================================================================
+// 3-D: Quantum Particle Field (better, denser, more alive)
 // ============================================================================
 function QuantumField({ phase }: { phase: Phase }) {
   const ref = useRef<THREE.Points>(null);
-  const COUNT = 12000;
+  const COUNT = 20000;
   const positions = useRef(new Float32Array(COUNT * 3));
   const velocities = useRef(new Float32Array(COUNT * 3));
-  const colors = useRef(new Float32Array(COUNT * 3));
 
   useEffect(() => {
-    const palette = [
-      new THREE.Color(C.cyan),
-      new THREE.Color(C.purple),
-      new THREE.Color(C.gold),
-      new THREE.Color(C.magenta),
-    ];
     for (let i = 0; i < COUNT; i++) {
       const i3 = i * 3;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
-      const r = 0.3 + Math.random() * 3.5;
-      positions.current[i3]     = r * Math.sin(phi) * Math.cos(theta);
+      const r = 0.4 + Math.random() * 5.0;
+
+      positions.current[i3] = r * Math.sin(phi) * Math.cos(theta);
       positions.current[i3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       positions.current[i3 + 2] = r * Math.cos(phi);
 
-      const spd = 0.04 + Math.random() * 0.1;
-      velocities.current[i3]     = (Math.random() - 0.5) * spd;
+      const spd = 0.02 + Math.random() * 0.06;
+      velocities.current[i3] = (Math.random() - 0.5) * spd;
       velocities.current[i3 + 1] = (Math.random() - 0.5) * spd;
       velocities.current[i3 + 2] = (Math.random() - 0.5) * spd;
-
-      const col = palette[Math.floor(Math.random() * palette.length)];
-      colors.current[i3]     = col.r;
-      colors.current[i3 + 1] = col.g;
-      colors.current[i3 + 2] = col.b;
     }
   }, []);
 
@@ -91,34 +164,62 @@ function QuantumField({ phase }: { phase: Phase }) {
     const arr = posAttr.array as Float32Array;
 
     const flying =
-      phase === "explosion" || phase === "cosmos" || phase === "crown" ||
-      phase === "logo" || phase === "message";
+      phase === "explosion" ||
+      phase === "cosmos" ||
+      phase === "crown" ||
+      phase === "logo" ||
+      phase === "message";
 
-    const speed = flying ? 0.32 : 0.015;
+    const baseSpeed = flying ? 0.4 : 0.02;
+    const swirl = flying ? 0.45 : 0.15;
 
     for (let i = 0; i < COUNT; i++) {
       const i3 = i * 3;
-      arr[i3]     += velocities.current[i3]     * speed;
-      arr[i3 + 1] += velocities.current[i3 + 1] * speed;
-      arr[i3 + 2] += velocities.current[i3 + 2] * speed;
+
+      arr[i3] += velocities.current[i3] * baseSpeed;
+      arr[i3 + 1] += velocities.current[i3 + 1] * baseSpeed;
+      arr[i3 + 2] += velocities.current[i3 + 2] * baseSpeed;
+
+      const dx = arr[i3];
+      const dy = arr[i3 + 1];
+      const dz = arr[i3 + 2];
+      const dist = Math.sqrt(dx * dx + dy * dy + dz * dz) + 0.0001;
+      const attract = flying ? -0.0008 : -0.0002;
+
+      arr[i3] += (dx / dist) * attract * swirl;
+      arr[i3 + 1] += (dy / dist) * attract * swirl;
+      arr[i3 + 2] += (dz / dist) * attract * swirl;
+
+      if (dist > 55) {
+        arr[i3] *= 0.4;
+        arr[i3 + 1] *= 0.4;
+        arr[i3 + 2] *= 0.4;
+      }
     }
+
     posAttr.needsUpdate = true;
 
-    ref.current.rotation.y = t * 0.18;
-    ref.current.rotation.x = Math.sin(t * 0.4) * 0.22;
+    ref.current.rotation.y = t * 0.16;
+    ref.current.rotation.x = Math.sin(t * 0.3) * 0.25;
   });
 
-  const isVisible = phase !== "permission";
+  const visible = phase !== "permission";
 
-  return isVisible ? (
-    <Points ref={ref} positions={positions.current} stride={3} frustumCulled={false}>
+  return visible ? (
+    <Points
+      ref={ref}
+      positions={positions.current}
+      stride={3}
+      frustumCulled={false}
+    >
       <PointMaterial
         transparent
-        vertexColors
-        size={0.045}
+        vertexColors={false}
+        color="#ffffff"
+        size={phase === "explosion" ? 0.06 : 0.035}
         sizeAttenuation
         depthWrite={false}
-        opacity={0.92}
+        opacity={0.95}
         blending={THREE.AdditiveBlending}
       />
     </Points>
@@ -126,7 +227,7 @@ function QuantumField({ phase }: { phase: Phase }) {
 }
 
 // ============================================================================
-// 3-D: Sacred Geometry — icosahedron power core
+// 3-D: Sacred Geometry — Power Core
 // ============================================================================
 function PowerCore({ phase }: { phase: Phase }) {
   const outer = useRef<THREE.Mesh>(null);
@@ -139,67 +240,81 @@ function PowerCore({ phase }: { phase: Phase }) {
     if (!outer.current || !inner.current) return;
 
     const target =
-      phase === "awakening" ? 0.6
-      : phase === "ignition" ? 1.4
-      : phase === "explosion" ? 7
-      : 0;
+      phase === "awakening"
+        ? 0.8
+        : phase === "ignition"
+        ? 1.6
+        : phase === "explosion"
+        ? 8
+        : 0;
 
     const cur = outer.current.scale.x || 0.001;
-    const ns = cur + (target - cur) * 0.06;
+    const ns = cur + (target - cur) * 0.08;
     outer.current.scale.set(ns, ns, ns);
-    inner.current.scale.set(ns * 0.62, ns * 0.62, ns * 0.62);
+    inner.current.scale.set(ns * 0.6, ns * 0.6, ns * 0.6);
 
     outer.current.rotation.y = t * 0.9;
     outer.current.rotation.x = t * 0.55;
-    inner.current.rotation.y = -t * 1.2;
-    inner.current.rotation.z = t * 0.7;
+    inner.current.rotation.y = -t * 1.4;
+    inner.current.rotation.z = t * 0.9;
 
     if (ring1.current) {
-      ring1.current.rotation.z = t * 1.3;
-      ring1.current.rotation.x = Math.PI / 4 + Math.sin(t * 0.5) * 0.3;
+      ring1.current.rotation.z = t * 1.4;
+      ring1.current.position.y = Math.sin(t * 0.8) * 0.25;
     }
     if (ring2.current) {
-      ring2.current.rotation.z = -t * 0.9;
-      ring2.current.rotation.y = Math.PI / 3 + Math.cos(t * 0.4) * 0.3;
+      ring2.current.rotation.z = -t * 1.0;
+      ring2.current.position.y = Math.cos(t * 0.6) * 0.25;
     }
+
+    const pulse = 1.5 + Math.sin(t * 3) * 0.6;
+    (outer.current.material as THREE.MeshStandardMaterial).emissiveIntensity =
+      phase === "ignition" || phase === "explosion" ? pulse * 1.6 : 1.2;
+    (inner.current.material as THREE.MeshStandardMaterial).emissiveIntensity =
+      phase === "ignition" || phase === "explosion" ? pulse * 2 : 1.4;
   });
 
   if (
-    phase === "permission" || phase === "cosmos" || phase === "crown" ||
-    phase === "logo" || phase === "message" || phase === "done"
-  ) return null;
+    phase === "permission" ||
+    phase === "cosmos" ||
+    phase === "crown" ||
+    phase === "logo" ||
+    phase === "message" ||
+    phase === "done"
+  )
+    return null;
 
   return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={0.6}>
+    <Float speed={2} rotationIntensity={0.7} floatIntensity={0.9}>
       <mesh ref={outer}>
         <icosahedronGeometry args={[1, 4]} />
         <meshStandardMaterial
           color={C.gold}
-          emissive={C.gold}
-          emissiveIntensity={2.8}
+          emissive={new THREE.Color(C.gold)}
+          emissiveIntensity={2.2}
           wireframe
           transparent
-          opacity={0.65}
+          opacity={0.7}
         />
       </mesh>
       <mesh ref={inner}>
-        <octahedronGeometry args={[1, 2]} />
+        <octahedronGeometry args={[0.9, 2]} />
         <meshStandardMaterial
           color={C.cyan}
-          emissive={C.cyan}
-          emissiveIntensity={3.5}
+          emissive={new THREE.Color(C.cyan)}
+          emissiveIntensity={2.8}
           wireframe
           transparent
-          opacity={0.8}
+          opacity={0.9}
         />
       </mesh>
       <mesh ref={ring1}>
-        <torusGeometry args={[1.6, 0.025, 16, 120]} />
-        <meshBasicMaterial color={C.purple} transparent opacity={0.7} />
+        <torusGeometry args={[1.7, 0.03, 16, 120]} />
+        <meshBasicMaterial color={C.purple} transparent opacity={0.9} />
       </mesh>
       <mesh ref={ring2}>
-        <torusGeometry args={[2.1, 0.018, 16, 120]} />
-        <meshBasicMaterial color={C.magenta} transparent opacity={0.55} />
+        <torusGeometry args={[2.2, 0.02, 16, 120]} />
+        <meshBasicMaterial color={C.magenta} transparent opacity={0.7} />
       </mesh>
     </Float>
   );
@@ -257,7 +372,8 @@ function LeadershipCrown({ phase }: { phase: Phase }) {
   useFrame((state) => {
     if (!group.current) return;
     const t = state.clock.elapsedTime;
-    const visible = phase === "crown" || phase === "logo" || phase === "message";
+    const visible =
+      phase === "crown" || phase === "logo" || phase === "message";
     const targetY = visible ? 2.5 : 5;
     group.current.position.y += (targetY - group.current.position.y) * 0.07;
     group.current.rotation.y = t * 0.5;
@@ -268,26 +384,37 @@ function LeadershipCrown({ phase }: { phase: Phase }) {
     group.current.scale.z += (s - group.current.scale.z) * 0.08;
   });
 
-  const SPIKE_ANGLES = [0, 60, 120, 180, 240, 300].map((d) => (d * Math.PI) / 180);
+  const SPIKE_ANGLES = [0, 60, 120, 180, 240, 300].map(
+    (d) => (d * Math.PI) / 180
+  );
 
   return (
     <group ref={group} position={[0, 5, 0]}>
-      {/* Crown base ring */}
       <mesh rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[1.1, 0.09, 16, 80]} />
-        <meshStandardMaterial color={C.gold} emissive={C.gold} emissiveIntensity={4} />
+        <meshStandardMaterial
+          color={C.gold}
+          emissive={C.gold}
+          emissiveIntensity={4}
+        />
       </mesh>
-      {/* Crown spikes */}
       {SPIKE_ANGLES.map((angle, i) => (
         <mesh
           key={i}
-          position={[Math.cos(angle) * 1.1, 0.3 + (i % 2 === 0 ? 0.55 : 0.2), Math.sin(angle) * 1.1]}
+          position={[
+            Math.cos(angle) * 1.1,
+            0.3 + (i % 2 === 0 ? 0.55 : 0.2),
+            Math.sin(angle) * 1.1,
+          ]}
         >
           <coneGeometry args={[0.08, i % 2 === 0 ? 0.9 : 0.5, 8]} />
-          <meshStandardMaterial color={C.gold} emissive={C.gold} emissiveIntensity={3.5} />
+          <meshStandardMaterial
+            color={C.gold}
+            emissive={C.gold}
+            emissiveIntensity={3.5}
+          />
         </mesh>
       ))}
-      {/* Center gem */}
       <mesh position={[0, 0.3, 0]}>
         <octahedronGeometry args={[0.28, 0]} />
         <meshStandardMaterial
@@ -313,8 +440,11 @@ function MagicRunes({ phase }: { phase: Phase }) {
   useFrame((state) => {
     const t = state.clock.elapsedTime;
     const visible =
-      phase === "ignition" || phase === "explosion" || phase === "cosmos" ||
-      phase === "crown" || phase === "logo";
+      phase === "ignition" ||
+      phase === "explosion" ||
+      phase === "cosmos" ||
+      phase === "crown" ||
+      phase === "logo";
 
     [g1, g2, g3].forEach((ref, i) => {
       if (!ref.current) return;
@@ -323,23 +453,24 @@ function MagicRunes({ phase }: { phase: Phase }) {
       ref.current.scale.y += (s - ref.current.scale.y) * 0.07;
       ref.current.scale.z += (s - ref.current.scale.z) * 0.07;
       ref.current.rotation.z = t * (0.4 + i * 0.25) * (i % 2 === 0 ? 1 : -1);
-      ref.current.rotation.x = Math.sin(t * 0.3 + i) * 0.4;
+      ref.current.rotation.x = Math.sin(t * 0.3 + i) * 0.35;
+      ref.current.position.y = -1.2 + Math.sin(t * 0.5 + i) * 0.15;
     });
   });
 
   return (
     <>
-      <mesh ref={g1} position={[0, 0, 0]}>
-        <torusGeometry args={[2.5, 0.018, 12, 200]} />
-        <meshBasicMaterial color={C.gold} transparent opacity={0.45} />
+      <mesh ref={g1}>
+        <torusGeometry args={[2.6, 0.02, 18, 220]} />
+        <meshBasicMaterial color={C.gold} transparent opacity={0.5} />
       </mesh>
-      <mesh ref={g2} position={[0, 0, 0]}>
-        <torusGeometry args={[3.2, 0.013, 12, 200]} />
-        <meshBasicMaterial color={C.purple} transparent opacity={0.35} />
+      <mesh ref={g2}>
+        <torusGeometry args={[3.4, 0.018, 18, 220]} />
+        <meshBasicMaterial color={C.purple} transparent opacity={0.4} />
       </mesh>
-      <mesh ref={g3} position={[0, 0, 0]}>
-        <torusGeometry args={[3.9, 0.01, 12, 200]} />
-        <meshBasicMaterial color={C.cyan} transparent opacity={0.28} />
+      <mesh ref={g3}>
+        <torusGeometry args={[4.1, 0.016, 18, 220]} />
+        <meshBasicMaterial color={C.cyan} transparent opacity={0.35} />
       </mesh>
     </>
   );
@@ -349,27 +480,38 @@ function MagicRunes({ phase }: { phase: Phase }) {
 // 3-D Scene root
 // ============================================================================
 function CinematicScene({ phase }: { phase: Phase }) {
+  const camRig = useCinematicCamera(phase);
+
   return (
-    <>
-      <ambientLight intensity={0.2} />
-      <pointLight position={[0, 0, 6]} intensity={4} color={C.gold} />
-      <pointLight position={[8, 8, -4]} intensity={2.5} color={C.cyan} />
-      <pointLight position={[-8, -6, -4]} intensity={2} color={C.purple} />
-      <Stars
-        radius={160}
-        depth={90}
-        count={12000}
-        factor={4.5}
-        saturation={0.2}
-        fade
-        speed={phase === "cosmos" || phase === "crown" ? 2.5 : 0.8}
+    <group ref={camRig}>
+      <ambientLight intensity={0.25} color="#0b1020" />
+      <spotLight
+        position={[0, 6, 5]}
+        intensity={2.8}
+        angle={0.6}
+        penumbra={0.6}
+        color={C.gold}
       />
+      <pointLight position={[6, -4, 4]} intensity={2.3} color={C.cyan} />
+      <pointLight position={[-8, 6, -6]} intensity={1.7} color={C.purple} />
+
+      <NebulaFog phase={phase} />
+      <Stars
+        radius={200}
+        depth={120}
+        count={16000}
+        factor={4.5}
+        saturation={0.4}
+        fade
+        speed={phase === "cosmos" || phase === "crown" ? 3 : 1}
+      />
+      <LightHalo />
       <QuantumField phase={phase} />
       <PowerCore phase={phase} />
       <ShockwaveRings phase={phase} />
       <LeadershipCrown phase={phase} />
       <MagicRunes phase={phase} />
-    </>
+    </group>
   );
 }
 
@@ -436,10 +578,18 @@ function PermissionGate({ onAccept }: { onAccept: () => void }) {
             bottom: pos.startsWith("b") ? 24 : "auto",
             left: pos.endsWith("l") ? 24 : "auto",
             right: pos.endsWith("r") ? 24 : "auto",
-            borderTop: pos.startsWith("t") ? "1px solid rgba(0,217,255,0.4)" : "none",
-            borderBottom: pos.startsWith("b") ? "1px solid rgba(0,217,255,0.4)" : "none",
-            borderLeft: pos.endsWith("l") ? "1px solid rgba(0,217,255,0.4)" : "none",
-            borderRight: pos.endsWith("r") ? "1px solid rgba(0,217,255,0.4)" : "none",
+            borderTop: pos.startsWith("t")
+              ? "1px solid rgba(0,217,255,0.4)"
+              : "none",
+            borderBottom: pos.startsWith("b")
+              ? "1px solid rgba(0,217,255,0.4)"
+              : "none",
+            borderLeft: pos.endsWith("l")
+              ? "1px solid rgba(0,217,255,0.4)"
+              : "none",
+            borderRight: pos.endsWith("r")
+              ? "1px solid rgba(0,217,255,0.4)"
+              : "none",
           }}
         />
       ))}
@@ -447,7 +597,7 @@ function PermissionGate({ onAccept }: { onAccept: () => void }) {
       {/* Top label */}
       <motion.div
         className="absolute top-8 text-[0.65rem] tracking-[0.5em] uppercase text-white/20 text-center"
-        initial={{ opacity: 0 }}
+        initial({ opacity: 0 })}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
       >
@@ -475,7 +625,8 @@ function PermissionGate({ onAccept }: { onAccept: () => void }) {
         <motion.h1
           className="text-5xl md:text-7xl font-black tracking-[0.4em] text-center"
           style={{
-            background: "linear-gradient(135deg, #FFD700 0%, #00D9FF 45%, #9D4EDD 80%, #FFD700 100%)",
+            background:
+              "linear-gradient(135deg, #FFD700 0%, #00D9FF 45%, #9D4EDD 80%, #FFD700 100%)",
             backgroundSize: "300% 300%",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
@@ -542,7 +693,9 @@ function PermissionGate({ onAccept }: { onAccept: () => void }) {
                 ? "linear-gradient(135deg, rgba(255,215,0,0.18) 0%, rgba(0,217,255,0.18) 50%, rgba(157,78,221,0.18) 100%)"
                 : "rgba(255,255,255,0.04)",
               border: "1px solid",
-              borderColor: hovered ? "rgba(255,215,0,0.8)" : "rgba(255,215,0,0.4)",
+              borderColor: hovered
+                ? "rgba(255,215,0,0.8)"
+                : "rgba(255,215,0,0.4)",
               color: hovered ? "#FFD700" : "rgba(255,255,255,0.7)",
               backdropFilter: "blur(20px)",
               boxShadow: hovered
@@ -608,7 +761,10 @@ function PermissionGate({ onAccept }: { onAccept: () => void }) {
 // ============================================================================
 // MAIN COMPONENT
 // ============================================================================
-export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntroProps) {
+export function CinematicIntro({
+  onComplete,
+  skipEnabled = true,
+}: CinematicIntroProps) {
   const [phase, setPhase] = useState<Phase>("permission");
   const [accepted, setAccepted] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -648,12 +804,12 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
 
     // Phase timeline
     push(() => setPhase("awakening"), 200);
-    push(() => setPhase("ignition"),  2200);
+    push(() => setPhase("ignition"), 2200);
     push(() => setPhase("explosion"), 4800);
-    push(() => setPhase("cosmos"),    7200);
-    push(() => setPhase("crown"),     9500);
-    push(() => setPhase("logo"),      11800);
-    push(() => setPhase("message"),   14000);
+    push(() => setPhase("cosmos"), 7200);
+    push(() => setPhase("crown"), 9500);
+    push(() => setPhase("logo"), 11800);
+    push(() => setPhase("message"), 14000);
 
     // Isabella narrative
     let lineDelay = 14000;
@@ -685,12 +841,14 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
     onComplete();
   }, [clearAll, onComplete]);
 
-  useEffect(() => () => {
-    clearAll();
-    audioRef.current?.pause();
-  }, [clearAll]);
+  useEffect(
+    () => () => {
+      clearAll();
+      audioRef.current?.pause();
+    },
+    [clearAll]
+  );
 
-  // ── Render: permission gate
   if (!accepted) {
     return (
       <AnimatePresence>
@@ -699,19 +857,17 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
     );
   }
 
-  // ── Render: cinematic sequence
   const bgGlow = (() => {
     if (phase === "awakening") return "rgba(157,78,221,0.15)";
-    if (phase === "ignition")  return "rgba(255,215,0,0.20)";
+    if (phase === "ignition") return "rgba(255,215,0,0.20)";
     if (phase === "explosion") return "rgba(0,217,255,0.55)";
-    if (phase === "cosmos")    return "rgba(157,78,221,0.30)";
-    if (phase === "crown")     return "rgba(255,215,0,0.35)";
+    if (phase === "cosmos") return "rgba(157,78,221,0.30)";
+    if (phase === "crown") return "rgba(255,215,0,0.35)";
     return "rgba(0,217,255,0.18)";
   })();
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black overflow-hidden">
-
       {/* 3D canvas */}
       <Canvas camera={{ position: [0, 0, 9], fov: 70 }} className="absolute inset-0">
         <CinematicScene phase={phase} />
@@ -720,11 +876,13 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
       {/* Chromatic radial glow */}
       <motion.div
         className="absolute inset-0 pointer-events-none mix-blend-screen"
-        animate={{ background: `radial-gradient(circle at 50% 50%, ${bgGlow} 0%, transparent 60%)` }}
+        animate={{
+          background: `radial-gradient(circle at 50% 50%, ${bgGlow} 0%, transparent 60%)`,
+        }}
         transition={{ duration: 1.2 }}
       />
 
-      {/* Secondary colour wash */}
+      {/* Secondary color wash */}
       <div
         className="absolute inset-0 pointer-events-none opacity-60"
         style={{
@@ -737,20 +895,30 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
 
       {/* CRT scanlines */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.18]"
+        className="absolute inset-0 pointer-events-none opacity-[0.12]"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(to bottom, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.02) 1px, transparent 2px)",
+            "repeating-linear-gradient(to bottom, rgba(255,255,255,0.06) 0, rgba(255,255,255,0.03) 1px, transparent 3px)",
         }}
       />
 
       {/* Film grain */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.10]"
+        className="absolute inset-0 pointer-events-none opacity-[0.18]"
         style={{
           backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E\")",
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E\")",
           mixBlendMode: "soft-light",
+        }}
+      />
+
+      {/* Vignette */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 50%, transparent 55%, rgba(0,0,0,0.85) 100%)",
+          mixBlendMode: "multiply",
         }}
       />
 
@@ -767,17 +935,25 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
         </div>
       </div>
 
-      {/* ── AWAKENING: pulsing heartbeat text ── */}
+      {/* AWAKENING */}
       <AnimatePresence>
         {phase === "awakening" && (
           <motion.div
             className="absolute inset-0 flex items-center justify-center z-20"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
             <motion.p
               className="text-[0.8rem] md:text-sm tracking-[1em] uppercase font-mono"
-              style={{ color: "rgba(157,78,221,0.9)", textShadow: "0 0 40px rgba(157,78,221,0.8)" }}
-              animate={{ opacity: [0.3, 1, 0.3], scale: [0.98, 1.02, 0.98] }}
+              style={{
+                color: "rgba(157,78,221,0.9)",
+                textShadow: "0 0 40px rgba(157,78,221,0.8)",
+              }}
+              animate={{
+                opacity: [0.3, 1, 0.3],
+                scale: [0.98, 1.02, 0.98],
+              }}
               transition={{ duration: 1.4, repeat: Infinity }}
             >
               INICIALIZANDO...
@@ -786,12 +962,14 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
         )}
       </AnimatePresence>
 
-      {/* ── IGNITION: power surge text ── */}
+      {/* IGNITION */}
       <AnimatePresence>
         {phase === "ignition" && (
           <motion.div
             className="absolute inset-0 flex items-center justify-center z-20"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
             <motion.p
               className="text-lg md:text-2xl tracking-[0.6em] uppercase font-black text-center"
@@ -801,7 +979,9 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
-              animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+              animate={{
+                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+              }}
               transition={{ duration: 1.5, repeat: Infinity }}
             >
               PODER · LIDERAZGO · MAGIA
@@ -810,7 +990,7 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
         )}
       </AnimatePresence>
 
-      {/* ── EXPLOSION: flash overlay ── */}
+      {/* EXPLOSION */}
       <AnimatePresence>
         {phase === "explosion" && (
           <motion.div
@@ -819,24 +999,30 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
             animate={{ opacity: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.8 }}
-            style={{ background: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.95) 0%, rgba(0,217,255,0.5) 35%, transparent 65%)" }}
+            style={{
+              background:
+                "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.95) 0%, rgba(0,217,255,0.5) 35%, transparent 65%)",
+            }}
           />
         )}
       </AnimatePresence>
 
-      {/* ── CROWN: leadership moment text ── */}
+      {/* CROWN */}
       <AnimatePresence>
         {phase === "crown" && (
           <motion.div
             className="absolute inset-0 flex items-end justify-center pb-56 z-20"
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.8 }}
           >
             <div className="text-center">
               <motion.p
                 className="text-2xl md:text-4xl font-black tracking-[0.5em] uppercase"
                 style={{
-                  background: "linear-gradient(135deg, #FFD700 0%, #FFFFFF 50%, #FFD700 100%)",
+                  background:
+                    "linear-gradient(135deg, #FFD700 0%, #FFFFFF 50%, #FFD700 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   textShadow: "0 0 60px rgba(255,215,0,0.5)",
@@ -848,7 +1034,9 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
               </motion.p>
               <motion.p
                 className="mt-3 text-[0.75rem] tracking-[0.6em] uppercase text-white/40"
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
               >
                 El mundo te espera
               </motion.p>
@@ -857,7 +1045,7 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
         )}
       </AnimatePresence>
 
-      {/* ── LOGO PHASE ── */}
+      {/* LOGO / MESSAGE */}
       <AnimatePresence>
         {(phase === "logo" || phase === "message") && (
           <motion.div
@@ -867,21 +1055,19 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
             exit={{ opacity: 0 }}
             transition={{ duration: 1.2, ease: "easeOut" }}
           >
-            {/* Logo circle */}
             <motion.div
               className="relative mb-8"
               animate={{ rotate: [0, 360] }}
               transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
             >
-              {/* Outer orbit ring */}
               <div
                 className="absolute -inset-4 rounded-full"
                 style={{
                   border: "1px solid rgba(255,215,0,0.4)",
-                  boxShadow: "0 0 30px rgba(255,215,0,0.3), 0 0 60px rgba(0,217,255,0.2)",
+                  boxShadow:
+                    "0 0 30px rgba(255,215,0,0.3), 0 0 60px rgba(0,217,255,0.2)",
                 }}
               />
-              {/* Inner orbit ring */}
               <div
                 className="absolute -inset-8 rounded-full"
                 style={{ border: "1px solid rgba(0,217,255,0.25)" }}
@@ -901,24 +1087,25 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
               </motion.div>
             </motion.div>
 
-            {/* Title */}
             <motion.h1
               className="text-5xl md:text-8xl font-black tracking-[0.45em] md:tracking-[0.55em] mb-4 text-center"
               style={{
-                background: "linear-gradient(135deg, #FFD700 0%, #00D9FF 35%, #9D4EDD 65%, #FFFFFF 100%)",
+                background:
+                  "linear-gradient(135deg, #FFD700 0%, #00D9FF 35%, #9D4EDD 65%, #FFFFFF 100%)",
                 backgroundSize: "200% 200%",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 filter: "drop-shadow(0 0 30px rgba(255,215,0,0.5))",
               }}
-              animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+              animate={{
+                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+              }}
               transition={{ duration: 4, repeat: Infinity }}
               initial={{ y: 40, opacity: 0 }}
             >
               TAMV MD-X4™
             </motion.h1>
 
-            {/* Subtitle */}
             <motion.p
               className="text-xs md:text-sm tracking-[0.7em] uppercase text-white/45 text-center"
               initial={{ opacity: 0, y: 12 }}
@@ -928,7 +1115,6 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
               ECOSISTEMA CIVILIZATORIO LATINOAMERICANO · NEXT-GEN
             </motion.p>
 
-            {/* Tag line */}
             <motion.div
               className="mt-5 flex flex-col items-center gap-2 text-[0.7rem] md:text-xs text-white/30 tracking-[0.38em] uppercase"
               initial={{ opacity: 0, y: 10 }}
@@ -948,19 +1134,22 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
         )}
       </AnimatePresence>
 
-      {/* ── ISABELLA NARRATIVE LINES ── */}
+      {/* ISABELLA LINES */}
       <div className="absolute bottom-28 left-0 right-0 z-30 px-8">
         <AnimatePresence>
           {displayedLines.length > 0 && (
             <motion.div
               className="max-w-4xl mx-auto text-center"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
             >
               {displayedLines.map((line, i) => (
                 <motion.p
                   key={i}
                   className={`text-sm md:text-lg font-mono mb-2 md:mb-3 ${
-                    i === currentLineIndex ? "text-yellow-300" : "text-white/25"
+                    i === currentLineIndex
+                      ? "text-yellow-300"
+                      : "text-white/25"
                   }`}
                   initial={{ opacity: 0, y: 18 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -968,7 +1157,8 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
                   style={
                     i === currentLineIndex
                       ? {
-                          textShadow: "0 0 28px rgba(255,215,0,0.8), 0 0 56px rgba(255,215,0,0.45)",
+                          textShadow:
+                            "0 0 28px rgba(255,215,0,0.8), 0 0 56px rgba(255,215,0,0.45)",
                           letterSpacing: "0.32em",
                         }
                       : { letterSpacing: "0.22em" }
@@ -982,21 +1172,26 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
         </AnimatePresence>
       </div>
 
-      {/* ── PROGRESS BAR ── */}
+      {/* PROGRESS BAR */}
       <div className="absolute bottom-10 left-10 right-10 z-30">
-        <div className="h-[3px] rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+        <div
+          className="h-[3px] rounded-full overflow-hidden"
+          style={{ background: "rgba(255,255,255,0.06)" }}
+        >
           <motion.div
             className="h-full rounded-full"
             style={{
               width: `${progress}%`,
-              background: "linear-gradient(90deg, #FFD700 0%, #00D9FF 40%, #9D4EDD 75%, #FFFFFF 100%)",
-              boxShadow: "0 0 16px rgba(255,215,0,0.7), 0 0 32px rgba(0,217,255,0.4)",
+              background:
+                "linear-gradient(90deg, #FFD700 0%, #00D9FF 40%, #9D4EDD 75%, #FFFFFF 100%)",
+              boxShadow:
+                "0 0 16px rgba(255,215,0,0.7), 0 0 32px rgba(0,217,255,0.4)",
             }}
           />
         </div>
       </div>
 
-      {/* ── SKIP BUTTON ── */}
+      {/* SKIP BUTTON */}
       {skipEnabled && (
         <motion.button
           className="absolute top-6 right-6 z-50 px-5 py-2.5 rounded-full text-[0.72rem] font-semibold border transition-all"
@@ -1007,7 +1202,11 @@ export function CinematicIntro({ onComplete, skipEnabled = true }: CinematicIntr
             backdropFilter: "blur(16px)",
           }}
           onClick={handleSkip}
-          whileHover={{ scale: 1.08, borderColor: "rgba(255,215,0,0.9)", boxShadow: "0 0 28px rgba(255,215,0,0.6)" }}
+          whileHover={{
+            scale: 1.08,
+            borderColor: "rgba(255,215,0,0.9)",
+            boxShadow: "0 0 28px rgba(255,215,0,0.6)",
+          }}
           whileTap={{ scale: 0.94 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
