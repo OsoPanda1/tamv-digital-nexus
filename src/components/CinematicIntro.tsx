@@ -1,6 +1,6 @@
 // ============================================================================
-// TAMV MD-X4™ — CINEMATIC GENESIS INTRO v6.0 (Full File)
-// PODER · LIDERAZGO · MAGIA — La Entrada al Mundo TAMV
+// TAMV MD-X4™ — CINEMATIC GENESIS INTRO v6.1
+// PODER · LIDERAZGO · MAGIA — Corona SOBRE el logo, no tapado
 // ============================================================================
 
 import { useEffect, useRef, useState, useCallback } from "react";
@@ -13,14 +13,14 @@ import logoImg from "@/assets/LOGOTAMV2.jpg";
 
 // ─── Phase machine ───────────────────────────────────────────────────────────
 type Phase =
-  | "permission" // Black screen + button
-  | "awakening"  // Dark pulse / heartbeat
-  | "ignition"   // Energy builds
-  | "explosion"  // Quantum big bang
-  | "cosmos"     // Stars + particles fly
-  | "crown"      // Leadership crown moment
-  | "logo"       // Logo reveal
-  | "message"    // Isabella lines
+  | "permission"
+  | "awakening"
+  | "ignition"
+  | "explosion"
+  | "cosmos"
+  | "crown"
+  | "logo"
+  | "message"
   | "done";
 
 interface CinematicIntroProps {
@@ -49,34 +49,30 @@ const C = {
 // 3-D: Camera rig with parallax and shake
 // ============================================================================
 function useCinematicCamera(phase: Phase) {
-  const group = useRef<THREE.Group>(null);
+  useFrame(({ mouse, camera }) => {
+    const targetX = THREE.MathUtils.lerp(-0.3, 0.3, (mouse.x + 1) / 2);
+    const targetY = THREE.MathUtils.lerp(-0.2, 0.2, (mouse.y + 1) / 2);
 
-  useFrame(({ mouse, clock, camera }) => {
-    const t = clock.elapsedTime;
-
-    const targetX = THREE.MathUtils.lerp(-0.4, 0.4, (mouse.x + 1) / 2);
-    const targetY = THREE.MathUtils.lerp(-0.25, 0.25, (mouse.y + 1) / 2);
-
-    // Parallax suave
     camera.position.x += (targetX - camera.position.x) * 0.06;
     camera.position.y += (targetY - camera.position.y) * 0.06;
 
-    // Shake ligero en explosión
     if (phase === "explosion") {
-      const shake = 0.08;
+      const shake = 0.06;
       camera.position.x += (Math.random() - 0.5) * shake;
       camera.position.y += (Math.random() - 0.5) * shake;
     }
 
-    camera.lookAt(0, 0, 0);
-
-    if (group.current) {
-      group.current.rotation.y = Math.sin(t * 0.1) * 0.1;
-      group.current.rotation.x = Math.cos(t * 0.08) * 0.08;
+    // LOGO/CROWN: aleja un poco la cámara para encuadrar todo
+    if (phase === "crown" || phase === "logo" || phase === "message") {
+      const targetZ = 10.5;
+      camera.position.z += (targetZ - camera.position.z) * 0.08;
+    } else {
+      const targetZ = 9;
+      camera.position.z += (targetZ - camera.position.z) * 0.08;
     }
-  });
 
-  return group;
+    camera.lookAt(0, 0.5, 0);
+  });
 }
 
 // ============================================================================
@@ -88,9 +84,10 @@ function NebulaFog({ phase }: { phase: Phase }) {
   useFrame(({ clock }) => {
     if (!matRef.current) return;
     const t = clock.elapsedTime;
-    const intensity =
-      phase === "cosmos" || phase === "crown" || phase === "logo" ? 0.35 : 0.14;
-    matRef.current.opacity = intensity + Math.sin(t * 0.3) * 0.05;
+    const active =
+      phase === "cosmos" || phase === "crown" || phase === "logo" || phase === "message";
+    const base = active ? 0.35 : 0.12;
+    matRef.current.opacity = base + Math.sin(t * 0.3) * 0.05;
   });
 
   return (
@@ -104,7 +101,7 @@ function NebulaFog({ phase }: { phase: Phase }) {
             depthWrite={false}
             side={THREE.BackSide}
             color={idx === 0 ? C.purple : idx === 1 ? C.cyan : C.magenta}
-            opacity={0.2}
+            opacity={0.18}
           />
         </mesh>
       ))}
@@ -116,7 +113,7 @@ function LightHalo() {
   return (
     <group position={[0, 0, 0]}>
       <mesh position={[0, 0, -4]}>
-        <planeGeometry args={[10, 10]} />
+        <planeGeometry args={[11, 11]} />
         <meshBasicMaterial
           transparent
           depthWrite={false}
@@ -130,7 +127,7 @@ function LightHalo() {
 }
 
 // ============================================================================
-// 3-D: Quantum Particle Field (better, denser, more alive)
+// 3-D: Quantum Particle Field
 // ============================================================================
 function QuantumField({ phase }: { phase: Phase }) {
   const ref = useRef<THREE.Points>(null);
@@ -364,8 +361,10 @@ function ShockwaveRings({ phase }: { phase: Phase }) {
 }
 
 // ============================================================================
-// 3-D: Crown of Leadership
+// 3-D: Crown of Leadership (ALIGNED OVER LOGO)
 // ============================================================================
+// Corona centrada en X/Z, ligeramente por delante en Z, y a ~2.8 en Y.
+// El logo 2D lo vamos a bajar en la capa UI para que quede visualmente debajo.
 function LeadershipCrown({ phase }: { phase: Phase }) {
   const group = useRef<THREE.Group>(null);
 
@@ -374,14 +373,14 @@ function LeadershipCrown({ phase }: { phase: Phase }) {
     const t = state.clock.elapsedTime;
     const visible =
       phase === "crown" || phase === "logo" || phase === "message";
-    const targetY = visible ? 2.5 : 5;
-    group.current.position.y += (targetY - group.current.position.y) * 0.07;
+    const targetY = visible ? 2.8 : 5.5;
+    group.current.position.y += (targetY - group.current.position.y) * 0.08;
     group.current.rotation.y = t * 0.5;
 
     const s = visible ? 1 : 0;
-    group.current.scale.x += (s - group.current.scale.x) * 0.08;
-    group.current.scale.y += (s - group.current.scale.y) * 0.08;
-    group.current.scale.z += (s - group.current.scale.z) * 0.08;
+    group.current.scale.x += (s - group.current.scale.x) * 0.1;
+    group.current.scale.y += (s - group.current.scale.y) * 0.1;
+    group.current.scale.z += (s - group.current.scale.z) * 0.1;
   });
 
   const SPIKE_ANGLES = [0, 60, 120, 180, 240, 300].map(
@@ -389,7 +388,7 @@ function LeadershipCrown({ phase }: { phase: Phase }) {
   );
 
   return (
-    <group ref={group} position={[0, 5, 0]}>
+    <group ref={group} position={[0, 2.8, 0.5]}>
       <mesh rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[1.1, 0.09, 16, 80]} />
         <meshStandardMaterial
@@ -415,8 +414,8 @@ function LeadershipCrown({ phase }: { phase: Phase }) {
           />
         </mesh>
       ))}
-      <mesh position={[0, 0.3, 0]}>
-        <octahedronGeometry args={[0.28, 0]} />
+      <mesh position={[0, 0.45, 0]}>
+        <octahedronGeometry args={[0.3, 0]} />
         <meshStandardMaterial
           color={C.cyan}
           emissive={C.cyan}
@@ -480,10 +479,10 @@ function MagicRunes({ phase }: { phase: Phase }) {
 // 3-D Scene root
 // ============================================================================
 function CinematicScene({ phase }: { phase: Phase }) {
-  const camRig = useCinematicCamera(phase);
+  useCinematicCamera(phase);
 
   return (
-    <group ref={camRig}>
+    <group>
       <ambientLight intensity={0.25} color="#0b1020" />
       <spotLight
         position={[0, 6, 5]}
@@ -509,8 +508,8 @@ function CinematicScene({ phase }: { phase: Phase }) {
       <QuantumField phase={phase} />
       <PowerCore phase={phase} />
       <ShockwaveRings phase={phase} />
-      <LeadershipCrown phase={phase} />
       <MagicRunes phase={phase} />
+      <LeadershipCrown phase={phase} />
     </group>
   );
 }
@@ -597,7 +596,7 @@ function PermissionGate({ onAccept }: { onAccept: () => void }) {
       {/* Top label */}
       <motion.div
         className="absolute top-8 text-[0.65rem] tracking-[0.5em] uppercase text-white/20 text-center"
-        initial({ opacity: 0 })}
+        initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
       >
@@ -647,14 +646,13 @@ function PermissionGate({ onAccept }: { onAccept: () => void }) {
         </motion.p>
       </motion.div>
 
-      {/* THE BUTTON */}
+      {/* CTA BUTTON */}
       <motion.div
         className="relative z-10 flex flex-col items-center gap-6"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.2, duration: 1, ease: "easeOut" }}
       >
-        {/* Hint text */}
         <motion.p
           className="text-xs tracking-[0.4em] uppercase text-white/30 text-center"
           animate={{ opacity: [0.3, 0.7, 0.3] }}
@@ -663,7 +661,6 @@ function PermissionGate({ onAccept }: { onAccept: () => void }) {
           Para iniciar la experiencia de inmersión
         </motion.p>
 
-        {/* Main CTA button */}
         <motion.button
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
@@ -672,7 +669,6 @@ function PermissionGate({ onAccept }: { onAccept: () => void }) {
           whileHover={{ scale: 1.06 }}
           whileTap={{ scale: 0.94 }}
         >
-          {/* Outer glow ring */}
           <motion.div
             className="absolute -inset-3 rounded-full pointer-events-none"
             animate={{
@@ -685,7 +681,6 @@ function PermissionGate({ onAccept }: { onAccept: () => void }) {
             transition={{ duration: 2.2, repeat: Infinity }}
           />
 
-          {/* Button body */}
           <div
             className="relative px-10 py-5 rounded-full text-sm md:text-base font-bold tracking-[0.3em] uppercase overflow-hidden"
             style={{
@@ -704,7 +699,6 @@ function PermissionGate({ onAccept }: { onAccept: () => void }) {
               transition: "all 0.3s ease",
             }}
           >
-            {/* Shimmer sweep */}
             <motion.div
               className="absolute inset-0 pointer-events-none"
               style={{
@@ -734,7 +728,6 @@ function PermissionGate({ onAccept }: { onAccept: () => void }) {
           </div>
         </motion.button>
 
-        {/* Sub hint */}
         <motion.p
           className="text-[0.6rem] tracking-[0.35em] uppercase text-white/18 text-center"
           initial={{ opacity: 0 }}
@@ -745,7 +738,6 @@ function PermissionGate({ onAccept }: { onAccept: () => void }) {
         </motion.p>
       </motion.div>
 
-      {/* Bottom credits */}
       <motion.div
         className="absolute bottom-8 flex flex-col items-center gap-1 text-[0.6rem] tracking-[0.4em] uppercase text-white/15"
         initial={{ opacity: 0 }}
@@ -790,7 +782,7 @@ export function CinematicIntro({
       audioRef.current = audio;
       await audio.play();
     } catch {
-      // autoplay blocked — silent fail
+      // autoplay blocked
     }
   }, []);
 
@@ -802,7 +794,6 @@ export function CinematicIntro({
       timeoutsRef.current.push(window.setTimeout(fn, delay));
     };
 
-    // Phase timeline
     push(() => setPhase("awakening"), 200);
     push(() => setPhase("ignition"), 2200);
     push(() => setPhase("explosion"), 4800);
@@ -811,7 +802,6 @@ export function CinematicIntro({
     push(() => setPhase("logo"), 11800);
     push(() => setPhase("message"), 14000);
 
-    // Isabella narrative
     let lineDelay = 14000;
     ISABELLA_LINES.forEach((line, idx) => {
       push(() => {
@@ -821,19 +811,17 @@ export function CinematicIntro({
       lineDelay += line.duration;
     });
 
-    // Progress bar
     intervalRef.current = window.setInterval(() => {
       setProgress((p) => Math.min(p + 100 / (totalDuration / 50), 100));
     }, 50);
 
-    // Completion
     push(() => {
       if (intervalRef.current) clearInterval(intervalRef.current);
       setProgress(100);
       audioRef.current?.pause();
       window.setTimeout(onComplete, 1000);
     }, totalDuration);
-  }, [initAudio, onComplete, totalDuration]);
+  }, [initAudio, onComplete, totalDuration, clearAll]);
 
   const handleSkip = useCallback(() => {
     clearAll();
@@ -1007,11 +995,11 @@ export function CinematicIntro({
         )}
       </AnimatePresence>
 
-      {/* CROWN */}
+      {/* CROWN TEXT */}
       <AnimatePresence>
         {phase === "crown" && (
           <motion.div
-            className="absolute inset-0 flex items-end justify-center pb-56 z-20"
+            className="absolute inset-0 flex items-end justify-center pb-40 z-20"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
@@ -1045,39 +1033,39 @@ export function CinematicIntro({
         )}
       </AnimatePresence>
 
-      {/* LOGO / MESSAGE */}
+      {/* LOGO / MESSAGE: LOGO MÁS PEQUEÑO Y MÁS ABAJO */}
       <AnimatePresence>
         {(phase === "logo" || phase === "message") && (
           <motion.div
             className="absolute inset-0 flex flex-col items-center justify-center z-20"
-            initial={{ opacity: 0, scale: 0.88 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.2, ease: "easeOut" }}
           >
             <motion.div
-              className="relative mb-8"
+              className="relative mb-4 mt-10" // márgenes para dejar aire a la corona
               animate={{ rotate: [0, 360] }}
               transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
             >
               <div
-                className="absolute -inset-4 rounded-full"
+                className="absolute -inset-3 rounded-full"
                 style={{
                   border: "1px solid rgba(255,215,0,0.4)",
                   boxShadow:
-                    "0 0 30px rgba(255,215,0,0.3), 0 0 60px rgba(0,217,255,0.2)",
+                    "0 0 25px rgba(255,215,0,0.3), 0 0 50px rgba(0,217,255,0.2)",
                 }}
               />
               <div
-                className="absolute -inset-8 rounded-full"
+                className="absolute -inset-6 rounded-full"
                 style={{ border: "1px solid rgba(0,217,255,0.25)" }}
               />
               <motion.div
-                className="w-32 h-32 md:w-44 md:h-44 rounded-full overflow-hidden border-2"
+                className="w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden border-2"
                 style={{
                   borderColor: "rgba(255,215,0,0.8)",
                   boxShadow:
-                    "0 0 40px rgba(255,215,0,0.6), 0 0 90px rgba(0,217,255,0.4), 0 0 160px rgba(157,78,221,0.3)",
+                    "0 0 30px rgba(255,215,0,0.6), 0 0 70px rgba(0,217,255,0.4), 0 0 130px rgba(157,78,221,0.3)",
                 }}
                 animate={{ rotate: [0, -360] }}
                 transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
@@ -1088,7 +1076,7 @@ export function CinematicIntro({
             </motion.div>
 
             <motion.h1
-              className="text-5xl md:text-8xl font-black tracking-[0.45em] md:tracking-[0.55em] mb-4 text-center"
+              className="text-4xl md:text-7xl font-black tracking-[0.4em] md:tracking-[0.5em] mb-3 text-center"
               style={{
                 background:
                   "linear-gradient(135deg, #FFD700 0%, #00D9FF 35%, #9D4EDD 65%, #FFFFFF 100%)",
@@ -1101,14 +1089,14 @@ export function CinematicIntro({
                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
               }}
               transition={{ duration: 4, repeat: Infinity }}
-              initial={{ y: 40, opacity: 0 }}
+              initial={{ y: 20, opacity: 0 }}
             >
               TAMV MD-X4™
             </motion.h1>
 
             <motion.p
               className="text-xs md:text-sm tracking-[0.7em] uppercase text-white/45 text-center"
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 1.2 }}
             >
@@ -1116,8 +1104,8 @@ export function CinematicIntro({
             </motion.p>
 
             <motion.div
-              className="mt-5 flex flex-col items-center gap-2 text-[0.7rem] md:text-xs text-white/30 tracking-[0.38em] uppercase"
-              initial={{ opacity: 0, y: 10 }}
+              className="mt-4 flex flex-col items-center gap-2 text-[0.7rem] md:text-xs text-white/30 tracking-[0.38em] uppercase"
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.3, duration: 0.9 }}
             >
