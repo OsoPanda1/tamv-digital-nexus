@@ -201,7 +201,7 @@ function TrailerScene({ act, t }: TrailerSceneProps) {
         act === "SYSTEM_FAILURE" ||
         act === "CIVILIZATORY_EXPANSION" ||
         act === "REVELATION") && (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]}>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 2, 0]}>
           <planeGeometry args={[120, 120]} />
           <meshStandardMaterial
             color={"#050505"}
