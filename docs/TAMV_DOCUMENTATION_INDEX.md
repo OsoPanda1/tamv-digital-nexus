@@ -39,6 +39,7 @@
 - `docs/modules/guardianias/guardianias_summary.md` ✅ stable
 - `docs/modules/guardianias/guardianias_internal.md` ✅ draft
 - `docs/modules/guardianias/guardianias_public.md` ✅ stable
+- `docs/modules/guardianias/guardianias_hexa_edimap_bridge.md` ✅ **stable** — integración HEXA-EDIMAP Guardian Pattern con TAMV
 
 ## 09. Motor MD-X4 y pipelines
 - `docs/09_motor_mdx4_y_pipelines.md` *(pendiente)*
@@ -46,6 +47,10 @@
 - `docs/modules/render/render_internal.md` ✅ draft
 - `docs/modules/render/render_public.md` ✅ stable
 - `02_MODULOS/M03_XR/INTERNO/XR-PERFORMANCE-GUIDELINES.md` ✅ draft
+
+## 14. HEXA-EDIMAP — Arquitectura Adaptativa Gobernada *(NUEVO)*
+- `docs/14_hexa_edimap_architecture.md` ✅ **stable** — especificación fundacional Hot/Cold Pipeline, Event Store, Templates, Promoción
+- `docs/14b_hexa_edimap_tamv_integration_map.md` ✅ **stable** — mapeo técnico HEXA-EDIMAP ↔ TAMV MD-X4, Guardianías, MSR
 
 ## 12–13. Jurídico y económico
 - `docs/12_juridico_tamv.md` *(pendiente)*

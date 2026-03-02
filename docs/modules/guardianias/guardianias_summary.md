@@ -42,3 +42,5 @@ Las Guardianías son los sistemas de protección civilizatoria de TAMV. Cada gua
 - `src/systems/AnubisSecuritySystem.ts`
 - `src/systems/FederationSystem.ts` (federaciones ANUBIS, HORUS)
 - `docs/08_seguridad_sentinel_y_radares.md`
+- `docs/modules/guardianias/guardianias_hexa_edimap_bridge.md` — Integración con patrón Guardian de HEXA-EDIMAP
+- `docs/14_hexa_edimap_architecture.md` — Arquitectura operativa adaptativa
