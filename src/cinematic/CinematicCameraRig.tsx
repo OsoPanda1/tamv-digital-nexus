@@ -8,14 +8,14 @@ import { useMemo } from "react"
 import * as THREE from "three"
 import type { ActId } from "./types"
 
-// Poses de cámara por acto (posición de la cámara)
+// Poses de cámara por acto (posición de la cámara) - AMPLIADA PARA MAYOR PROFUNDIDAD
 const CAMERA_POSES: Record<ActId, THREE.Vector3> = {
-  BLACK_VOID: new THREE.Vector3(0, 1, 24),
-  CORE_AWAKENS: new THREE.Vector3(0, 2, 18),
-  SYSTEM_FAILURE: new THREE.Vector3(0, 1.5, 14),
-  CIVILIZATORY_EXPANSION: new THREE.Vector3(0, 3, 12),
-  REVELATION: new THREE.Vector3(0, 2.5, 9),
-  FINAL_DECLARATION: new THREE.Vector3(0, 1, 18),
+  BLACK_VOID: new THREE.Vector3(0, 1, 38),
+  CORE_AWAKENS: new THREE.Vector3(0, 3, 30),
+  SYSTEM_FAILURE: new THREE.Vector3(0, 2, 24),
+  CIVILIZATORY_EXPANSION: new THREE.Vector3(0, 4, 20),
+  REVELATION: new THREE.Vector3(0, 3.5, 16),
+  FINAL_DECLARATION: new THREE.Vector3(0, 2, 28),
 }
 
 // Target de lookAt por acto

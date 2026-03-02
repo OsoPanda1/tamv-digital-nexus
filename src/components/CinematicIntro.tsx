@@ -244,13 +244,98 @@ export default function CinematicIntro({
   // Get current act
   const { act, t } = getActAtTime(time)
 
-  // Audio control
+  // Audio control with enhanced volume and echo/reverb for enveloping effect
   const initAudio = useCallback(async () => {
     try {
       const audio = new Audio(introAudio)
-      audio.volume = 0.85
+      audio.volume = 1.0 // Maximum volume for full immersion
       audio.loop = false
       audioRef.current = audio
+      
+      // Create audio context for echo/reverb effect
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext
+      if (AudioContextClass) {
+        const audioContext = new AudioContextClass()
+        const source = audioContext.createMediaElementSource(audio)
+        
+        // Create convolver for reverb/echo effect
+        const convolver = audioContext.createConvolver()
+        
+        // Generate impulse response for large hall reverb
+        const sampleRate = audioContext.sampleRate
+        const length = sampleRate * 3.5 // 3.5 second reverb tail
+        const impulse = audioContext.createBuffer(2, length, sampleRate)
+        
+        for (let channel = 0; channel < 2; channel++) {
+          const channelData = impulse.getChannelData(channel)
+          for (let i = 0; i < length; i++) {
+            // Exponential decay with random diffusion for natural echo
+            channelData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 2.5)
+          }
+        }
+        convolver.buffer = impulse
+        
+        // Create multiple delay lines for different tonalities (echo effect)
+        const delay1 = audioContext.createDelay(2.0)
+        delay1.delayTime.value = 0.15 // 150ms - short echo
+        const delay2 = audioContext.createDelay(2.0)
+        delay2.delayTime.value = 0.35 // 350ms - medium echo
+        const delay3 = audioContext.createDelay(2.0)
+        delay3.delayTime.value = 0.65 // 650ms - long echo
+        
+        // Gain nodes for mixing
+        const masterGain = audioContext.createGain()
+        masterGain.gain.value = 0.9
+        const reverbGain = audioContext.createGain()
+        reverbGain.gain.value = 0.4 // Reverb intensity
+        const delay1Gain = audioContext.createGain()
+        delay1Gain.gain.value = 0.25
+        const delay2Gain = audioContext.createGain()
+        delay2Gain.gain.value = 0.15
+        const delay3Gain = audioContext.createGain()
+        delay3Gain.gain.value = 0.08
+        
+        // Filters for different tonalities in echo
+        const lowpassFilter = audioContext.createBiquadFilter()
+        lowpassFilter.type = 'lowpass'
+        lowpassFilter.frequency.value = 4000
+        const highpassFilter = audioContext.createBiquadFilter()
+        highpassFilter.type = 'highpass'
+        highpassFilter.frequency.value = 200
+        const bandpassFilter = audioContext.createBiquadFilter()
+        bandpassFilter.type = 'bandpass'
+        bandpassFilter.frequency.value = 1500
+        bandpassFilter.Q.value = 0.8
+        
+        // Connect the audio graph
+        // Main signal path
+        source.connect(lowpassFilter)
+        lowpassFilter.connect(masterGain)
+        
+        // Reverb path
+        source.connect(convolver)
+        convolver.connect(reverbGain)
+        reverbGain.connect(masterGain)
+        
+        // Delay paths with different tonalities
+        source.connect(delay1)
+        delay1.connect(delay1Gain)
+        delay1Gain.connect(masterGain)
+        
+        source.connect(delay2)
+        delay2.connect(bandpassFilter) // Mid-tone echo
+        bandpassFilter.connect(delay2Gain)
+        delay2Gain.connect(masterGain)
+        
+        source.connect(delay3)
+        delay3.connect(highpassFilter) // Treble echo
+        highpassFilter.connect(delay3Gain)
+        delay3Gain.connect(masterGain)
+        
+        // Output to speakers
+        masterGain.connect(audioContext.destination)
+      }
+      
       await audio.play()
     } catch {
       console.warn("Autoplay bloqueado por el navegador.")
@@ -309,7 +394,7 @@ export default function CinematicIntro({
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: 1.2,
         }}
-        camera={{ position: [0, 1, 24], fov: 40, near: 0.1, far: 200 }}
+        camera={{ position: [0, 1, 38], fov: 35, near: 0.1, far: 200 }}
       >
         <Suspense fallback={null}>
           <CinematicCameraRig act={act} t={t} />
