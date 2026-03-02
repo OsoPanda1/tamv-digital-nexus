@@ -29,11 +29,13 @@ interface CinematicIntroProps {
 }
 
 // ─── Isabella narrative ──────────────────────────────────────────────────────
+// EXTENDED DURATION: +4000ms to sync audio with presentation
 const ISABELLA_LINES: { text: string; duration: number }[] = [
-  { text: "PROTOCOLO DE INMERSIÓN ACTIVADO...", duration: 3000 },
-  { text: "TAMV ONLINE · ORGULLOSAMENTE LATINOAMERICANOS.", duration: 4500 },
-  { text: "PROYECTO DEDICADO A REINA TREJO SERRANO.", duration: 4000 },
-  { text: "SONRÍE: TU OVEJA NEGRA LO LOGRÓ. TE QUIERO, MA'.", duration: 5000 },
+  { text: "PROTOCOLO DE INMERSIÓN ACTIVADO...", duration: 3500 },
+  { text: "TAMV ONLINE · ORGULLOSAMENTE LATINOAMERICANOS.", duration: 5000 },
+  { text: "PROYECTO DEDICADO A REINA TREJO SERRANO.", duration: 4500 },
+  { text: "SONRÍE: TU OVEJA NEGRA LO LOGRÓ. TE QUIERO, MA'.", duration: 5500 },
+  { text: "BIENVENIDO AL ECOSISTEMA CIVILIZATORIO.", duration: 4000 },
 ];
 
 // ─── Color palette ───────────────────────────────────────────────────────────
@@ -510,7 +512,112 @@ function CinematicScene({ phase }: { phase: Phase }) {
       <ShockwaveRings phase={phase} />
       <MagicRunes phase={phase} />
       <LeadershipCrown phase={phase} />
+      <GlowingOrbs phase={phase} />
+      <ParticleTrails phase={phase} />
     </group>
+  );
+}
+
+// ============================================================================
+// 3-D: Glowing Orbs - Enhanced Visual Element
+// ============================================================================
+function GlowingOrbs({ phase }: { phase: Phase }) {
+  const orbs = useRef<THREE.Group>(null);
+  
+  useFrame((state) => {
+    if (!orbs.current) return;
+    const t = state.clock.elapsedTime;
+    const visible = phase === "cosmos" || phase === "crown" || phase === "logo" || phase === "message";
+    
+    orbs.current.children.forEach((orb, i) => {
+      const speed = 0.3 + i * 0.1;
+      const radius = 3 + i * 1.2;
+      orb.position.x = Math.cos(t * speed + i) * radius;
+      orb.position.y = Math.sin(t * speed * 0.7 + i) * radius * 0.5;
+      orb.position.z = Math.sin(t * speed + i) * radius * 0.3;
+      
+      const targetScale = visible ? 1 : 0;
+      orb.scale.x += (targetScale - orb.scale.x) * 0.05;
+      orb.scale.y += (targetScale - orb.scale.y) * 0.05;
+      orb.scale.z += (targetScale - orb.scale.z) * 0.05;
+    });
+  });
+
+  return (
+    <group ref={orbs}>
+      {[0, 1, 2, 3, 4].map((i) => (
+        <mesh key={i}>
+          <sphereGeometry args={[0.08 + i * 0.02, 16, 16]} />
+          <meshBasicMaterial
+            color={i % 2 === 0 ? C.gold : C.cyan}
+            transparent
+            opacity={0.8}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+// ============================================================================
+// 3-D: Particle Trails - Enhanced Visual Element
+// ============================================================================
+function ParticleTrails({ phase }: { phase: Phase }) {
+  const trailRef = useRef<THREE.Points>(null);
+  const trailCount = 150;
+  const positions = useRef(new Float32Array(trailCount * 3));
+  const alphas = useRef(new Float32Array(trailCount));
+  
+  useEffect(() => {
+    for (let i = 0; i < trailCount; i++) {
+      const i3 = i * 3;
+      positions.current[i3] = (Math.random() - 0.5) * 10;
+      positions.current[i3 + 1] = (Math.random() - 0.5) * 10;
+      positions.current[i3 + 2] = (Math.random() - 0.5) * 5;
+      alphas.current[i] = Math.random();
+    }
+  }, []);
+
+  useFrame((state) => {
+    if (!trailRef.current) return;
+    const t = state.clock.elapsedTime;
+    const visible = phase === "ignition" || phase === "explosion" || phase === "cosmos";
+    
+    const positions = trailRef.current.geometry.attributes.position.array as Float32Array;
+    for (let i = 0; i < trailCount; i++) {
+      const i3 = i * 3;
+      positions[i3] += Math.sin(t + i) * 0.01;
+      positions[i3 + 1] += Math.cos(t + i * 0.5) * 0.01;
+      positions[i3 + 2] += 0.02;
+      
+      if (positions[i3 + 2] > 5) {
+        positions[i3 + 2] = -5;
+      }
+    }
+    trailRef.current.geometry.attributes.position.needsUpdate = true;
+    
+    // @ts-expect-error material opacity
+    trailRef.current.material.opacity = visible ? 0.6 : 0;
+  });
+
+  return (
+    <points ref={trailRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={trailCount}
+          array={positions.current}
+          itemSize={3}
+        />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.05}
+        color={C.cyan}
+        transparent
+        opacity={0.6}
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
   );
 }
 
@@ -767,7 +874,7 @@ export function CinematicIntro({
   const intervalRef = useRef<number | null>(null);
 
   const totalDuration =
-    ISABELLA_LINES.reduce((s, l) => s + l.duration, 0) + 11000;
+    ISABELLA_LINES.reduce((s, l) => s + l.duration, 0) + 15000;
 
   const clearAll = useCallback(() => {
     timeoutsRef.current.forEach(clearTimeout);
@@ -909,6 +1016,60 @@ export function CinematicIntro({
           mixBlendMode: "multiply",
         }}
       />
+
+      {/* Floating Particles Layer - Enhanced Visual */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[...Array(30)].map((_, i) => (
+          <motion.div
+            key={`float-${i}`}
+            className="absolute rounded-full"
+            style={{
+              width: Math.random() * 4 + 1,
+              height: Math.random() * 4 + 1,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              background: i % 3 === 0 ? C.gold : i % 3 === 1 ? C.cyan : C.purple,
+              boxShadow: `0 0 ${Math.random() * 10 + 5}px ${i % 3 === 0 ? C.gold : i % 3 === 1 ? C.cyan : C.purple}`,
+            }}
+            animate={{
+              y: [0, -100, 0],
+              opacity: [0, 0.8, 0],
+              scale: [0.5, 1, 0.5],
+            }}
+            transition={{
+              duration: Math.random() * 4 + 4,
+              repeat: Infinity,
+              delay: Math.random() * 3,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Energy Waves - Enhanced Visual */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={`wave-${i}`}
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border"
+            style={{
+              width: 200 + i * 100,
+              height: 200 + i * 100,
+              borderColor: i % 2 === 0 ? `${C.cyan}20` : `${C.gold}20`,
+            }}
+            animate={{
+              scale: [1, 2, 1],
+              opacity: [0.5, 0, 0.5],
+            }}
+            transition={{
+              duration: 4 + i,
+              repeat: Infinity,
+              delay: i * 0.5,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </div>
 
       {/* HUD frame */}
       <div className="absolute inset-0 pointer-events-none z-10">
@@ -1134,7 +1295,7 @@ export function CinematicIntro({
               {displayedLines.map((line, i) => (
                 <motion.p
                   key={i}
-                  className={`text-sm md:text-lg font-mono mb-2 md:mb-3 ${
+                  className={`text-sm md:text-lg font-medium mb-2 md:mb-3 ${
                     i === currentLineIndex
                       ? "text-yellow-300"
                       : "text-white/25"
@@ -1147,9 +1308,17 @@ export function CinematicIntro({
                       ? {
                           textShadow:
                             "0 0 28px rgba(255,215,0,0.8), 0 0 56px rgba(255,215,0,0.45)",
-                          letterSpacing: "0.32em",
+                          letterSpacing: "0.25em",
+                          wordSpacing: "0.15em",
+                          fontFamily: "'Inter', system-ui, sans-serif",
+                          fontWeight: 600,
                         }
-                      : { letterSpacing: "0.22em" }
+                      : { 
+                          letterSpacing: "0.18em",
+                          wordSpacing: "0.1em",
+                          fontFamily: "'Inter', system-ui, sans-serif",
+                          fontWeight: 400,
+                        }
                   }
                 >
                   {line}
