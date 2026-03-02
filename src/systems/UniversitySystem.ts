@@ -1,11 +1,41 @@
 // ============================================================================
 // TAMV MD-X4™ - University System
 // Comprehensive Education and Certification Platform
+// Enhanced with TBENA BCI-AI Integration
+// ============================================================================
+
+import { 
+  BCIEmotionalSystem, 
+  EmotionalStateResult,
+  EmotionalState 
+} from './BCIEmotionalSystem';
+
+// ============================================================================
+// Types and Interfaces
 // ============================================================================
 
 export type CourseLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert';
-export type CourseCategory = 'fundamentos' | 'desarrollo' | 'ia' | 'seguridad' | 'audio' | 'xr' | 'gobernanza' | 'economia';
+export type CourseCategory = 
+  | 'fundamentos' | 'desarrollo' | 'ia' | 'seguridad' | 'audio' 
+  | 'xr' | 'gobernanza' | 'economia' | 'bci' | 'neurotech' | 'afective-ai';
 export type EnrollmentStatus = 'enrolled' | 'in-progress' | 'completed' | 'certified' | 'dropped';
+
+export interface BCICourseConfig {
+  enabled: boolean;
+  requiredDevice?: 'muse' | 'emotiv' | 'neurosky' | 'any';
+  emotionalFeedback: boolean;
+  adaptiveContent: boolean;
+  meditationExercises: boolean;
+  neurofeedbackEnabled: boolean;
+}
+
+export interface EmotionalContentModulation {
+  difficulty: number;
+  pacing: 'slow' | 'normal' | 'fast' | 'adaptive';
+  emphasis: string[];
+  breakSuggestions: boolean;
+  encouragementLevel: 'minimal' | 'normal' | 'enhanced';
+}
 
 export interface Course {
   id: string;
@@ -14,7 +44,7 @@ export interface Course {
   shortDescription: string;
   level: CourseLevel;
   category: CourseCategory;
-  duration: number; // in minutes
+  duration: number;
   modules: Module[];
   instructor: Instructor;
   thumbnail: string;
@@ -28,6 +58,7 @@ export interface Course {
   enrollmentCount: number;
   createdAt: string;
   updatedAt: string;
+  bciConfig?: BCICourseConfig;
 }
 
 export interface Module {
@@ -38,17 +69,24 @@ export interface Module {
   lessons: Lesson[];
   quiz?: Quiz;
   duration: number;
+  bciInteractive?: boolean;
 }
 
 export interface Lesson {
   id: string;
   title: string;
   content: string;
-  type: 'video' | 'text' | 'interactive' | 'quiz' | 'project';
+  type: 'video' | 'text' | 'interactive' | 'quiz' | 'project' | 'bci-exercise';
   duration: number;
   videoUrl?: string;
   resources: Resource[];
   order: number;
+  bciData?: {
+    required: boolean;
+    exerciseType: 'meditation' | 'focus' | 'relaxation' | 'neurofeedback';
+    targetState: EmotionalState;
+    duration: number;
+  };
 }
 
 export interface Resource {
@@ -97,6 +135,17 @@ export interface Enrollment {
   lastAccessedAt: string;
   completedAt?: string;
   certificateUrl?: string;
+  bciSessionId?: string;
+  emotionalProgress?: EmotionalProgressRecord[];
+}
+
+export interface EmotionalProgressRecord {
+  timestamp: Date;
+  lessonId: string;
+  emotionalState: EmotionalStateResult;
+  engagement: number;
+  focus: number;
+  notes?: string;
 }
 
 export interface QuizResult {
@@ -117,11 +166,155 @@ export interface Certificate {
   expiresAt?: string;
   verificationUrl: string;
   ipfsHash?: string;
+  bciCompetencies?: string[];
 }
 
 // ============================================================================
-// Sample Courses Data
+// BCI-Enhanced Courses Data
 // ============================================================================
+
+export const BCI_COURSES: Course[] = [
+  {
+    id: 'bci-001',
+    title: 'Introducción a BCI y Neurotecnología',
+    description: 'Descubre el fascinante mundo de las interfaces cerebro-computadora. Aprende los fundamentos de la señalización EEG, dispositivos disponibles, y aplicaciones prácticas en el ecosistema TAMV.',
+    shortDescription: 'Fundamentos de interfaces cerebro-computadora',
+    level: 'beginner',
+    category: 'bci',
+    duration: 360,
+    modules: [
+      {
+        id: 'bci-001-mod-1',
+        title: '¿Qué es BCI?',
+        description: 'Introducción a las interfaces cerebro-computadora',
+        order: 1,
+        duration: 60,
+        lessons: [
+          { id: 'bci-001-l1', title: 'Historia de BCI', content: '', type: 'video', duration: 15, order: 1, resources: [] },
+          { id: 'bci-001-l2', title: 'Principios básicos de EEG', content: '', type: 'text', duration: 20, order: 2, resources: [] },
+          { id: 'bci-001-l3', title: 'Dispositivos BCI modernos', content: '', type: 'interactive', duration: 25, order: 3, resources: [] }
+        ],
+        bciInteractive: false
+      },
+      {
+        id: 'bci-001-mod-2',
+        title: 'BCI en TAMV',
+        description: 'El sistema TBENA de TAMV',
+        order: 2,
+        duration: 90,
+        lessons: [
+          { id: 'bci-001-l4', title: 'Arquitectura TBENA', content: '', type: 'video', duration: 30, order: 1, resources: [] },
+          { id: 'bci-001-l5', title: 'Tu primera sesión BCI', content: '', type: 'bci-exercise', duration: 30, order: 2, resources: [], 
+            bciData: { required: false, exerciseType: 'meditation', targetState: 'calm', duration: 300 } 
+          },
+          { id: 'bci-001-l6', title: 'Interpretando tus datos', content: '', type: 'interactive', duration: 30, order: 3, resources: [] }
+        ],
+        bciInteractive: true
+      }
+    ],
+    instructor: {
+      id: 'inst-bci',
+      name: 'Equipo TBENA',
+      avatar: '/avatars/tbena-team.jpg',
+      bio: 'Equipo de neurotecnología de TAMV',
+      credentials: ['PhD Neuroscience', 'BCI Specialist'],
+      coursesCount: 3,
+      rating: 4.9
+    },
+    thumbnail: '/courses/bci-intro.jpg',
+    isFree: true,
+    price: 0,
+    certificationIncluded: true,
+    prerequisites: [],
+    tags: ['bci', 'neurotech', 'tbena', 'introducción'],
+    rating: 4.85,
+    enrollmentCount: 3200,
+    createdAt: '2025-06-01T00:00:00Z',
+    updatedAt: '2026-02-01T00:00:00Z',
+    bciConfig: {
+      enabled: true,
+      requiredDevice: 'any',
+      emotionalFeedback: true,
+      adaptiveContent: true,
+      meditationExercises: true,
+      neurofeedbackEnabled: false
+    }
+  },
+  {
+    id: 'bci-002',
+    title: 'IA Afectiva y Procesamiento Emocional',
+    description: 'Aprende cómo TAMV procesa y responde a estados emocionales. Este curso cubre el pipeline de IA afectiva, desde la captura de señales hasta la modulación del entorno.',
+    shortDescription: 'Procesamiento de emociones con IA',
+    level: 'intermediate',
+    category: 'afective-ai',
+    duration: 480,
+    modules: [],
+    instructor: {
+      id: 'inst-ai',
+      name: 'Isabella AI Team',
+      avatar: '/avatars/isabella.jpg',
+      bio: 'Equipo de IA afectiva de TAMV',
+      credentials: ['AI Research', 'Emotional Computing'],
+      coursesCount: 5,
+      rating: 4.9
+    },
+    thumbnail: '/courses/affective-ai.jpg',
+    isFree: false,
+    price: 599,
+    certificationIncluded: true,
+    prerequisites: ['bci-001'],
+    tags: ['ia', 'afectiva', 'emociones', 'tbena'],
+    rating: 4.9,
+    enrollmentCount: 1800,
+    createdAt: '2025-08-15T00:00:00Z',
+    updatedAt: '2026-01-20T00:00:00Z',
+    bciConfig: {
+      enabled: true,
+      requiredDevice: 'any',
+      emotionalFeedback: true,
+      adaptiveContent: true,
+      meditationExercises: false,
+      neurofeedbackEnabled: true
+    }
+  },
+  {
+    id: 'bci-003',
+    title: 'Neurofeedback Avanzado',
+    description: 'Domina las técnicas de neurofeedback para optimizar tu rendimiento cognitivo y bienestar emocional. Incluye entrenamiento con dispositivos BCI profesionales.',
+    shortDescription: 'Entrenamiento con neurofeedback',
+    level: 'advanced',
+    category: 'neurotech',
+    duration: 720,
+    modules: [],
+    instructor: {
+      id: 'inst-neuro',
+      name: 'Dr. Carlos Mendoza',
+      avatar: '/avatars/carlos-neuro.jpg',
+      bio: 'Especialista en neurofeedback',
+      credentials: ['PhD Clinical Psychology', 'BCI Researcher'],
+      coursesCount: 8,
+      rating: 5.0
+    },
+    thumbnail: '/courses/neurofeedback.jpg',
+    isFree: false,
+    price: 899,
+    certificationIncluded: true,
+    prerequisites: ['bci-001', 'bci-002'],
+    tags: ['neurofeedback', 'bci', 'avanzado', 'certificación'],
+    rating: 4.95,
+    enrollmentCount: 950,
+    createdAt: '2025-11-01T00:00:00Z',
+    updatedAt: '2026-02-10T00:00:00Z',
+    bciConfig: {
+      enabled: true,
+      requiredDevice: 'emotiv',
+      emotionalFeedback: true,
+      adaptiveContent: false,
+      meditationExercises: true,
+      neurofeedbackEnabled: true
+    }
+  }
+];
 
 export const SAMPLE_COURSES: Course[] = [
   {
@@ -140,7 +333,7 @@ export const SAMPLE_COURSES: Course[] = [
         order: 1,
         duration: 30,
         lessons: [
-          { id: 'lesson-001-1-1', title: 'Â¿Qué es TAMV MD-X4™?', content: 'Contenido de la lección', type: 'video', duration: 10, order: 1, resources: [] },
+          { id: 'lesson-001-1-1', title: '¿Qué es TAMV MD-X4™?', content: 'Contenido de la lección', type: 'video', duration: 10, order: 1, resources: [] },
           { id: 'lesson-001-1-2', title: 'Historia y Filosofía', content: 'Contenido de la lección', type: 'text', duration: 15, order: 2, resources: [] },
           { id: 'lesson-001-1-3', title: 'Arquitectura del Sistema', content: 'Contenido de la lección', type: 'video', duration: 5, order: 3, resources: [] },
         ],
@@ -206,6 +399,14 @@ export const SAMPLE_COURSES: Course[] = [
     enrollmentCount: 8750,
     createdAt: '2025-03-20T00:00:00Z',
     updatedAt: '2026-01-15T00:00:00Z',
+    bciConfig: {
+      enabled: true,
+      requiredDevice: 'any',
+      emotionalFeedback: true,
+      adaptiveContent: false,
+      meditationExercises: false,
+      neurofeedbackEnabled: false
+    }
   },
   {
     id: 'course-003',
@@ -325,6 +526,9 @@ export const SAMPLE_COURSES: Course[] = [
   },
 ];
 
+// Combine all courses
+const ALL_COURSES: Course[] = [...SAMPLE_COURSES, ...BCI_COURSES];
+
 // ============================================================================
 // University System Class
 // ============================================================================
@@ -335,10 +539,12 @@ export class UniversitySystem {
   private enrollments: Map<string, Enrollment> = new Map();
   private certificates: Map<string, Certificate> = new Map();
   private userProgress: Map<string, Map<string, Enrollment>> = new Map();
+  private bciSystem: BCIEmotionalSystem;
 
   private constructor() {
     this.loadCourses();
     this.loadPersistedData();
+    this.bciSystem = BCIEmotionalSystem.getInstance();
   }
 
   static getInstance(): UniversitySystem {
@@ -352,7 +558,7 @@ export class UniversitySystem {
    * Load courses into memory
    */
   private loadCourses(): void {
-    SAMPLE_COURSES.forEach(course => {
+    ALL_COURSES.forEach(course => {
       this.courses.set(course.id, course);
     });
     console.log(`[University] Loaded ${this.courses.size} courses`);
@@ -363,6 +569,13 @@ export class UniversitySystem {
    */
   getAllCourses(): Course[] {
     return Array.from(this.courses.values());
+  }
+
+  /**
+   * Get BCI-enhanced courses
+   */
+  getBCICourses(): Course[] {
+    return this.getAllCourses().filter(c => c.bciConfig?.enabled);
   }
 
   /**
@@ -414,6 +627,7 @@ export class UniversitySystem {
       return existingEnrollment;
     }
 
+    const course = this.getCourse(courseId);
     const enrollment: Enrollment = {
       id: `enroll-${userId}-${courseId}`,
       userId,
@@ -424,7 +638,15 @@ export class UniversitySystem {
       quizResults: [],
       startedAt: new Date().toISOString(),
       lastAccessedAt: new Date().toISOString(),
+      emotionalProgress: [],
     };
+
+    // Start BCI session if course requires it
+    if (course?.bciConfig?.enabled) {
+      const session = this.bciSystem.startSession(userId, course.bciConfig.requiredDevice === 'emotiv' ? 'emotiv' : 'muse');
+      enrollment.bciSessionId = session.id;
+      console.log(`[University] Started BCI session ${session.id} for course ${courseId}`);
+    }
 
     // Store enrollment
     this.enrollments.set(enrollment.id, enrollment);
@@ -458,9 +680,18 @@ export class UniversitySystem {
   }
 
   /**
-   * Update lesson progress
+   * Update lesson progress with BCI integration
    */
-  updateLessonProgress(userId: string, courseId: string, lessonId: string): Enrollment | null {
+  updateLessonProgress(
+    userId: string, 
+    courseId: string, 
+    lessonId: string,
+    bciData?: {
+      emotionalState: EmotionalStateResult;
+      engagement: number;
+      focus: number;
+    }
+  ): Enrollment | null {
     const enrollment = this.getEnrollment(userId, courseId);
     if (!enrollment) return null;
 
@@ -471,6 +702,17 @@ export class UniversitySystem {
     enrollment.lastAccessedAt = new Date().toISOString();
     enrollment.status = 'in-progress';
 
+    // Record emotional progress if BCI data provided
+    if (bciData && enrollment.emotionalProgress) {
+      enrollment.emotionalProgress.push({
+        timestamp: new Date(),
+        lessonId,
+        emotionalState: bciData.emotionalState,
+        engagement: bciData.engagement,
+        focus: bciData.focus
+      });
+    }
+
     // Calculate progress
     const course = this.getCourse(courseId);
     if (course) {
@@ -480,6 +722,126 @@ export class UniversitySystem {
 
     this.persistData();
     return enrollment;
+  }
+
+  /**
+   * Get content modulation based on emotional state
+   */
+  getContentModulation(
+    userId: string,
+    courseId: string
+  ): EmotionalContentModulation {
+    const embedding = this.bciSystem.getAffectiveEmbedding(userId);
+    
+    if (!embedding) {
+      return {
+        difficulty: 1.0,
+        pacing: 'normal',
+        emphasis: [],
+        breakSuggestions: false,
+        encouragementLevel: 'normal'
+      };
+    }
+
+    const { state, dimensions } = embedding;
+    const course = this.getCourse(courseId);
+    const isBCICourse = course?.bciConfig?.adaptiveContent;
+
+    // Adaptive difficulty based on engagement and focus
+    let difficulty = 1.0;
+    let pacing: EmotionalContentModulation['pacing'] = 'normal';
+    let breakSuggestions = false;
+    let encouragementLevel: EmotionalContentModulation['encouragementLevel'] = 'normal';
+
+    if (isBCICourse) {
+      // High stress or fatigue
+      if (dimensions.stress > 0.7 || dimensions.fatigue > 0.6) {
+        difficulty = 0.7;
+        pacing = 'slow';
+        breakSuggestions = true;
+        encouragementLevel = 'enhanced';
+      }
+      // High engagement and focus
+      else if (dimensions.engagement > 0.8 && dimensions.attention > 0.7) {
+        difficulty = 1.2;
+        pacing = 'fast';
+        encouragementLevel = 'minimal';
+      }
+      // Flow state
+      else if (state.primary === 'flow') {
+        pacing = 'adaptive';
+        difficulty = 1.1;
+      }
+      // Low engagement
+      else if (dimensions.engagement < 0.3) {
+        difficulty = 0.8;
+        pacing = 'slow';
+        encouragementLevel = 'enhanced';
+      }
+    }
+
+    // Emphasis based on emotional state
+    const emphasis: string[] = [];
+    if (state.primary === 'stressed' || state.primary === 'anxious') {
+      emphasis.push('breathing', 'relaxation');
+    }
+    if (state.primary === 'fatigued') {
+      emphasis.push('breaks', 'review');
+    }
+    if (state.primary === 'focused' || state.primary === 'flow') {
+      emphasis.push('advanced', 'practice');
+    }
+
+    return {
+      difficulty,
+      pacing,
+      emphasis,
+      breakSuggestions,
+      encouragementLevel
+    };
+  }
+
+  /**
+   * Start BCI exercise for lesson
+   */
+  async startBCIExercise(
+    userId: string,
+    lessonId: string,
+    courseId: string
+  ): Promise<{
+    success: boolean;
+    sessionId?: string;
+    targetState?: EmotionalState;
+    duration?: number;
+  }> {
+    const course = this.getCourse(courseId);
+    if (!course?.bciConfig?.enabled) {
+      return { success: false };
+    }
+
+    // Find the lesson
+    let lesson: Lesson | undefined;
+    for (const module of course.modules) {
+      lesson = module.lessons.find(l => l.id === lessonId);
+      if (lesson) break;
+    }
+
+    if (!lesson?.bciData) {
+      return { success: false };
+    }
+
+    // Ensure BCI session is active
+    let session = this.bciSystem.getActiveSession(userId);
+    if (!session) {
+      session = this.bciSystem.startSession(userId);
+    }
+
+    return {
+      success: true,
+      sessionId: session.id,
+      targetState: lesson.bciData.targetState,
+      duration: lesson.bciData.duration
+    };
   }
 
   /**
@@ -495,9 +857,14 @@ export class UniversitySystem {
     enrollment.status = 'completed';
     enrollment.completedAt = new Date().toISOString();
 
+    // End BCI session if active
+    if (enrollment.bciSessionId) {
+      this.bciSystem.endSession(userId);
+    }
+
     // Generate certificate if included
     if (course.certificationIncluded) {
-      const certificate = await this.generateCertificate(userId, course);
+      const certificate = await this.generateCertificate(userId, course, enrollment);
       enrollment.certificateUrl = certificate.verificationUrl;
       enrollment.status = 'certified';
       return certificate;
@@ -508,17 +875,33 @@ export class UniversitySystem {
   }
 
   /**
-   * Generate certificate
+   * Generate certificate with BCI competencies
    */
-  private async generateCertificate(userId: string, course: Course): Promise<Certificate> {
+  private async generateCertificate(
+    userId: string, 
+    course: Course,
+    enrollment: Enrollment
+  ): Promise<Certificate> {
+    // Extract BCI competencies from emotional progress
+    const bciCompetencies: string[] = [];
+    if (enrollment.emotionalProgress && enrollment.emotionalProgress.length > 0) {
+      const avgEngagement = enrollment.emotionalProgress.reduce((s, p) => s + p.engagement, 0) / enrollment.emotionalProgress.length;
+      const avgFocus = enrollment.emotionalProgress.reduce((s, p) => s + p.focus, 0) / enrollment.emotionalProgress.length;
+      
+      if (avgEngagement > 0.7) bciCompetencies.push('High Engagement');
+      if (avgFocus > 0.7) bciCompetencies.push('Sustained Focus');
+      if (course.bciConfig?.neurofeedbackEnabled) bciCompetencies.push('Neurofeedback Training');
+    }
+
     const certificate: Certificate = {
       id: `cert-${userId}-${course.id}-${Date.now()}`,
       userId,
       courseId: course.id,
       courseName: course.title,
-      userName: userId, // Should be replaced with actual user name
+      userName: userId,
       issuedAt: new Date().toISOString(),
       verificationUrl: `https://tamv.network/certificates/${userId}/${course.id}`,
+      bciCompetencies: bciCompetencies.length > 0 ? bciCompetencies : undefined
     };
 
     this.certificates.set(certificate.id, certificate);
@@ -587,6 +970,7 @@ export class UniversitySystem {
     totalCourses: number;
     freeCourses: number;
     paidCourses: number;
+    bciEnabledCourses: number;
     totalEnrollments: number;
     certificatesIssued: number;
     averageRating: number;
@@ -596,6 +980,7 @@ export class UniversitySystem {
       totalCourses: courses.length,
       freeCourses: courses.filter(c => c.isFree).length,
       paidCourses: courses.filter(c => !c.isFree).length,
+      bciEnabledCourses: courses.filter(c => c.bciConfig?.enabled).length,
       totalEnrollments: this.enrollments.size,
       certificatesIssued: this.certificates.size,
       averageRating: courses.reduce((sum, c) => sum + c.rating, 0) / courses.length,

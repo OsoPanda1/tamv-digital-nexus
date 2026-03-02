@@ -10,6 +10,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
+  Home, Compass, Users, MessageCircle, Video, Radio, Music, Gamepad2,
+  ShoppingBag, Globe, Sparkles, Heart, Share2, Send, Play, Pause,
+  TrendingUp, Zap, Layers, Search, Bell, Settings, Plus, Camera,
+  Mic, Image, Smile, Gift, MapPin, Hash, AtSign, Eye, Flame,
+  ChevronRight, ChevronLeft, Wifi, WifiOff, Volume2, VolumeX,
+  Maximize2, Minimize2, MoreHorizontal, Bookmark, Flag, UserPlus,
+  LogIn, Star, Crown, Diamond, Wallet, Activity, Headphones,
+  Wifi as LiveIcon, Ghost, Sparkle, Rocket, Aurora, Waves, Brain,
+  ShoppingCart, Store, GraduationCap, PiggyBank, CreditCard, Gem, Palette
   Home, Compass, Users, MessageCircle, Video, Radio, 
   Sparkles, Heart, Share2, Play, TrendingUp, Zap,
   Globe, Brain, Shield, Crown, Rocket, ChevronRight,

@@ -1,0 +1,434 @@
+---
+title: Dominios TAMV
+description: ID-NVIDA, UTAMV, Metaverso MD-X4, Economía, Seguridad, IA & Agentes
+category: WikiTAMV
+order: 5
+---
+
+# Dominios TAMV
+
+## Visión General
+
+TAMV MD-X4™ está compuesto por dominios funcionales interconectados que operan de manera coordinada para proporcionar una experiencia civilizatoria digital completa.
+
+## 1. ID-NVIDA (Identidad Digital)
+
+### Concepto
+
+ID-NVIDA es el sistema de identidad digital soberana que permite a los usuarios mantener control total sobre su identidad digital a través del ecosistema TAMV.
+
+### Características Principales
+
+```typescript
+interface IDNVIDAIdentity {
+  // Identificador único
+  id: string;
+  
+  // Datos verificables
+  credentials: VerifiableCredential[];
+  
+  // Reputación EOCT
+  reputation: {
+    score: number;      // 0-100
+    level: 1 | 2 | 3 | 4 | 5;
+    factors: {
+      antiguedad: number;
+      contribuciones: number;
+      verificaciones: number;
+    };
+  };
+  
+  // Control de privacidad
+  privacy: {
+    profileVisibility: 'public' | 'contacts' | 'private';
+    dataSharing: string[];
+    consentRecords: ConsentRecord[];
+  };
+  
+  // Membresía
+  membership: {
+    tier: MembershipTier;
+    startDate: Date;
+    benefits: string[];
+  };
+}
+```
+
+### Niveles de Verificación
+
+| Nivel | Método | Permisos |
+|-------|--------|----------|
+| Básico | Email | Acceso limitado |
+| Verificado | +Phone | APIs básicas |
+| Certificado | +Identity | Todas las APIs |
+| Guardián | +Biometric | Admin functions |
+
+### Casos de Uso
+
+1. **Autenticación única**: Un login para todo el ecosistema
+2. **Portabilidad**: Mover identidad entre aplicaciones
+3. **Reputación**: Score EOCT transferible
+4. **Certificaciones**: Credenciales verificables
+
+---
+
+## 2. UTAMV (Unidad Tecnológica Avanzada del Metaverso Virtual)
+
+### Concepto
+
+UTAMV es el núcleo operativo que coordina todos los subsistemas del ecosistema TAMV, actuando como orquestador central.
+
+### Arquitectura
+
+```
+┌─────────────────────────────────────────────┐
+│                   UTAMV Core                 │
+├───────────┬───────────┬───────────┬─────────┤
+│  Events   │  State    │  Plugins  │  Sync   │
+│  Manager  │  Manager  │  System   │  Layer  │
+├───────────┴───────────┴───────────┴─────────┤
+│              Federation Protocol             │
+├─────────────────────────────────────────────┤
+│         Node Communication Layer            │
+└─────────────────────────────────────────────┘
+```
+
+### Componentes Principales
+
+#### Event Manager
+```typescript
+class UTAMVEventManager {
+  // Publicar eventos
+  emit(event: UTAMVEvent): void;
+  
+  // Suscribirse a eventos
+  on(eventType: string, handler: EventHandler): void;
+  
+  // Eventos del sistema
+  events: {
+    'user:login': UserEvent;
+    'node:sync': NodeSyncEvent;
+    'economy:transaction': TransactionEvent;
+    'security:alert': SecurityAlertEvent;
+  };
+}
+```
+
+#### State Manager
+```typescript
+class UTAMVStateManager {
+  // Estado global del sistema
+  state: {
+    nodes: Map<NodeId, NodeState>;
+    users: Map<UserId, UserState>;
+    economy: EconomyState;
+    security: SecurityState;
+  };
+  
+  // Persistencia
+  persist(): Promise<void>;
+  restore(): Promise<void>;
+}
+```
+
+#### Sync Layer
+```typescript
+class UTAMVSyncLayer {
+  // Sincronización entre nodos
+  syncNode(nodeId: NodeId): Promise<SyncResult>;
+  
+  // Resolución de conflictos
+  resolveConflict(conflict: Conflict): Resolution;
+  
+  // Consistencia eventual
+  ensureConsistency(): Promise<void>;
+}
+```
+
+### Métricas de UTAMV
+
+| Métrica | Descripción | Target |
+|---------|-------------|--------|
+| Latency | Tiempo de respuesta | <100ms |
+| Throughput | Eventos/segundo | >10K |
+| Uptime | Disponibilidad | 99.9% |
+| Sync | Tiempo de sincronización | <500ms |
+
+---
+
+## 3. Metaverso MD-X4
+
+### Concepto
+
+El metaverso MD-X4 es el espacio virtual inmersivo donde los usuarios interactúan, crean y colaboran en tiempo real.
+
+### Características
+
+#### Renderizado
+- **Pipeline hexagonal**: 6 etapas de procesamiento
+- **Quantum rendering**: Simulación de efectos cuánticos
+- **LOD dinámico**: Nivel de detalle adaptativo
+- **Instancing**: Renderizado eficiente de objetos repetidos
+
+#### Espacios
+
+```typescript
+interface DreamSpace {
+  id: string;
+  name: string;
+  owner: UserId;
+  
+  // Geometría y ambiente
+  environment: {
+    skybox: string;
+    lighting: LightingConfig;
+    audio: AudioConfig;
+    particles: ParticleConfig;
+  };
+  
+  // Objetos
+  objects: SpaceObject[];
+  
+  // Usuarios conectados
+  occupants: UserId[];
+  
+  // Configuración BCI
+  bciEnhanced: boolean;
+  emotionalModulation: boolean;
+}
+```
+
+#### Capacidades XR
+
+| Modo | Dispositivo | Características |
+|------|-------------|-----------------|
+| Desktop | PC/Mac | Controles teclado/mouse |
+| Mobile | iOS/Android | Touch, AR básico |
+| VR | Meta Quest, etc. | Inmersión completa |
+| AR | HoloLens, ARKit | Overlay en mundo real |
+
+---
+
+## 4. Economía Digital
+
+### Tokens
+
+#### TCEP (Token de Certificación Educacional Permanente)
+```typescript
+interface TCEP {
+  symbol: 'TCEP';
+  decimals: 18;
+  
+  // Uso: Certificaciones académicas
+  // Valor: 1 TCEP = 1 certificación válida
+  // Transferibilidad: No transferible (soulbound)
+}
+```
+
+#### TAU (Token de Acceso Universal)
+```typescript
+interface TAU {
+  symbol: 'TAU';
+  decimals: 18;
+  
+  // Uso: Acceso a servicios premium
+  // Valor: Variable según demanda
+  // Transferibilidad: Libre
+}
+```
+
+### Wallet
+
+```typescript
+interface TAMVWallet {
+  // Identidad asociada
+  identity: IDNVIDAIdentity;
+  
+  // Balances
+  balances: {
+    tau: bigint;
+    tcep: bigint;
+    reputation: number;
+  };
+  
+  // Transacciones
+  transactions: Transaction[];
+  
+  // Stake/Delegation
+  staking: {
+    amount: bigint;
+    rewards: bigint;
+    unlockDate: Date;
+  };
+}
+```
+
+### Modelo de Membresía
+
+| Tier | Precio/mes | Beneficios |
+|------|------------|------------|
+| Free | $0 | Acceso básico |
+| Starter | $30 | APIs limitadas |
+| Pro | $180 | APIs extendidas, dashboards |
+| Business | $550 | Soporte prioritario, SLA |
+| Enterprise | $2,400 | Dedicado, compliance |
+| Custom | $10,000+ | White-label, custom |
+
+---
+
+## 5. Seguridad (DEKATEOTL)
+
+### Arquitectura de Seguridad
+
+```
+┌─────────────────────────────────────────────┐
+│                 ANUBIS                      │
+│          Autenticación & Acceso             │
+├─────────────────────────────────────────────┤
+│                  HORUS                      │
+│          Vigilancia de Red                  │
+├─────────────────────────────────────────────┤
+│                 OSIRIS                      │
+│          Recuperación & Backup              │
+├─────────────────────────────────────────────┤
+│               DEKATEOTL                     │
+│          Amenazas Avanzadas                 │
+├─────────────────────────────────────────────┤
+│              QUETZALCÓATL                   │
+│          IA de Seguridad                    │
+├─────────────────────────────────────────────┤
+│              TENOCHTITLAN                   │
+│          Infraestructura Base               │
+└─────────────────────────────────────────────┘
+```
+
+### Sistema de Amenazas
+
+```typescript
+enum ThreatLevel {
+  LOW = 'low',           // Monitoreo
+  MEDIUM = 'medium',     // Alerta
+  HIGH = 'high',         // Cuarentena
+  CRITICAL = 'critical'  // Aislamiento
+}
+
+interface SecurityEvent {
+  id: string;
+  timestamp: Date;
+  type: SecurityEventType;
+  level: ThreatLevel;
+  source: string;
+  details: Record<string, unknown>;
+  response: SecurityResponse;
+}
+```
+
+### Respuesta Automática
+
+| Nivel | Acción |
+|-------|--------|
+| LOW | Log + monitoreo |
+| MEDIUM | Alerta + notificación |
+| HIGH | Bloqueo temporal + investigación |
+| CRITICAL | Aislamiento + protocolo emergencia |
+
+---
+
+## 6. IA & Agentes
+
+### Isabella AI
+
+Asistente IA emocional multimodal:
+
+```typescript
+interface IsabellaAI {
+  // Capacidades
+  capabilities: {
+    voice: boolean;        // Síntesis de voz
+    emotion: boolean;      // Detección emocional
+    context: boolean;      // Memoria contextual
+    bci: boolean;          // Integración BCI
+  };
+  
+  // Personalidad
+  personality: {
+    tone: 'professional' | 'friendly' | 'empathetic';
+    language: 'es' | 'en' | 'pt';
+    adaptiveness: boolean;
+  };
+  
+  // Funciones principales
+  functions: {
+    chat: (message: string) => Promise<Response>;
+    analyzeEmotion: (data: BCIData) => EmotionState;
+    modulateEnvironment: (state: EmotionState) => void;
+    voiceSynthesis: (text: string) => Promise<AudioBuffer>;
+  };
+}
+```
+
+### Agentes del Sistema
+
+| Agente | Función | Autonomía |
+|--------|---------|-----------|
+| Isabella | Asistente personal | Supervisada |
+| Anubis-Bot | Seguridad | Autónoma |
+| Economy-Agent | Transacciones | Supervisada |
+| Content-Agent | Moderación | Autónoma |
+| Node-Agent | Federación | Autónoma |
+
+### TBENA (BCI-AI)
+
+Sistema de interfaz cerebro-computadora:
+
+```typescript
+interface TBENASystem {
+  // Captura de datos
+  captureEEG: () => EEGData;
+  
+  // Decodificación
+  decodeEmotion: (eeg: EEGData) => EmotionState;
+  
+  // Estado afectivo
+  updateAffectiveState: (emotion: EmotionState) => void;
+  
+  // Modulación del entorno
+  modulateEnvironment: (state: EmotionState) => EnvironmentMod;
+  
+  // Modulación del agente
+  modulateAgentBehavior: (state: EmotionState) => AgentMod;
+}
+```
+
+### Integración de Dominios
+
+Todos los dominios operan de manera integrada:
+
+```typescript
+// Ejemplo de flujo integrado
+const integratedFlow = async (userId: string) => {
+  // 1. Identidad
+  const identity = await IDNVIDA.verify(userId);
+  
+  // 2. UTAMV coordina
+  const state = await UTAMV.getState(identity);
+  
+  // 3. Seguridad valida
+  const security = await Anubis.validate(state);
+  
+  // 4. Economía verifica
+  const economy = await Economy.checkBalance(identity);
+  
+  // 5. Isabella personaliza
+  const aiResponse = await Isabella.personalize(identity, state);
+  
+  // 6. Metaverso renderiza
+  const space = await MDX4.render(state.location);
+  
+  return { identity, state, security, economy, aiResponse, space };
+};
+```
+
+---
+
+*Próxima sección: [Sistemas Avanzados](./06-sistemas-avanzados)*

@@ -13,9 +13,6 @@ export {
   interAgent,
   GuardianValidator,
   guardian,
-} from './core';
-
-export type {
   EmotionVector,
   BiometricData,
   EthicalConstraints,
@@ -31,9 +28,6 @@ export {
   executeWithConstitutionalGuard,
   createConstitutionalMiddleware,
   ConstitutionalRulesEngine,
-} from './constitutionalGuard';
-
-export type {
   ConstitutionalViolation,
   ConstitutionalViolationReport,
 } from './constitutionalGuard';
@@ -58,9 +52,6 @@ export {
   NormalPipeline,
   RiskPipeline,
   PipelineType,
-} from './doublePipeline';
-
-export type {
   PipelineConfig,
   PipelineResult,
 } from './doublePipeline';
@@ -73,9 +64,6 @@ export {
   BehavioralShield,
   ONTOLOGICAL_SHIELD,
   checkOntologicalShield,
-} from './sexualEthicalShield';
-
-export type {
   ShieldCategory,
   ShieldResult,
 } from './sexualEthicalShield';
@@ -89,9 +77,6 @@ export {
   LogExportManager,
   ShutdownPhase,
   AuthorizationLevel,
-} from './hardStop';
-
-export type {
   Authorization,
   ShutdownState,
   HardStopConfig,
@@ -111,6 +96,17 @@ export async function getGovernanceMetrics(): Promise<GovernanceMetrics> {
   const { supabase } = await import('@/integrations/supabase/client');
   
   try {
+    const [interactions, blocks, risks, escalations, shields] = await Promise.all([
+      supabase.from('isabella_interactions').select('id', { count: 'exact' }),
+      supabase.from('isabella_filter_logs').select('id', { count: 'exact' })
+        .eq('decision', 'block'),
+      supabase.from('isabella_risk_logs').select('id', { count: 'exact' }),
+      supabase.from('isabella_alerts').select('id', { count: 'exact' })
+        .eq('status', 'pending'),
+      supabase.from('isabella_filter_logs').select('id', { count: 'exact' })
+        .eq('decision', 'block')
+        .like('reasons', '%ethical%')
+    ]);
     const interactions = await supabase
       .from('isabella_interactions')
       .select('id', { count: 'exact' });
@@ -129,6 +125,9 @@ export async function getGovernanceMetrics(): Promise<GovernanceMetrics> {
       totalInteractions: interactions.count || 0,
       blockedInteractions: blocks.count || 0,
       riskDetections: risks.count || 0,
+      humanEscalations: escalations.count || 0,
+      averageResponseTime: 0, // Calculated separately
+      shieldActivations: shields.count || 0
       humanEscalations: 0,
       averageResponseTime: 0,
       shieldActivations: 0,
@@ -155,6 +154,11 @@ export async function logAuditEntry(
 ): Promise<void> {
   const { supabase } = await import('@/integrations/supabase/client');
   try {
+    await supabase.from('isabella_audit_logs').insert({
+      action,
+      user_id: userId,
+      details,
+      created_at: new Date().toISOString()
     await supabase.from('isabella_interactions').insert({
       user_id: userId || '00000000-0000-0000-0000-000000000000',
       message_role: 'system',
@@ -193,3 +197,32 @@ export async function getSystemStatus(): Promise<SystemStatus> {
 export const ISABELLA_VERSION = '3.0.0-MD-X4';
 export const ISABELLA_BUILD = '2026.01.15';
 export const DOCUMENT_MASTER_VERSION = '1.0-FUNDACIONAL-2026';
+
+// ============================================================================
+// DEFAULT EXPORTS
+// ============================================================================
+
+export default {
+  // Core
+  eoct,
+  phoenix,
+  interAgent,
+  guardian,
+  constitutionalGuard,
+  
+  // System
+  octupleFilter,
+  pipelineOrchestrator,
+  sexualEthicalShield,
+  hardStop,
+  
+  // Utils
+  getGovernanceMetrics,
+  logAuditEntry,
+  getSystemStatus,
+  
+  // Version
+  version: ISABELLA_VERSION,
+  build: ISABELLA_BUILD,
+  masterVersion: DOCUMENT_MASTER_VERSION
+};

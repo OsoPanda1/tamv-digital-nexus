@@ -158,6 +158,9 @@ class NormalPipeline {
       // Get recent conversation history
       if (context.sessionId) {
         const { data: history } = await supabase
+          .from('isabella_conversations')
+          .select('messages')
+          .eq('session_id', context.sessionId)
           .from('isabella_interactions')
           .select('content, message_role, metadata')
           .eq('user_id', context.userId || '')
@@ -165,10 +168,14 @@ class NormalPipeline {
           .limit(10);
 
         if (history && history.length > 0) {
-          enriched.previousMessages = history as any[];
+          enriched.previousMessages = history[0].messages as any[];
         }
       }
 
+      // Get user preferences
+      if (context.userId) {
+        const { data: userPrefs } = await supabase
+          .from('user_preferences')
       // Get user profile as preferences proxy
       if (context.userId) {
         const { data: userPrefs } = await supabase
@@ -390,6 +397,13 @@ class RiskPipeline {
     action: string
   ) {
     try {
+      await supabase.from('isabella_risk_logs').insert({
+        user_id: context.userId,
+        session_id: context.sessionId,
+        input_preview: context.input.substring(0, 200),
+        action,
+        filter_result: filterResult as any,
+        pipeline: PipelineType.RISK,
       await supabase.from('isabella_interactions').insert({
         user_id: context.userId || '',
         message_role: 'system',
@@ -413,6 +427,16 @@ class RiskPipeline {
    */
   private async alertHumanSupervisor(context: PipelineContext, filterResult: any) {
     try {
+      await supabase.from('isabella_alerts').insert({
+        alert_type: 'CRITICAL_RISK',
+        user_id: context.userId,
+        session_id: context.sessionId,
+        details: {
+          filterResult: filterResult,
+          input: context.input.substring(0, 200),
+          timestamp: Date.now()
+        },
+        status: 'pending',
       await supabase.from('isabella_interactions').insert({
         user_id: context.userId || '',
         message_role: 'system',

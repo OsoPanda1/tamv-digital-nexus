@@ -1,0 +1,507 @@
+---
+title: Sistemas Avanzados TAMV
+description: Pipelines hexagonales, EOCT, Quantum, Monitoreo
+category: WikiTAMV
+order: 6
+---
+
+# Sistemas Avanzados
+
+## Visión General
+
+Los sistemas avanzados de TAMV MD-X4™ representan las capacidades de vanguardia que distinguen al ecosistema: pipelines de procesamiento hexagonales, evaluación de reputación EOCT, computación cuántica simulada y monitoreo integral.
+
+## 1. Pipelines Hexagonales
+
+### Concepto
+
+El pipeline hexagonal es un patrón de procesamiento de datos que asegura calidad, resiliencia y trazabilidad a través de 6 etapas secuenciales con validación en cada paso.
+
+### Estructura
+
+```
+        ┌─────────────┐
+        │   INPUT     │
+        └──────┬──────┘
+               │
+               ▼
+        ┌─────────────┐
+   ┌───▶│  1. INGEST  │◀───┐
+   │    └──────┬──────┘    │
+   │           │           │
+   │           ▼           │
+   │    ┌─────────────┐    │
+   │    │ 2. VALIDATE │    │
+   │    └──────┬──────┘    │
+   │           │           │
+   │           ▼           │
+   │    ┌─────────────┐    │
+   │    │  3. PROCESS │    │ Feedback
+   │    └──────┬──────┘    │ Loop
+   │           │           │
+   │           ▼           │
+   │    ┌─────────────┐    │
+   │    │ 4. ENRICH   │    │
+   │    └──────┬──────┘    │
+   │           │           │
+   │           ▼           │
+   │    ┌─────────────┐    │
+   └────│ 5. OUTPUT   │────┘
+        └──────┬──────┘
+               │
+               ▼
+        ┌─────────────┐
+        │  6. ARCHIVE │
+        └─────────────┘
+```
+
+### Implementación
+
+```typescript
+interface PipelineStage<TInput, TOutput> {
+  name: string;
+  process: (input: TInput) => Promise<TOutput>;
+  validate: (output: TOutput) => boolean;
+  onError: (error: Error, input: TInput) => TOutput | null;
+  metrics: {
+    duration: number;
+    successRate: number;
+    errorCount: number;
+  };
+}
+
+class HexagonalPipeline<T> {
+  private stages: PipelineStage<any, any>[] = [];
+  
+  addStage(stage: PipelineStage<any, any>): this {
+    this.stages.push(stage);
+    return this;
+  }
+  
+  async execute(input: T): Promise<PipelineResult<T>> {
+    let current = input;
+    const trace: StageTrace[] = [];
+    
+    for (const stage of this.stages) {
+      const startTime = Date.now();
+      try {
+        current = await stage.process(current);
+        if (!stage.validate(current)) {
+          throw new ValidationError(`Validation failed at ${stage.name}`);
+        }
+        trace.push({ stage: stage.name, success: true, duration: Date.now() - startTime });
+      } catch (error) {
+        const fallback = stage.onError(error, current);
+        if (fallback === null) {
+          return { success: false, error, trace };
+        }
+        current = fallback;
+        trace.push({ stage: stage.name, success: false, fallback: true, duration: Date.now() - startTime });
+      }
+    }
+    
+    return { success: true, result: current, trace };
+  }
+}
+```
+
+### Etapas del Pipeline
+
+| Etapa | Función | Ejemplo |
+|-------|---------|---------|
+| INGEST | Recepción de datos | API request, evento BCI |
+| VALIDATE | Validación de schema | Tipo, formato, permisos |
+| PROCESS | Transformación | Normalización, enriquecimiento |
+| ENRICH | Agregación de contexto | Metadata, referencias |
+| OUTPUT | Generación de resultado | Response, evento |
+| ARCHIVE | Persistencia | DB, logs, auditoría |
+
+---
+
+## 2. EOCT (Evaluación de Observadores Confiables)
+
+### Concepto
+
+El sistema EOCT evalúa la confiabilidad y reputación de los participantes del ecosistema basándose en múltiples factores objetivos y subjetivos.
+
+### Factores de Evaluación
+
+```typescript
+interface EOCTFactors {
+  // Factor 1: Antigüedad
+  antiquity: {
+    accountAge: number;        // Días desde creación
+    activeDays: number;        // Días con actividad
+    consistency: number;       // Regularidad (0-1)
+  };
+  
+  // Factor 2: Contribuciones
+  contributions: {
+    contentCreated: number;    // Contenido publicado
+    codeCommits: number;       // Commits de código
+    helpfulVotes: number;      // Votos positivos recibidos
+    coursesCompleted: number;  // Cursos completados
+  };
+  
+  // Factor 3: Reputación de pares
+  peerReputation: {
+    endorsements: number;      // Aval de otros usuarios
+    ratings: number;           // Calificaciones recibidas
+    trust: number;             // Índice de confianza
+  };
+  
+  // Factor 4: Verificaciones
+  verifications: {
+    identity: boolean;         // Identidad verificada
+    email: boolean;            // Email verificado
+    phone: boolean;            // Teléfono verificado
+    credentials: number;       // Credenciales verificadas
+  };
+  
+  // Factor 5: Conducta
+  conduct: {
+    violations: number;        // Violaciones de términos
+    warnings: number;          // Advertencias
+    bans: number;              // Suspensiones
+    reports: number;           // Reportes de otros usuarios
+  };
+}
+```
+
+### Cálculo del Score
+
+```typescript
+class EOCTCalculator {
+  calculate(factors: EOCTFactors): EOCTScore {
+    const weights = {
+      antiquity: 0.15,
+      contributions: 0.25,
+      peerReputation: 0.25,
+      verifications: 0.20,
+      conduct: 0.15
+    };
+    
+    const antiquityScore = this.scoreAntiquity(factors.antiquity);
+    const contributionsScore = this.scoreContributions(factors.contributions);
+    const peerScore = this.scorePeerReputation(factors.peerReputation);
+    const verificationsScore = this.scoreVerifications(factors.verifications);
+    const conductScore = this.scoreConduct(factors.conduct);
+    
+    const base = 
+      antiquityScore * weights.antiquity +
+      contributionsScore * weights.contributions +
+      peerScore * weights.peerReputation +
+      verificationsScore * weights.verifications +
+      conductScore * weights.conduct;
+    
+    return {
+      base: Math.round(base * 100) / 100,
+      level: this.calculateLevel(base),
+      factors: {
+        antiguedad: antiquityScore,
+        contribuciones: contributionsScore,
+        reputacion: peerScore,
+        verificaciones: verificationsScore,
+        conducta: conductScore
+      }
+    };
+  }
+  
+  private calculateLevel(score: number): 1 | 2 | 3 | 4 | 5 {
+    if (score >= 0.8) return 5;
+    if (score >= 0.6) return 4;
+    if (score >= 0.4) return 3;
+    if (score >= 0.2) return 2;
+    return 1;
+  }
+}
+```
+
+### Niveles y Permisos
+
+| Nivel | Score | Permisos |
+|-------|-------|----------|
+| 1 | 0-0.19 | Básicos, limitados |
+| 2 | 0.20-0.39 | Estándar |
+| 3 | 0.40-0.59 | Extendidos, APIs |
+| 4 | 0.60-0.79 | Avanzados, dashboards |
+| 5 | 0.80-1.0 | Completos, admin limitado |
+
+---
+
+## 3. Quantum Computing Simulado
+
+### Concepto
+
+TAMV implementa simulación de computación cuántica para ciertas operaciones criptográficas y de optimización, preparando el ecosistema para la era post-cuántica.
+
+### Capacidades
+
+```typescript
+interface QuantumCapabilities {
+  // Generación de números aleatorios cuánticos
+  random: {
+    generateBits: (count: number) => Promise<number[]>;
+    generateUUID: () => Promise<string>;
+  };
+  
+  // Criptografía post-cuántica
+  crypto: {
+    generateKeyPair: () => Promise<QuantumKeyPair>;
+    encrypt: (data: Buffer, key: QuantumPublicKey) => Promise<Buffer>;
+    decrypt: (data: Buffer, key: QuantumPrivateKey) => Promise<Buffer>;
+  };
+  
+  // Optimización (QAOA simulado)
+  optimization: {
+    solveTSP: (nodes: Node[]) => Promise<Route>;
+    optimizeAllocation: (resources: Resource[]) => Promise<Allocation>;
+  };
+}
+```
+
+### Algoritmos Implementados
+
+| Algoritmo | Uso | Implementación |
+|-----------|-----|----------------|
+| QRNG | Números aleatorios | Simulado con ruido |
+| CRYSTALS-Kyber | Encriptación post-cuántica | WebAssembly |
+| CRYSTALS-Dilithium | Firmas digitales | WebAssembly |
+| QAOA | Optimización | Simulación clásica |
+
+### Uso en DEKATEOTL
+
+```typescript
+class DEKATEOTLSecurity {
+  async generateQuantumSafeKeys(): Promise<KeyPair> {
+    // Usar CRYSTALS-Kyber para intercambio de claves
+    const keyPair = await QuantumCrypto.generateKeyPair('kyber-1024');
+    
+    // Usar CRYSTALS-Dilithium para firmas
+    const signingKey = await QuantumCrypto.generateKeyPair('dilithium-5');
+    
+    return { encryption: keyPair, signing: signingKey };
+  }
+  
+  async secureChannel(): Promise<SecureChannel> {
+    const keys = await this.generateQuantumSafeKeys();
+    return new QuantumSecureChannel(keys);
+  }
+}
+```
+
+---
+
+## 4. Sistema de Monitoreo
+
+### Arquitectura
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                      GRAFANA DASHBOARDS                      │
+├──────────────────────────────────────────────────────────────┤
+│                     PROMETHEUS                               │
+│                  (Métricas & Alertas)                        │
+├───────────┬───────────┬───────────┬───────────┬─────────────┤
+│   TEMPO   │   LOKI    │  POSTGRES │   REDIS   │   APPS      │
+│  (Traces) │  (Logs)   │   (DB)    │  (Cache)  │  (Runtime)  │
+└───────────┴───────────┴───────────┴───────────┴─────────────┘
+```
+
+### Métricas Clave
+
+#### Sistema
+```typescript
+interface SystemMetrics {
+  // CPU & Memoria
+  cpu: {
+    usage: number;          // Porcentaje
+    loadAverage: number[];
+    cores: number;
+  };
+  
+  memory: {
+    used: number;
+    total: number;
+    percentage: number;
+  };
+  
+  // Red
+  network: {
+    bytesIn: number;
+    bytesOut: number;
+    connections: number;
+    latency: number;
+  };
+}
+```
+
+#### Aplicación
+```typescript
+interface ApplicationMetrics {
+  // Requests
+  requests: {
+    total: number;
+    successful: number;
+    failed: number;
+    avgLatency: number;
+    p95Latency: number;
+    p99Latency: number;
+  };
+  
+  // Usuarios
+  users: {
+    active: number;
+    sessions: number;
+    concurrent: number;
+    byRegion: Map<string, number>;
+  };
+  
+  // Federación
+  federation: {
+    nodesOnline: number;
+    syncLatency: number;
+    conflicts: number;
+    dataTransfer: number;
+  };
+}
+```
+
+### Dashboards
+
+#### Dashboard Principal
+```typescript
+interface MainDashboard {
+  title: "TAMV MD-X4™ Control Center";
+  panels: [
+    // Panel 1: Nodos federados
+    {
+      type: 'graph',
+      title: 'Estado de Nodos Federados',
+      metrics: ['node_status', 'node_latency', 'node_load'],
+      refresh: '10s'
+    },
+    
+    // Panel 2: Usuarios activos
+    {
+      type: 'stat',
+      title: 'Usuarios Activos',
+      metrics: ['active_users'],
+      refresh: '5s'
+    },
+    
+    // Panel 3: Latencia de API
+    {
+      type: 'heatmap',
+      title: 'Latencia de APIs',
+      metrics: ['api_latency'],
+      refresh: '15s'
+    },
+    
+    // Panel 4: Errores
+    {
+      type: 'alert',
+      title: 'Alertas de Sistema',
+      metrics: ['error_rate', 'security_events'],
+      refresh: '30s'
+    }
+  ];
+}
+```
+
+### Alertas
+
+```yaml
+# Prometheus alerting rules
+groups:
+  - name: tamv-alerts
+    rules:
+      - alert: HighLatency
+        expr: api_latency_p95 > 500
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API latency detected"
+          
+      - alert: NodeDown
+        expr: node_status == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Federation node is down"
+          
+      - alert: HighErrorRate
+        expr: error_rate > 0.05
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Error rate exceeds 5%"
+```
+
+### Integración con Dashboard TAMV
+
+```typescript
+// src/pages/Dashboard.tsx
+const Dashboard = () => {
+  const { data: metrics } = useQuery('metrics', fetchMetrics, {
+    refetchInterval: 5000
+  });
+  
+  const { data: nodes } = useQuery('nodes', fetchNodeStatus, {
+    refetchInterval: 10000
+  });
+  
+  return (
+    <div className="dashboard">
+      <MetricsGrid metrics={metrics} />
+      <NodesTable nodes={nodes} />
+      <ChartsPanel>
+        <BarChart data={metrics.byRegion} />
+        <PieChart data={metrics.byType} />
+        <AreaChart data={metrics.timeline} />
+        <RadarChart data={metrics.health} />
+      </ChartsPanel>
+    </div>
+  );
+};
+```
+
+---
+
+## 5. Integración de Sistemas
+
+### Flujo Integrado
+
+```typescript
+class IntegratedSystems {
+  async processEvent(event: SystemEvent): Promise<void> {
+    // 1. Pipeline hexagonal
+    const pipelineResult = await this.pipeline.execute(event);
+    
+    // 2. Actualizar EOCT si es evento de usuario
+    if (event.type === 'user_action') {
+      await this.eoct.updateScore(event.userId, event);
+    }
+    
+    // 3. Aplicar seguridad cuántica
+    const secureResult = await this.dekateotl.process(pipelineResult);
+    
+    // 4. Registrar métricas
+    await this.monitoring.record({
+      event: event.type,
+      duration: pipelineResult.duration,
+      success: secureResult.success
+    });
+    
+    // 5. Sincronizar con federación
+    await this.federation.sync(secureResult);
+  }
+}
+```
+
+---
+
+*Próxima sección: [Dashboard de Monitoreo](./07-dashboard)*

@@ -244,6 +244,17 @@ class MemoryFreezeManager {
     console.log('[MemoryFreeze] Starting memory freeze...');
 
     try {
+      // Obtener sesiones activas
+      const { data: sessions } = await supabase
+        .from('isabella_sessions')
+        .select('session_id')
+        .eq('status', 'active');
+
+      const sessionIds = sessions?.map(s => s.session_id) || [];
+
+      // Congelar cada sesión
+
+    try {
       // Use in-memory tracking since isabella_sessions table doesn't exist
       const sessionIds = Array.from(this.frozenSessions);
 
@@ -267,6 +278,30 @@ class MemoryFreezeManager {
    */
   async freezeSession(sessionId: string): Promise<void> {
     try {
+      // Marcar sesión como congelada
+      await supabase
+        .from('isabella_sessions')
+        .update({ 
+          status: 'frozen', 
+          frozen_at: new Date().toISOString() 
+        })
+        .eq('session_id', sessionId);
+
+      // Guardar estado actual de la sesión
+      const { data: session } = await supabase
+        .from('isabella_sessions')
+        .select('*')
+        .eq('session_id', sessionId)
+        .single();
+
+      if (session) {
+        // Guardar snapshot para auditoría
+        await supabase.from('isabella_session_snapshots').insert({
+          session_id: sessionId,
+          snapshot_data: session as any,
+          frozen_at: new Date().toISOString()
+        });
+      }
       // Log freeze event to isabella_interactions
       await supabase
         .from('isabella_interactions')
@@ -289,6 +324,13 @@ class MemoryFreezeManager {
    */
   async unfreezeSession(sessionId: string): Promise<boolean> {
     try {
+      await supabase
+        .from('isabella_sessions')
+        .update({ 
+          status: 'active', 
+          unfrozen_at: new Date().toISOString() 
+        })
+        .eq('session_id', sessionId);
       // Log unfreeze event
       await supabase
         .from('isabella_interactions')
@@ -339,6 +381,38 @@ class LogExportManager {
     try {
       const logIds: string[] = [];
 
+      // Exportar filter logs
+      const filterLogs = await supabase
+        .from('isabella_filter_logs')
+        .select('*')
+        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+
+      if (filterLogs.data) {
+        const exportId = await this.createLogExport('isabella_filter_logs', filterLogs.data);
+        logIds.push(exportId);
+      }
+
+      // Exportar risk logs
+      const riskLogs = await supabase
+        .from('isabella_risk_logs')
+        .select('*')
+        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+
+      if (riskLogs.data) {
+        const exportId = await this.createLogExport('isabella_risk_logs', riskLogs.data);
+        logIds.push(exportId);
+      }
+
+      // Exportar conversaciones
+      const conversations = await supabase
+        .from('isabella_conversations')
+        .select('*')
+        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+
+      if (conversations.data) {
+        const exportId = await this.createLogExport('isabella_conversations', conversations.data);
+        logIds.push(exportId);
+      }
       // Export all isabella_interactions as consolidated logs
       const allLogs = await supabase
         .from('isabella_interactions')
@@ -364,6 +438,20 @@ class LogExportManager {
       // Generar hash de integridad
       await this.generateIntegrityHash(logIds);
 
+      // Exportar auditorías
+      const audits = await supabase
+        .from('isabella_audit_logs')
+        .select('*')
+        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+
+      if (audits.data) {
+        const exportId = await this.createLogExport('isabella_audit_logs', audits.data);
+        logIds.push(exportId);
+      }
+
+      // Generar hash de integridad
+      await this.generateIntegrityHash(logIds);
+
       this.exportedLogs = logIds;
       console.log('[LogExport] Exported', logIds.length, 'log sets');
 
@@ -380,6 +468,12 @@ class LogExportManager {
   private async createLogExport(tableName: string, data: any[]): Promise<string> {
     const exportId = `export_${tableName}_${Date.now()}`;
     
+    await supabase.from('isabella_log_exports').insert({
+      export_id: exportId,
+      table_name: tableName,
+      record_count: data.length,
+      exported_at: new Date().toISOString(),
+      hash: '' // Will be updated after hash generation
     // Log export event to isabella_interactions
     await supabase.from('isabella_interactions').insert({
       user_id: '00000000-0000-0000-0000-000000000000',
@@ -404,6 +498,13 @@ class LogExportManager {
       .map(b => b.toString(16).padStart(2, '0'))
       .join('');
 
+    // Actualizar hash en la base de datos
+    for (const exportId of logIds) {
+      await supabase
+        .from('isabella_log_exports')
+        .update({ hash })
+        .eq('export_id', exportId);
+    }
     console.log('[LogExport] Integrity hash:', hash);
   }
 
@@ -599,6 +700,11 @@ export class HardStopController {
       };
       this.isActive = false;
 
+      // Log de restauración
+      await supabase.from('isabella_system_events').insert({
+        event_type: 'SYSTEM_RESTORED',
+        user_id: auditorId,
+        details: { restored_at: Date.now() },
       // Log restore event
       await supabase.from('isabella_interactions').insert({
         user_id: auditorId,
@@ -622,6 +728,9 @@ export class HardStopController {
    */
   private async logShutdown(): Promise<void> {
     try {
+      await supabase.from('isabella_system_events').insert({
+        event_type: 'HARD_STOP',
+        details: {
       await supabase.from('isabella_interactions').insert({
         user_id: '00000000-0000-0000-0000-000000000000',
         message_role: 'system',
@@ -638,6 +747,7 @@ export class HardStopController {
           exportedLogs: this.state.exportedLogs,
           startTime: this.state.startTime,
           completionTime: this.state.completionTime
+        },
         } as any,
         created_at: new Date().toISOString()
       });
