@@ -236,7 +236,8 @@ export default function CinematicIntro({
   autoStart = false,
 }: CinematicIntroProps) {
   const [accepted, setAccepted] = useState(autoStart)
-  const { time, completed, restart } = useTrailerClock(32, accepted)
+  // Clock always runs in background, but 3D scene only shows when accepted
+  const { time, completed, restart } = useTrailerClock(32, true)
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
 

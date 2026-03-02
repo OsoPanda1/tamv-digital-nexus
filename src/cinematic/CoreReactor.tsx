@@ -115,7 +115,7 @@ export function CoreReactor({ act, t }: CoreReactorProps) {
   const panelArray = Array.from({ length: panelCount })
 
   return (
-    <group ref={group} position={[0, -10, 0]}>
+    <group ref={group} position={[0, 0, 0]}>
       {/* Núcleo interno - Icosaedro */}
       <mesh ref={innerCore}>
         <icosahedronGeometry args={[1.2, 1]} />
