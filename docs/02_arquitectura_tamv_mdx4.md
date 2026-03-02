@@ -500,3 +500,28 @@ graph TD
 - `docs/repo-unification/AUDITORIA_GENERAL_2026-02-24.md` — Auditoría técnica
 - `docs/repo-unification/INTEGRATION_WAVES.md` — Olas de convergencia
 - `02_MODULOS/M05_IA_TAMVAI/INTERNO/QC-TAMV-01-v1.1.md` — Spec QC
+
+## 12. Wiki MD-X4 — Documentos de referencia
+
+Documentos del master wiki MD-X4, actualizados como parte del update 2026-03-01:
+
+| Documento | Dominio | Estado |
+|-----------|---------|--------|
+| `docs/04_auth_memberships_access_control.md` | DM-X4-01, DM-X4-05 | ✅ stable |
+| `docs/05_social_core_schema_ui.md` | DM-X4-01 Social | ✅ stable |
+| `docs/06_federated_certification.md` | DM-X4-04 Educación | ✅ stable |
+| `docs/deployment_templates.md` | DM-X4-07 Infra | ✅ stable |
+| `docs/MDX4_FUNCTIONAL_ARCHITECTURE_MAP.md` | Todos | ✅ operational |
+
+### Cobertura por área
+
+| Área | Documento canónico | Módulo interno |
+|------|--------------------|----------------|
+| Auth & Memberships | `docs/04_auth_memberships_access_control.md` | — |
+| Control de acceso (RLS) | `docs/04_auth_memberships_access_control.md` § 5 | — |
+| Social Core Schema | `docs/05_social_core_schema_ui.md` | `02_MODULOS/M02_SOCIAL/` |
+| Social UI Components | `docs/05_social_core_schema_ui.md` § 5 | — |
+| Certificación federada | `docs/06_federated_certification.md` | `docs/devhub/bookpi_api.md` |
+| Deployment templates | `docs/deployment_templates.md` | `fly.toml`, `Dockerfile` |
+| Pipeline CI/CD | `docs/deployment_templates.md` § 7 | `.github/workflows/ci.yml` |
+| Deca-V Protocol | `MDX5_OPERATIONAL_PROTOCOL.md` | — |

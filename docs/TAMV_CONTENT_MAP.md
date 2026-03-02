@@ -1,9 +1,20 @@
 # TAMV_CONTENT_MAP
 
+> **Última actualización:** 2026-03-01 · **MD-X4 Wiki Master Update v1**
+
 ## Estado
 - **Repositorio base analizado:** `tamv-digital-nexus`
 - **Clasificación actual:** `TAMV_REPO_CONFIRMED`
 - **Objetivo de esta fase:** preparar unificación de 177 repos del owner en un mapa trazable.
+
+## Documentación MD-X4 Wiki — Actualización 2026-03-01
+
+| Documento | Tipo | Cobertura | Estado |
+|-----------|------|-----------|--------|
+| `docs/04_auth_memberships_access_control.md` | `doc_tech` | Auth, tiers, RLS, roles | `stable` |
+| `docs/05_social_core_schema_ui.md` | `doc_tech` | Social schema, hooks, UI | `stable` |
+| `docs/06_federated_certification.md` | `doc_tech` | BookPI, certs, federation | `stable` |
+| `docs/deployment_templates.md` | `blueprint` | Templates deploy, CI/CD | `stable` |
 
 ## Inventario inicial (local)
 | Dominio | Evidencia en repo | Estado |

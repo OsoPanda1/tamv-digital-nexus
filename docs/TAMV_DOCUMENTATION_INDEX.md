@@ -1,6 +1,6 @@
 # TAMV_DOCUMENTATION_INDEX
 
-> **Última actualización:** 2026-02-24 · **Estado:** en construcción iterativa
+> **Última actualización:** 2026-03-01 · **Estado:** en construcción iterativa · **MD-X4 Wiki Update v1**
 
 ## 00. Canon y gobierno documental
 - `docs/MASTER_CANON_OPENCLAW_TAMV.md` ✅ canon
@@ -11,11 +11,20 @@
 - `docs/01_filosofia_tamv.md` *(pendiente)*
 
 ## 02. Arquitectura MD-X4
-- `docs/02_arquitectura_tamv_mdx4.md` ✅ stable — **vista completa: dominios, cells, MSR, Fusion Core, Nexus, flujos**
+- `docs/02_arquitectura_tamv_mdx4.md` ✅ stable — **vista completa: dominios, cells, MSR, Fusion Core, Nexus, flujos** *(incluye §12 Wiki References)*
 - `docs/MDX4_FUNCTIONAL_ARCHITECTURE_MAP.md` ✅ **OPERACIONAL** — mapa funcional completo: rutas, stores, sistemas, hooks, Edge Functions
+
+## 04. Auth, Memberships & Access Control *(NUEVO)*
+- `docs/04_auth_memberships_access_control.md` ✅ **stable** — auth flow, tiers, RLS, roles, route guards
+
+## 05. Social Core Schema & UI *(NUEVO)*
+- `docs/05_social_core_schema_ui.md` ✅ **stable** — schema posts/profiles, hooks, UI components, flujos
 
 ## 03. Federados
 - `docs/03_federados_tamv.md` ✅ draft
+
+## 06. Federated Certification Checks *(NUEVO)*
+- `docs/06_federated_certification.md` ✅ **stable** — schema courses/enrollments/certificates, BookPI, flujos, federation checks
 
 ## 07. IA / Isabella / THE SOF
 - `docs/07_isabella_multiagente_y_boveda.md` *(pendiente)*
@@ -30,6 +39,7 @@
 - `docs/modules/guardianias/guardianias_summary.md` ✅ stable
 - `docs/modules/guardianias/guardianias_internal.md` ✅ draft
 - `docs/modules/guardianias/guardianias_public.md` ✅ stable
+- `docs/modules/guardianias/guardianias_hexa_edimap_bridge.md` ✅ **stable** — integración HEXA-EDIMAP Guardian Pattern con TAMV
 
 ## 09. Motor MD-X4 y pipelines
 - `docs/09_motor_mdx4_y_pipelines.md` *(pendiente)*
@@ -37,6 +47,10 @@
 - `docs/modules/render/render_internal.md` ✅ draft
 - `docs/modules/render/render_public.md` ✅ stable
 - `02_MODULOS/M03_XR/INTERNO/XR-PERFORMANCE-GUIDELINES.md` ✅ draft
+
+## 14. HEXA-EDIMAP — Arquitectura Adaptativa Gobernada *(NUEVO)*
+- `docs/14_hexa_edimap_architecture.md` ✅ **stable** — especificación fundacional Hot/Cold Pipeline, Event Store, Templates, Promoción
+- `docs/14b_hexa_edimap_tamv_integration_map.md` ✅ **stable** — mapeo técnico HEXA-EDIMAP ↔ TAMV MD-X4, Guardianías, MSR
 
 ## 12–13. Jurídico y económico
 - `docs/12_juridico_tamv.md` *(pendiente)*
@@ -58,6 +72,13 @@
 
 ## Content Sync / DigyTAMV
 - `02_MODULOS/M06_CONTENT/INTERNO/CONTENT-SYNC-SPEC.md` ✅ draft
+
+## Deployment & CI/CD *(NUEVO)*
+- `docs/deployment_templates.md` ✅ **stable** — templates Vercel/Netlify/Fly.io/Docker, pipeline CI/CD, checklist despliegue
+- `DEPLOYMENT_GUIDE.md` ✅ guía completa de despliegue
+- `MDX5_OPERATIONAL_PROTOCOL.md` ✅ Protocolo Deca-V
+- `.github/workflows/ci.yml` ✅ pipeline CI/CD
+- `.github/workflows/constitutional-gate.yml` ✅ gate constitucional
 
 ## DevHub
 - `docs/devhub/README.md` ✅

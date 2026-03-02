@@ -160,21 +160,31 @@
 ## 10. Documentación Faltante
 
 ### Tareas
-- [ ] Integrar QC-TAMV-01 en devhub/digy
-- [ ] Escribir Manual Social & Tiempo Real
-- [ ] Escribir Isabella Prime Spec
-- [ ] Escribir XR Performance Guidelines
-- [ ] Escribir Marketplace & TAU Spec
-- [ ] Escribir Content Sync & DigyTAMV Spec
-- [ ] Escribir TEE Audit Runbook
+- [x] Integrar QC-TAMV-01 en devhub/digy — `02_MODULOS/M05_IA_TAMVAI/INTERNO/QC-TAMV-01-v1.1.md`
+- [x] Escribir Manual Social & Tiempo Real — `02_MODULOS/M02_SOCIAL/INTERNO/MANUAL-SOCIAL.md`
+- [x] Escribir Isabella Prime Spec — `02_MODULOS/M05_IA_TAMVAI/INTERNO/ISABELLA-PRIME-SPEC.md`
+- [x] Escribir XR Performance Guidelines — `02_MODULOS/M03_XR/INTERNO/XR-PERFORMANCE-GUIDELINES.md`
+- [x] Escribir Marketplace & TAU Spec — `02_MODULOS/M04_ECONOMIA/INTERNO/MARKETPLACE-TAU-SPEC.md`
+- [x] Escribir Content Sync & DigyTAMV Spec — `02_MODULOS/M06_CONTENT/INTERNO/CONTENT-SYNC-SPEC.md`
+- [x] Escribir TEE Audit Runbook — `02_MODULOS/M01_QC/INTERNO/TEE-AUDIT-RUNBOOK.md`
 
-### Archivos a Crear
-- `02_MODULOS/M02_SOCIAL/INTERNO/MANUAL-SOCIAL.md`
-- `02_MODULOS/M05_IA_TAMVAI/INTERNO/ISABELLA-PRIME-SPEC.md`
-- `02_MODULOS/M03_XR/INTERNO/XR-PERFORMANCE-GUIDELINES.md`
-- `02_MODULOS/M04_ECONOMIA/INTERNO/MARKETPLACE-TAU-SPEC.md`
-- `02_MODULOS/M06_CONTENT/INTERNO/CONTENT-SYNC-SPEC.md`
-- `02_MODULOS/M01_QC/INTERNO/TEE-AUDIT-RUNBOOK.md`
+### Documentación adicional (MD-X4 Wiki Master Update 2026-03-01)
+- [x] Auth & Memberships — `docs/04_auth_memberships_access_control.md`
+- [x] Social Core Schema & UI — `docs/05_social_core_schema_ui.md`
+- [x] Federated Certification Checks — `docs/06_federated_certification.md`
+- [x] Deployment Templates — `docs/deployment_templates.md`
+
+### Archivos Creados
+- `02_MODULOS/M02_SOCIAL/INTERNO/MANUAL-SOCIAL.md` ✅
+- `02_MODULOS/M05_IA_TAMVAI/INTERNO/ISABELLA-PRIME-SPEC.md` ✅
+- `02_MODULOS/M03_XR/INTERNO/XR-PERFORMANCE-GUIDELINES.md` ✅
+- `02_MODULOS/M04_ECONOMIA/INTERNO/MARKETPLACE-TAU-SPEC.md` ✅
+- `02_MODULOS/M06_CONTENT/INTERNO/CONTENT-SYNC-SPEC.md` ✅
+- `02_MODULOS/M01_QC/INTERNO/TEE-AUDIT-RUNBOOK.md` ✅
+- `docs/04_auth_memberships_access_control.md` ✅ (nuevo)
+- `docs/05_social_core_schema_ui.md` ✅ (nuevo)
+- `docs/06_federated_certification.md` ✅ (nuevo)
+- `docs/deployment_templates.md` ✅ (nuevo)
 
 ***
 

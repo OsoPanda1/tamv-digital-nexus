@@ -161,6 +161,9 @@ class NormalPipeline {
           .from('isabella_conversations')
           .select('messages')
           .eq('session_id', context.sessionId)
+          .from('isabella_interactions')
+          .select('content, message_role, metadata')
+          .eq('user_id', context.userId || '')
           .order('created_at', { ascending: false })
           .limit(10);
 
@@ -173,6 +176,10 @@ class NormalPipeline {
       if (context.userId) {
         const { data: userPrefs } = await supabase
           .from('user_preferences')
+      // Get user profile as preferences proxy
+      if (context.userId) {
+        const { data: userPrefs } = await supabase
+          .from('profiles')
           .select('*')
           .eq('user_id', context.userId)
           .single();
@@ -397,6 +404,12 @@ class RiskPipeline {
         action,
         filter_result: filterResult as any,
         pipeline: PipelineType.RISK,
+      await supabase.from('isabella_interactions').insert({
+        user_id: context.userId || '',
+        message_role: 'system',
+        content: `RISK_LOG: ${action} - ${context.input.substring(0, 200)}`,
+        metadata: { filter_result: filterResult, pipeline: PipelineType.RISK, session_id: context.sessionId } as any,
+        ethical_flag: 'risk_detected',
         created_at: new Date().toISOString()
       });
 
@@ -424,6 +437,12 @@ class RiskPipeline {
           timestamp: Date.now()
         },
         status: 'pending',
+      await supabase.from('isabella_interactions').insert({
+        user_id: context.userId || '',
+        message_role: 'system',
+        content: `ALERT: CRITICAL_RISK - ${context.input.substring(0, 200)}`,
+        metadata: { alert_type: 'CRITICAL_RISK', session_id: context.sessionId, filterResult, status: 'pending' } as any,
+        ethical_flag: 'critical_risk',
         created_at: new Date().toISOString()
       });
     } catch (error) {

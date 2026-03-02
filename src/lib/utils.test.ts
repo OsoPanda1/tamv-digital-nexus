@@ -4,6 +4,7 @@ import { cn } from "./utils";
 
 describe("cn utility", () => {
   it("joins plain tailwind classes", () => {
+    expect(cn("px-2", "py-1", "text-sm")).toBe("px-2 py-1 text-sm");
     expect(cn("px-2", "py-1", "text-sm")).toContain("text-sm");
   });
 

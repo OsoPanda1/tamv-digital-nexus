@@ -664,6 +664,12 @@ export class OctupleFilterSystem {
         layer: result.layer,
         confidence: result.confidence,
         reasons: result.reasons as any,
+      const { error } = await supabase.from('isabella_interactions').insert({
+        user_id: context.userId || '00000000-0000-0000-0000-000000000000',
+        message_role: 'system',
+        content: `FILTER_LOG: ${result.decision} at layer ${result.layer} - ${context.input.substring(0, 200)}`,
+        metadata: { decision: result.decision, layer: result.layer, confidence: result.confidence, reasons: result.reasons } as any,
+        ethical_flag: result.decision === 'block' ? 'blocked' : null,
         created_at: new Date().toISOString()
       });
 
