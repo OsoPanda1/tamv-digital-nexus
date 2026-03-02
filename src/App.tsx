@@ -36,6 +36,7 @@ import NotFound from "./pages/NotFound";
 import Gifts from "./pages/Gifts";
 import Governance from "./pages/Governance";
 import Economy from "./pages/Economy";
+import MDXOperations from "./pages/MDXOperations";
 
 // Configure React Query
 const queryClient = new QueryClient({
@@ -93,6 +94,9 @@ const App = () => (
             {/* Admin & Crisis */}
             <Route path="/crisis" element={<Crisis />} />
             <Route path="/admin" element={<Admin />} />
+
+            {/* MD-X Operations */}
+            <Route path="/operations" element={<MDXOperations />} />
 
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
