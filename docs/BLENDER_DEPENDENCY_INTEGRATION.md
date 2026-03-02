@@ -93,6 +93,138 @@ strict graph {
 }
 ```
 
+## Additional External Libraries
+
+### LCMS2 (Color Management)
+
+```cmake
+project(lcms2)
+
+cmake_minimum_required(VERSION 3.10)
+include_directories(include)
+
+set(HEADERS
+    include/lcms2.h
+    include/lcms2_plugin.h
+)
+set(SOURCES
+    src/cmscam02.c
+    src/cmscgats.c
+    src/cmscnvrt.c
+    src/cmserr.c
+    src/cmsgamma.c
+    src/cmsgmt.c
+    src/cmsintrp.c
+    src/cmsio0.c
+    src/cmsio1.c
+    src/cmslut.c
+    src/cmsmd5.c
+    src/cmsmtrx.c
+    src/cmsnamed.c
+    src/cmsopt.c
+    src/cmspack.c
+    src/cmspcs.c
+    src/cmsplugin.c
+    src/cmsps2.c
+    src/cmssamp.c
+    src/cmssm.c
+    src/cmstypes.c
+    src/cmsvirt.c
+    src/cmswtpnt.c
+    src/cmsxform.c
+    src/lcms2_internal.h
+)
+
+add_library(${PROJECT_NAME} STATIC ${HEADERS} ${SOURCES})
+```
+
+### GMPXX (C++ Big Integer)
+
+```cmake
+cmake_minimum_required(VERSION 3.10)
+project(libgmpxx)
+
+include_directories(. cxx ${GMP_INCLUDE_DIR})
+add_definitions(-D__GMP_WITHIN_GMPXX)
+add_library(libgmpxx SHARED
+  cxx/dummy.cc
+  cxx/isfuns.cc
+  cxx/ismpf.cc
+  cxx/ismpq.cc
+  cxx/ismpz.cc
+  cxx/ismpznw.cc
+  cxx/limits.cc
+  cxx/osdoprnti.cc
+  cxx/osfuns.cc
+  cxx/osmpf.cc
+  cxx/osmpq.cc
+  cxx/osmpz.cc
+)
+
+target_link_libraries(libgmpxx ${GMP_LIBRARY})
+```
+
+### Theora (Video Codec)
+
+```cmake
+cmake_minimum_required(VERSION 3.10)
+project(theora LANGUAGES C)
+
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
+FIND_PACKAGE(OGG REQUIRED)
+
+file(GLOB HEADERS
+  "include/theora/codec.h"
+  "include/theora/theora.h"
+  "include/theora/theoradec.h"
+  "include/theora/theoraenc.h"
+)
+
+include_directories("include")
+include_directories(${OGG_INCLUDE_DIR})
+
+set(LIBTHEORA_COMMON
+  "lib/apiwrapper.c"
+  "lib/bitpack.c"
+  "lib/dequant.c"
+  "lib/fragment.c"
+  "lib/idct.c"
+  "lib/info.c"
+  "lib/internal.c"
+  "lib/state.c"
+  "lib/quant.c"
+)
+
+set(LIBTHEORA_ENC
+  "lib/analyze.c"
+  "lib/encapiwrapper.c"
+  "lib/encfrag.c"
+  "lib/encinfo.c"
+  "lib/encode.c"
+  "lib/enquant.c"
+  "lib/fdct.c"
+  "lib/huffenc.c"
+  "lib/mathops.c"
+  "lib/mcenc.c"
+  "lib/rate.c"
+  "lib/tokenize.c"
+)
+
+set(LIBTHEORA_DEC
+  "lib/decapiwrapper.c"
+  "lib/decinfo.c"
+  "lib/decode.c"
+  "lib/huffdec.c"
+)
+
+add_library(theora-common OBJECT ${LIBTHEORA_COMMON} ${HEADERS})
+add_library(theora-enc OBJECT ${LIBTHEORA_ENC} ${HEADERS})
+add_library(theora-dec OBJECT ${LIBTHEORA_DEC} ${HEADERS})
+
+add_library(theora $<TARGET_OBJECTS:theora-common> $<TARGET_OBJECTS:theora-enc> $<TARGET_OBJECTS:theora-dec>)
+target_link_libraries(theora ${OGG_LIBRARY})
+```
+
 ## TAMV Integration Points
 
 ### M03_XR Module
