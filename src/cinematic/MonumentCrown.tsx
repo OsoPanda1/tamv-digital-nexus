@@ -60,7 +60,7 @@ export function MonumentCrown({ act, t }: MonumentCrownProps) {
     act === "CIVILIZATORY_EXPANSION" ? t : act === "REVELATION" ? 1 : 0
 
   return (
-    <group ref={group} position={[0, -10, 0]}>
+    <group ref={group} position={[0, 0, 0]}>
       {/* Anillo base */}
       <mesh>
         <torusGeometry args={[2.8, 0.18, 24, 96]} />
