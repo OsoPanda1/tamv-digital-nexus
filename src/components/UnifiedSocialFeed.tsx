@@ -2,6 +2,9 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useRealFeed, type FeedPost } from "@/hooks/useRealFeed";
+import { useAuth } from "@/hooks/useAuth";
+import { useState } from "react";
 import {
   Heart,
   MessageCircle,
@@ -24,6 +27,9 @@ import {
   Gem,
   Flame,
   Rocket,
+  Loader2,
+  Image,
+  Send,
   type LucideIcon,
 } from "lucide-react";
 
@@ -44,7 +50,7 @@ interface SectionConfig {
 }
 
 interface SocialPostProps {
-  idx: number;
+  post: FeedPost;
 }
 
 // -------------------------------------------------------------------
@@ -91,17 +97,33 @@ const EXCLUSIVE_SECTIONS: SectionConfig[] = [
 ];
 
 // -------------------------------------------------------------------
-// SocialPost
+// SocialPost - Con datos reales de Supabase
 // -------------------------------------------------------------------
 
-const SocialPost = ({ idx }: SocialPostProps) => {
-  const isMale = idx % 2 === 0;
-  const avatarUrl = `https://randomuser.me/api/portraits/${
-    isMale ? "men" : "women"
-  }/${idx}.jpg`;
-  const imageUrl = `https://picsum.photos/seed/post${idx}/600/400`;
-  const likes = Math.floor(Math.random() * 500) + 50;
-  const comments = Math.floor(Math.random() * 100) + 10;
+const SocialPost = ({ post }: SocialPostProps) => {
+  const [isLiking, setIsLiking] = useState(false);
+  const [likeCount, setLikeCount] = useState(post.likes_count || 0);
+  
+  const timeAgo = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+    
+    if (diffDays > 0) return `hace ${diffDays}d`;
+    if (diffHours > 0) return `hace ${diffHours}h`;
+    if (diffMins > 0) return `hace ${diffMins}m`;
+    return "ahora";
+  };
+
+  const handleLike = async () => {
+    setIsLiking(true);
+    setLikeCount(prev => prev + 1);
+    // TODO: Call Supabase to like
+    setTimeout(() => setIsLiking(false), 500);
+  };
 
   return (
     <Card
@@ -112,36 +134,41 @@ const SocialPost = ({ idx }: SocialPostProps) => {
     >
       <div className="flex items-start gap-4">
         <img
-          src={avatarUrl}
+          src={post.author_avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.author_id}`}
           className="w-14 h-14 rounded-full border-2 border-purple-400/30 object-cover"
-          alt={`Avatar Usuario ${idx}`}
+          alt={post.author_name || "Usuario"}
           loading="lazy"
         />
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <span className="font-bold text-lg">Usuario {idx}</span>
+            <span className="font-bold text-lg">{post.author_name || "Ciudadano TAMV"}</span>
             <Badge className="bg-gradient-to-r from-cyan-500 to-purple-500 text-xs">
               Creador
             </Badge>
-            <span className="text-sm text-muted-foreground">• hace 2h</span>
+            <span className="text-sm text-muted-foreground">• {timeAgo(post.created_at)}</span>
           </div>
-          <p className="text-base mb-4">
-            Explorando nuevas dimensiones en el metaverso TAMV 🚀✨{" "}
-            <span className="text-cyan-300">#DreamSpaces</span>{" "}
-            <span className="text-fuchsia-300">#QuantumReality</span>
-          </p>
-          <img
-            src={imageUrl}
-            className="rounded-xl mb-4 w-full object-cover"
-            alt={`Publicación ${idx}`}
-            loading="lazy"
-          />
+          <p className="text-base mb-4">{post.content}</p>
+          {post.media_url && (
+            <img
+              src={post.media_url}
+              className="rounded-xl mb-4 w-full object-cover"
+              alt="Media"
+              loading="lazy"
+            />
+          )}
           <div className="flex items-center gap-6 text-muted-foreground">
-            <Button variant="ghost" size="sm" className="gap-2">
-              <Heart className="w-5 h-5" /> {likes}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="gap-2"
+              onClick={handleLike}
+              disabled={isLiking}
+            >
+              {isLiking ? <Loader2 className="w-5 h-5 animate-spin" /> : <Heart className="w-5 h-5" />} 
+              {likeCount}
             </Button>
             <Button variant="ghost" size="sm" className="gap-2">
-              <MessageCircle className="w-5 h-5" /> {comments}
+              <MessageCircle className="w-5 h-5" /> {post.comments_count || 0}
             </Button>
             <Button variant="ghost" size="sm" className="gap-2">
               <Share2 className="w-5 h-5" /> Compartir
@@ -158,6 +185,18 @@ const SocialPost = ({ idx }: SocialPostProps) => {
 // -------------------------------------------------------------------
 
 export default function TAMVEpicPortal() {
+  const { posts, loading, createPost, refreshFeed } = useRealFeed();
+  const { user } = useAuth();
+  const [newPostContent, setNewPostContent] = useState("");
+  const [isPosting, setIsPosting] = useState(false);
+
+  const handleCreatePost = async () => {
+    if (!newPostContent.trim() || !user) return;
+    setIsPosting(true);
+    await createPost(newPostContent.trim());
+    setNewPostContent("");
+    setIsPosting(false);
+  };
   return (
     <main className="min-h-screen w-full bg-gradient-to-br from-[#141028] via-[#20134b] to-[#4e23aa] scrollbar-thin pb-20 relative">
       {/* CINTA HERO QUANTUM */}
@@ -372,10 +411,64 @@ export default function TAMVEpicPortal() {
         >
           Feed Global • Social Quantum
         </h2>
+        
+        {/* Composer for authenticated users */}
+        {user && (
+          <Card className={`${glassBase} p-4 mb-6 max-w-2xl mx-auto`}>
+            <div className="flex gap-3">
+              <img
+                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user.id}`}
+                className="w-10 h-10 rounded-full border-2 border-purple-400/30"
+                alt="Tu perfil"
+              />
+              <div className="flex-1">
+                <textarea
+                  value={newPostContent}
+                  onChange={(e) => setNewPostContent(e.target.value)}
+                  placeholder="¿Qué estás pensando en el metaverso?"
+                  className="w-full bg-transparent border-none outline-none text-white resize-none"
+                  rows={2}
+                />
+                <div className="flex gap-2 justify-end mt-2">
+                  <Button variant="ghost" size="sm">
+                    <Image className="w-4 h-4 mr-1" /> Imagen
+                  </Button>
+                  <Button 
+                    onClick={handleCreatePost} 
+                    disabled={!newPostContent.trim() || isPosting}
+                    size="sm"
+                  >
+                    {isPosting ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Send className="w-4 h-4 mr-1" />}
+                    Publicar
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Card>
+        )}
+        
         <div className="space-y-6">
-          {[...Array(5)].map((_, idx) => (
-            <SocialPost key={idx} idx={idx} />
-          ))}
+          {loading ? (
+            <Card className={`${glassBase} p-8 text-center max-w-2xl mx-auto`}>
+              <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2 text-cyan-400" />
+              <p className="text-white/60">Cargando feed del metaverso...</p>
+            </Card>
+          ) : posts.length > 0 ? (
+            posts.map((post) => (
+              <SocialPost key={post.id} post={post} />
+            ))
+          ) : (
+            <Card className={`${glassBase} p-8 text-center max-w-2xl mx-auto`}>
+              <p className="text-white/60 mb-4">Sé el primero en publicar en el metaverso TAMV</p>
+              {user ? (
+                <Button onClick={() => setNewPostContent("¡Hola metaverso! 🚀")}>
+                  Crear primera publicación
+                </Button>
+              ) : (
+                <Button>Regístrate para publicar</Button>
+              )}
+            </Card>
+          )}
         </div>
       </motion.section>
 
