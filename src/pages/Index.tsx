@@ -18,12 +18,8 @@ import {
   Maximize2, Minimize2, MoreHorizontal, Bookmark, Flag, UserPlus,
   LogIn, Star, Crown, Diamond, Wallet, Activity, Headphones,
   Wifi as LiveIcon, Ghost, Sparkle, Rocket, Aurora, Waves, Brain,
-  ShoppingCart, Store, GraduationCap, PiggyBank, CreditCard, Gem, Palette
-  Home, Compass, Users, MessageCircle, Video, Radio, 
-  Sparkles, Heart, Share2, Play, TrendingUp, Zap,
-  Globe, Brain, Shield, Crown, Rocket, ChevronRight,
-  Star, Gem, Wallet, Activity, BookOpen, Palette,
-  Music, Gamepad2, GraduationCap, ShoppingBag, Layers
+  ShoppingCart, Store, GraduationCap, PiggyBank, CreditCard, Gem, Palette,
+  Shield, BookOpen
 } from "lucide-react";
 
 // Import enhanced components
