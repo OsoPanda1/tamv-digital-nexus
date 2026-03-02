@@ -1,67 +1,36 @@
 // =======================================================
-// TAMV ONLINE – AAA CINEMATIC INTRO CONTROLLER
-// Arquitectura optimizada + Timeline centralizada
+// TAMV ONLINE – AAA CINEMATIC INTRO CONTROLLER v2.0
+// Evolved Architecture: Act-based Timeline + R3F Modular
 // =======================================================
 
-import React, { useEffect, useRef, useState, useCallback } from "react"
+import React, { useEffect, useRef, useState, useCallback, Suspense } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Canvas } from "@react-three/fiber"
-import { X } from "lucide-react"
+import { Environment, Stars as DreiStars } from "@react-three/drei"
+import * as THREE from "three"
 
+// Legacy imports (keep for compatibility)
 import introAudio from "@/assets/intro.mp3"
 import logoImg from "@/assets/LOGOTAMV2.jpg"
 
-// Import 3D Scene Components (we'll use the existing components)
-import { 
-  NebulaFog, 
-  LightHalo, 
-  QuantumField, 
-  PowerCore, 
-  ShockwaveRings,
-  LeadershipCrown,
-  MagicRunes,
-  GlowingOrbs,
-  ParticleTrails,
-  Stars
-} from "./CinematicSceneComponents"
+// New Cinematic System
+import {
+  getActAtTime,
+  useTrailerClock,
+  CinematicCameraRig,
+  LightingRig,
+  CoreReactor,
+  MegaStructure,
+  MonumentCrown,
+  TextOverlay,
+  type ActId,
+} from "@/cinematic"
 
-type Phase =
-  | "permission"
-  | "awakening"
-  | "ignition"
-  | "crisis"
-  | "expansion"
-  | "crown"
-  | "logo"
-  | "message"
-  | "complete"
-
-interface Props {
+interface CinematicIntroProps {
   onComplete: () => void
   skipEnabled?: boolean
+  autoStart?: boolean
 }
-
-// =======================================================
-// TIMELINE CONFIGURACIÓN CENTRALIZADA
-// =======================================================
-
-const TIMELINE = [
-  { phase: "awakening", delay: 300 },
-  { phase: "ignition", delay: 2200 },
-  { phase: "crisis", delay: 4800 },
-  { phase: "expansion", delay: 7200 },
-  { phase: "crown", delay: 9500 },
-  { phase: "logo", delay: 11800 },
-  { phase: "message", delay: 14000 },
-]
-
-const MESSAGE_LINES = [
-  { text: "PROTOCOLO DE INMERSIÓN ACTIVADO...", duration: 3500 },
-  { text: "TAMV ONLINE · ORGULLOSAMENTE LATINOAMERICANOS.", duration: 5000 },
-  { text: "PROYECTO DEDICADO A REINA TREJO SERRANO.", duration: 4500 },
-  { text: "SONRÍE: TU OVEJA NEGRA LO LOGRÓ.", duration: 4500 },
-  { text: "BIENVENIDO AL ECOSISTEMA CIVILIZATORIO.", duration: 4000 },
-]
 
 // =======================================================
 // PERMISSION GATE COMPONENT
@@ -188,9 +157,9 @@ const PermissionGate: React.FC<{ onAccept: () => void }> = ({ onAccept }) => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          Sistema Cinematico Genesis v7.0
+          Sistema Cinematico Genesis v8.0
           <br />
-          Powered by Isabella AI
+          Powered by Isabella AI · HEXA-EDIMAP Architecture
         </motion.p>
       </motion.div>
     </motion.div>
@@ -198,64 +167,25 @@ const PermissionGate: React.FC<{ onAccept: () => void }> = ({ onAccept }) => {
 }
 
 // =======================================================
-// CIVILIZATORY SCENE (3D)
+// 3D CINEMATIC SCENE
 // =======================================================
 
-import * as THREE from "three"
-import { useFrame } from "@react-three/fiber"
-import { Points, PointMaterial, Float, Stars as DreiStars } from "@react-three/drei"
-
-const C = {
-  gold: "#FFD700",
-  cyan: "#00D9FF",
-  purple: "#9D4EDD",
-  white: "#FFFFFF",
-  magenta: "#FF2D78",
+interface TrailerSceneProps {
+  act: ActId
+  t: number
 }
 
-function useCinematicCamera(phase: Phase) {
-  useFrame(({ mouse, camera }) => {
-    const targetX = THREE.MathUtils.lerp(-0.3, 0.3, (mouse.x + 1) / 2)
-    const targetY = THREE.MathUtils.lerp(-0.2, 0.2, (mouse.y + 1) / 2)
-
-    camera.position.x += (targetX - camera.position.x) * 0.06
-    camera.position.y += (targetY - camera.position.y) * 0.06
-
-    if (phase === "crisis") {
-      const shake = 0.06
-      camera.position.x += (Math.random() - 0.5) * shake
-      camera.position.y += (Math.random() - 0.5) * shake
-    }
-
-    if (phase === "crown" || phase === "logo" || phase === "message") {
-      const targetZ = 10.5
-      camera.position.z += (targetZ - camera.position.z) * 0.08
-    } else {
-      const targetZ = 9
-      camera.position.z += (targetZ - camera.position.z) * 0.08
-    }
-
-    camera.lookAt(0, 0.5, 0)
-  })
-}
-
-const CinematicScene: React.FC<{ phase: Phase }> = ({ phase }) => {
-  useCinematicCamera(phase)
-
+function TrailerScene({ act, t }: TrailerSceneProps) {
   return (
-    <group>
-      <ambientLight intensity={0.25} color="#0b1020" />
-      <spotLight
-        position={[0, 6, 5]}
-        intensity={2.8}
-        angle={0.6}
-        penumbra={0.6}
-        color={C.gold}
-      />
-      <pointLight position={[6, -4, 4]} intensity={2.3} color={C.cyan} />
-      <pointLight position={[-8, 6, -6]} intensity={1.7} color={C.purple} />
+    <>
+      {/* Background and fog */}
+      <color attach="background" args={["#020203"]} />
+      <fog attach="fog" args={["#020203", 20, 80]} />
 
-      <NebulaFog phase={phase as any} />
+      {/* Lighting */}
+      <LightingRig act={act} />
+
+      {/* Stars background */}
       <DreiStars
         radius={200}
         depth={120}
@@ -263,48 +193,58 @@ const CinematicScene: React.FC<{ phase: Phase }> = ({ phase }) => {
         factor={4.5}
         saturation={0.4}
         fade
-        speed={phase === "expansion" || phase === "crown" ? 3 : 1}
+        speed={act === "CIVILIZATORY_EXPANSION" || act === "REVELATION" ? 2 : 0.5}
       />
-      <LightHalo />
-      <QuantumField phase={phase as any} />
-      <PowerCore phase={phase as any} />
-      <ShockwaveRings phase={phase as any} />
-      <MagicRunes phase={phase as any} />
-      <LeadershipCrown phase={phase as any} />
-      <GlowingOrbs phase={phase as any} />
-      <ParticleTrails phase={phase as any} />
-    </group>
+
+      {/* Ground plane - visible when there's geometry */}
+      {(act === "CORE_AWAKENS" ||
+        act === "SYSTEM_FAILURE" ||
+        act === "CIVILIZATORY_EXPANSION" ||
+        act === "REVELATION") && (
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]}>
+          <planeGeometry args={[120, 120]} />
+          <meshStandardMaterial
+            color={"#050505"}
+            metalness={0.3}
+            roughness={0.9}
+          />
+        </mesh>
+      )}
+
+      {/* Core Reactor */}
+      <CoreReactor act={act} t={t} />
+
+      {/* Mega Structure */}
+      <MegaStructure act={act} t={t} />
+
+      {/* Monument Crown */}
+      <MonumentCrown act={act} t={t} />
+
+      {/* Environment for specularity */}
+      <Environment preset="night" />
+    </>
   )
 }
 
 // =======================================================
-// CIVILIZATORY EFFECTS
+// MAIN COMPONENT
 // =======================================================
 
-const CivilizatoryEffects: React.FC = () => {
-  return null // Placeholder for additional effects
-}
-
-// =======================================================
-// COMPONENTE PRINCIPAL
-// =======================================================
-
-export default function CinematicIntro({ onComplete, skipEnabled = true }: Props) {
-
-  const [phase, setPhase] = useState<Phase>("permission")
-  const [accepted, setAccepted] = useState(false)
-  const [progress, setProgress] = useState(0)
-  const [lines, setLines] = useState<string[]>([])
+export default function CinematicIntro({
+  onComplete,
+  skipEnabled = true,
+  autoStart = false,
+}: CinematicIntroProps) {
+  const [accepted, setAccepted] = useState(autoStart)
+  const { time, completed, restart } = useTrailerClock(32, accepted)
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
-  const timelineTimeouts = useRef<number[]>([])
-  const progressInterval = useRef<number | null>(null)
 
-  // =======================================================
-  // AUDIO CONTROL PROFESIONAL
-  // =======================================================
+  // Get current act
+  const { act, t } = getActAtTime(time)
 
-  const initAudio = async () => {
+  // Audio control
+  const initAudio = useCallback(async () => {
     try {
       const audio = new Audio(introAudio)
       audio.volume = 0.85
@@ -314,223 +254,99 @@ export default function CinematicIntro({ onComplete, skipEnabled = true }: Props
     } catch {
       console.warn("Autoplay bloqueado por el navegador.")
     }
-  }
-
-  const stopAudio = () => {
-    audioRef.current?.pause()
-    audioRef.current = null
-  }
-
-  // =======================================================
-  // CLEANUP GLOBAL
-  // =======================================================
-
-  const clearAllTimers = () => {
-    timelineTimeouts.current.forEach(clearTimeout)
-    timelineTimeouts.current = []
-    if (progressInterval.current) clearInterval(progressInterval.current)
-  }
-
-  // =======================================================
-  // MASTER START SEQUENCE
-  // =======================================================
-
-  const startIntro = useCallback(() => {
-
-    initAudio()
-    setAccepted(true)
-
-    // Fases automáticas
-    TIMELINE.forEach(({ phase, delay }) => {
-      const t = window.setTimeout(() => {
-        setPhase(phase as Phase)
-      }, delay)
-
-      timelineTimeouts.current.push(t)
-    })
-
-    // Mensajes
-    let delayAccumulator = 14000
-
-    MESSAGE_LINES.forEach(line => {
-      const t = window.setTimeout(() => {
-        setLines(prev => [...prev, line.text])
-      }, delayAccumulator)
-
-      timelineTimeouts.current.push(t)
-      delayAccumulator += line.duration
-    })
-
-    // Finalización
-    const totalDuration = delayAccumulator + 2000
-
-    timelineTimeouts.current.push(
-      window.setTimeout(() => {
-        stopAudio()
-        setPhase("complete")
-        setTimeout(onComplete, 1000)
-      }, totalDuration)
-    )
-
-    // Progress bar
-    const startTime = Date.now()
-    progressInterval.current = window.setInterval(() => {
-      const elapsed = Date.now() - startTime
-      setProgress(Math.min((elapsed / totalDuration) * 100, 100))
-    }, 50)
-
-  }, [onComplete])
-
-  // =======================================================
-  // SKIP CONTROL
-  // =======================================================
-
-  const handleSkip = () => {
-    if (!skipEnabled) return
-    clearAllTimers()
-    stopAudio()
-    onComplete()
-  }
-
-  // =======================================================
-  // CLEANUP ON UNMOUNT
-  // =======================================================
-
-  useEffect(() => {
-    return () => {
-      clearAllTimers()
-      stopAudio()
-    }
   }, [])
 
-  // =======================================================
-  // PERMISSION GATE
-  // =======================================================
+  const stopAudio = useCallback(() => {
+    audioRef.current?.pause()
+    audioRef.current = null
+  }, [])
 
+  // Handle start
+  const handleStart = useCallback(() => {
+    setAccepted(true)
+    initAudio()
+    restart()
+  }, [initAudio, restart])
+
+  // Handle skip
+  const handleSkip = useCallback(() => {
+    if (!skipEnabled) return
+    stopAudio()
+    onComplete()
+  }, [skipEnabled, stopAudio, onComplete])
+
+  // Watch for completion
+  useEffect(() => {
+    if (completed) {
+      stopAudio()
+      setTimeout(onComplete, 500)
+    }
+  }, [completed, onComplete, stopAudio])
+
+  // Cleanup
+  useEffect(() => {
+    return () => {
+      stopAudio()
+    }
+  }, [stopAudio])
+
+  // Show permission gate if not accepted
   if (!accepted) {
     return (
       <AnimatePresence>
-        <PermissionGate onAccept={startIntro} />
+        <PermissionGate onAccept={handleStart} />
       </AnimatePresence>
     )
   }
 
-  // =======================================================
-  // RENDER PRINCIPAL
-  // =======================================================
-
   return (
     <div className="fixed inset-0 bg-black overflow-hidden z-[9999]">
-
       {/* 3D SCENE */}
-      <Canvas camera={{ position: [0, 0.5, 9.5], fov: 70 }}>
-        <CinematicScene phase={phase} />
-        <CivilizatoryEffects />
+      <Canvas
+        gl={{
+          antialias: true,
+          toneMapping: THREE.ACESFilmicToneMapping,
+          toneMappingExposure: 1.2,
+        }}
+        camera={{ position: [0, 1, 24], fov: 40, near: 0.1, far: 200 }}
+      >
+        <Suspense fallback={null}>
+          <CinematicCameraRig act={act} t={t} />
+          <TrailerScene act={act} t={t} />
+        </Suspense>
       </Canvas>
 
-      {/* HUD OVERLAY */}
-      <div className="absolute inset-0 pointer-events-none">
-
-        {/* Header */}
-        <div className="absolute top-6 left-6 text-xs tracking-[0.4em] uppercase text-white/40">
-          TAMV ONLINE · SIMULACIÓN CIVILIZATORIA
-        </div>
-
-        {/* Phase Messaging */}
-        <AnimatePresence>
-          {phase === "awakening" && (
-            <motion.div
-              className="absolute inset-0 flex items-center justify-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <p className="text-sky-300 tracking-[1em] uppercase text-sm">
-                INICIALIZANDO RED...
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Logo Phase */}
-        <AnimatePresence>
-          {phase === "logo" && (
-            <motion.div
-              className="absolute inset-0 flex items-center justify-center z-50"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <motion.div
-                className="relative"
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 1.1, opacity: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                <img
-                  src={logoImg}
-                  alt="TAMV"
-                  className="w-32 h-32 object-contain rounded-xl"
-                  style={{
-                    boxShadow: "0 0 60px rgba(255,215,0,0.4)",
-                  }}
-                />
-                <motion.div
-                  className="absolute -inset-2 rounded-xl border-2 border-cyan-400/50"
-                  animate={{
-                    boxShadow: [
-                      "0 0 20px rgba(0,217,255,0.3)",
-                      "0 0 40px rgba(0,217,255,0.6)",
-                      "0 0 20px rgba(0,217,255,0.3)",
-                    ],
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Message Lines */}
-        {phase === "message" && (
-          <div className="absolute bottom-20 w-full text-center px-6">
-            {lines.map((line, i) => (
-              <motion.p
-                key={i}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="text-cyan-400/90 text-lg mb-2 tracking-wide"
-                style={{ textShadow: "0 0 20px rgba(0,217,255,0.5)" }}
-              >
-                {line}
-              </motion.p>
-            ))}
-          </div>
-        )}
-
-      </div>
+      {/* TEXT OVERLAY */}
+      <TextOverlay act={act} time={time} />
 
       {/* PROGRESS BAR */}
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-neutral-900">
         <motion.div
           className="h-full bg-gradient-to-r from-amber-400 via-sky-400 to-emerald-400"
-          animate={{ width: `${progress}%` }}
+          animate={{ width: `${(time / 32) * 100}%` }}
+          transition={{ duration: 0.05 }}
         />
       </div>
 
-      {/* SKIP */}
+      {/* HEADER INFO */}
+      <div className="absolute top-6 left-6 text-xs tracking-[0.4em] uppercase text-white/40">
+        TAMV ONLINE · SIMULACIÓN CIVILIZATORIA
+      </div>
+
+      {/* ACT INDICATOR */}
+      <div className="absolute top-6 right-6 text-xs tracking-[0.3em] uppercase text-white/30">
+        {act.replace(/_/g, " ")}
+      </div>
+
+      {/* SKIP BUTTON */}
       {skipEnabled && (
         <button
           onClick={handleSkip}
-          className="absolute top-4 right-4 text-xs uppercase tracking-widest text-white/40 hover:text-white z-50"
+          className="absolute top-4 right-24 text-xs uppercase tracking-widest text-white/40 hover:text-white transition-colors z-50"
         >
           Saltar Intro
         </button>
       )}
-
     </div>
   )
 }
