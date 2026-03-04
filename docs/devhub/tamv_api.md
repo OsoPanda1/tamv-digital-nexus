@@ -2,6 +2,8 @@
 
 > **Status:** `validated` · **Versión:** 1.0 · **Dominio:** DM-X4-07 Infra
 
+> **⚠️ NOTA IMPORTANTE:** Para la especificación técnica completa, arquitectura Pipeline A/B/CCP, OpenAPI 3.1.0 y roadmap institucional, consultar el documento maestro: [`docs/TAMV_UNIFIED_API_MASTER_TECHNICAL_v3.md`](../TAMV_UNIFIED_API_MASTER_TECHNICAL_v3.md) (v3.0.0-Sovereign)
+
 ---
 
 ## Endpoint

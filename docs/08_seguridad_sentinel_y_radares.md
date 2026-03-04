@@ -2,6 +2,8 @@
 
 > **Estado:** `draft` · **Versión:** 1.0 · **Origen:** Master Canon TAMV
 
+> **Ver especificación técnica completa:** [`docs/TAMV_UNIFIED_API_MASTER_TECHNICAL_v3.md`](../TAMV_UNIFIED_API_MASTER_TECHNICAL_v3.md) — Capítulos 6 (Seguridad y Guardianías) y 9 (OpenAPI) con QuantumSecurityLayer™, Anubis Sentinel™ 4 capas, y especificación criptográfica post-cuántica
+
 ---
 
 ## 1. Anubis Security System
