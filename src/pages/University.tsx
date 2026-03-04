@@ -12,7 +12,7 @@ import {
   Lock, ChevronLeft, Star, TrendingUp,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useUniversity, type CourseWithLessons, type CourseLessonRow } from '@/hooks/useUniversity';
+import { useUniversity, type CourseWithLessons } from '@/hooks/useUniversity';
 
 const LEVEL_COLORS: Record<string, string> = {
   beginner: 'bg-green-500/20 text-green-300 border-green-500/30',

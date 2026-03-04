@@ -1,8 +1,3 @@
-// ============================================================================
-// TAMV MD-X4™ - DM-X4-01 Social Cell
-// Hook: useUserPresence — realtime online/offline tracking via Supabase Presence
-// ============================================================================
-
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
@@ -26,20 +21,13 @@ export function useUserPresence(): UseUserPresenceReturn {
   const [myStatus, setMyStatusState] = useState<PresenceState['status']>('online');
 
   const isOnline = useCallback(
-    (userId: string): boolean => {
-      return onlineUsers.some(
-        (p) => p.userId === userId && p.status !== 'offline'
-      );
-    },
+    (userId: string): boolean => onlineUsers.some((p) => p.userId === userId && p.status !== 'offline'),
     [onlineUsers]
   );
 
-  const setMyStatus = useCallback(
-    (status: PresenceState['status']) => {
-      setMyStatusState(status);
-    },
-    []
-  );
+  const setMyStatus = useCallback((status: PresenceState['status']) => {
+    setMyStatusState(status);
+  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -62,39 +50,27 @@ export function useUserPresence(): UseUserPresenceReturn {
         setOnlineUsers(users);
       })
       .on('presence', { event: 'join' }, ({ newPresences }) => {
+        const raw = newPresences as unknown as Array<Record<string, unknown>>;
+        const incoming: PresenceState[] = raw.map((p) => ({
+          userId: String((p as Record<string, unknown>).key || (p as Record<string, unknown>).presence_ref || 'unknown'),
+          onlineAt: String((p as Record<string, unknown>).onlineAt ?? new Date().toISOString()),
+          status: ((p as Record<string, unknown>).status ?? 'online') as PresenceState['status'],
+        }));
         setOnlineUsers((prev) => {
-          const incoming = (newPresences as Array<{ key: string; status: PresenceState['status']; onlineAt: string }>).map((p) => ({
-            userId: p.key,
-            onlineAt: p.onlineAt ?? new Date().toISOString(),
-            status: p.status ?? 'online' as PresenceState['status'],
-          const raw = newPresences as unknown as Array<Record<string, any>>;
-          const incoming = raw.map((p) => ({
-            userId: (p as any).key || (p as any).presence_ref || 'unknown',
-            onlineAt: (p as any).onlineAt ?? new Date().toISOString(),
-            status: ((p as any).status ?? 'online') as PresenceState['status'],
-          }));
           const existingIds = new Set(prev.map((u) => u.userId));
           return [...prev, ...incoming.filter((u) => !existingIds.has(u.userId))];
         });
       })
       .on('presence', { event: 'leave' }, ({ leftPresences }) => {
-        const raw = leftPresences as unknown as Array<Record<string, any>>;
-        const leftIds = new Set(
-          (leftPresences as Array<{ key: string }>).map((p) => p.key)
-          raw.map((p) => (p as any).key || (p as any).presence_ref || '')
-        );
+        const raw = leftPresences as unknown as Array<Record<string, unknown>>;
+        const leftIds = new Set(raw.map((p) => String((p as Record<string, unknown>).key || (p as Record<string, unknown>).presence_ref || '')));
         setOnlineUsers((prev) =>
-          prev.map((u) =>
-            leftIds.has(u.userId) ? { ...u, status: 'offline' as const } : u
-          )
+          prev.map((u) => (leftIds.has(u.userId) ? { ...u, status: 'offline' as const } : u))
         );
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
-          await channel.track({
-            status: myStatus,
-            onlineAt: new Date().toISOString(),
-          });
+          await channel.track({ status: myStatus, onlineAt: new Date().toISOString() });
         }
       });
 

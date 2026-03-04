@@ -272,47 +272,6 @@ export type Database = {
         }
         Relationships: []
       }
-      course_certificates: {
-        Row: {
-          bookpi_event_id: string | null
-          course_id: string
-          course_title: string
-          id: string
-          issued_at: string
-          metadata: Json | null
-          user_id: string
-          verification_url: string
-        }
-        Insert: {
-          bookpi_event_id?: string | null
-          course_id: string
-          course_title: string
-          id?: string
-          issued_at?: string
-          metadata?: Json | null
-          user_id: string
-          verification_url: string
-        }
-        Update: {
-          bookpi_event_id?: string | null
-          course_id?: string
-          course_title?: string
-          id?: string
-          issued_at?: string
-          metadata?: Json | null
-          user_id?: string
-          verification_url?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "course_certificates_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "courses"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       course_enrollments: {
         Row: {
           completed: boolean | null
@@ -344,53 +303,6 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "course_enrollments_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "courses"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      course_lessons: {
-        Row: {
-          course_id: string
-          created_at: string | null
-          description: string | null
-          duration_minutes: number
-          id: string
-          is_free_preview: boolean
-          lesson_order: number
-          lesson_type: string
-          title: string
-          updated_at: string | null
-        }
-        Insert: {
-          course_id: string
-          created_at?: string | null
-          description?: string | null
-          duration_minutes?: number
-          id?: string
-          is_free_preview?: boolean
-          lesson_order?: number
-          lesson_type?: string
-          title: string
-          updated_at?: string | null
-        }
-        Update: {
-          course_id?: string
-          created_at?: string | null
-          description?: string | null
-          duration_minutes?: number
-          id?: string
-          is_free_preview?: boolean
-          lesson_order?: number
-          lesson_type?: string
-          title?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "course_lessons_course_id_fkey"
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
@@ -1094,51 +1006,6 @@ export type Database = {
             columns: ["draw_id"]
             isOneToOne: false
             referencedRelation: "lottery_draws"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      lesson_progress: {
-        Row: {
-          completed: boolean
-          completed_at: string | null
-          course_id: string
-          created_at: string | null
-          id: string
-          lesson_id: string
-          user_id: string
-        }
-        Insert: {
-          completed?: boolean
-          completed_at?: string | null
-          course_id: string
-          created_at?: string | null
-          id?: string
-          lesson_id: string
-          user_id: string
-        }
-        Update: {
-          completed?: boolean
-          completed_at?: string | null
-          course_id?: string
-          created_at?: string | null
-          id?: string
-          lesson_id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "lesson_progress_lesson_id_fkey"
-            columns: ["lesson_id"]
-            isOneToOne: false
-            referencedRelation: "course_lessons"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "lesson_progress_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "courses"
             referencedColumns: ["id"]
           },
         ]
