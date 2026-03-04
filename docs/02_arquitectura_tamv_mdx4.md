@@ -2,6 +2,8 @@
 
 > **Estado:** `stable` · **Versión:** 2.0 · **Origen:** Master Canon TAMV + análisis local 2026-02-24
 
+> **Ver también:** [`docs/TAMV_UNIFIED_API_MASTER_TECHNICAL_v3.md`](../TAMV_UNIFIED_API_MASTER_TECHNICAL_v3.md) — Master Técnico v3.0.0-Sovereign con especificación completa de Pipeline A/B/CCP, OpenAPI 3.1.0 y QuantumSecurityLayer™
+
 ---
 
 ## 1. Visión general

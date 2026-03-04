@@ -1,5 +1,7 @@
 # TAMV MD-X4™ v7.0 - Arquitectura de Subsistemas Míticos
 
+> **Ver también:** [`docs/TAMV_UNIFIED_API_MASTER_TECHNICAL_v3.md`](TAMV_UNIFIED_API_MASTER_TECHNICAL_v3.md) — Master Técnico v3.0.0-Sovereign con integración Pipeline A/B/CCP, especificación OpenAPI 3.1.0, y blueprint de microservicios
+
 ## Visión General
 
 Este documento define la arquitectura completa para "industrializar" los subsistemas de control del Nexus TAMV, transformando conceptos míticos en sistemas operativos reales.

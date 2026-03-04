@@ -2,6 +2,8 @@
 
 > **Status:** `validated` · **Versión:** 1.0 · **Dominio:** DM-X4-02 IA/Isabella
 
+> **⚠️ NOTA IMPORTANTE:** Para la especificación técnica completa de la TAMVAI API™, incluyendo protocolo EOCT™, manual operativo para IA, integración con Pipeline B y especificación OpenAPI, consultar: [`docs/TAMV_UNIFIED_API_MASTER_TECHNICAL_v3.md`](../TAMV_UNIFIED_API_MASTER_TECHNICAL_v3.md) (v3.0.0-Sovereign)
+
 ---
 
 ## Endpoints
