@@ -1,0 +1,1178 @@
+# TAMV Unified API™ - OpenAPI 3.1.0 Specification
+# Version: 3.0.0-Sovereign
+# Generated: 2026-03-04
+
+openapi: 3.1.0
+info:
+  title: TAMV Unified API
+  description: |
+    TAMV Digital Nexus - Pipeline A/B/CCP Microservices Architecture
+    
+    ## Pipeline A - Critical Operations
+    - Auth Service (8001): Authentication with JWT+PQC
+    - Security Service (8002): QuantumSecurityLayer™
+    - Transaction Service (8004): Saga pattern transactions
+    - Payment Service (8005): Stripe + TAU ledger
+    
+    ## Pipeline B - Adaptive Intelligence  
+    - AI Generation Service (8101): GPT-4/Claude with EOCT™
+    - Voice Service (8105): ElevenLabs TTS/STT
+    - Embedding Service (8102): pgvector RAG
+    
+    ## CCP - Control & Coordination
+    - Orchestrator (8200): Health checks & metrics
+    - Policy Engine (8201): OPA-like policy evaluation
+    - Governance Service (8202): DAO voting
+    
+    ## Security
+    - Post-quantum cryptography (Kyber/Dilithium)
+    - Hybrid signatures (RSA+PQC)
+    - EOCT™ emotional context tracking
+    - Horus Tower™ observability
+  version: 3.0.0-Sovereign
+  contact:
+    name: TAMV DevHub
+    url: https://dev.tamv.global
+    email: api@tamv.global
+  license:
+    name: TAMV Sovereign License
+    url: https://tamv.global/license
+
+servers:
+  - url: https://api.tamv.global/v1
+    description: Production
+  - url: https://api.staging.tamv.global/v1
+    description: Staging
+  - url: https://api.dev.tamv.global/v1
+    description: Development
+
+# ============================================
+# SECURITY
+# ============================================
+security:
+  - BearerAuth: []
+  - QuantumToken: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Standard JWT token
+    
+    QuantumToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT-PQC
+      description: JWT with post-quantum signature (Dilithium3)
+
+  # ============================================
+  # SCHEMAS
+  # ============================================
+  schemas:
+    # Common Schemas
+    Meta:
+      type: object
+      properties:
+        trace_id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2026-03-04T14:36:52.174Z"
+        version:
+          type: string
+          example: "3.0.0-Sovereign"
+        request_duration_ms:
+          type: integer
+          example: 125
+
+    Error:
+      type: object
+      required:
+        - success
+        - error
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              enum: [INVALID_REQUEST, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, RATE_LIMITED, INTERNAL_ERROR, QUANTUM_VALIDATION_FAILED, EOCT_VIOLATION]
+              example: "INVALID_REQUEST"
+            message:
+              type: string
+              example: "Email and password are required"
+            details:
+              type: object
+        meta:
+          $ref: '#/components/schemas/Meta'
+
+    # Auth Schemas
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        display_name:
+          type: string
+        role:
+          type: string
+          enum: [public, member, admin, security_officer]
+        tier:
+          type: string
+          enum: [free, premium, vip, elite, celestial, enterprise]
+
+    AuthTokens:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        refresh_token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        expires_in:
+          type: integer
+          example: 3600
+        qsl_enabled:
+          type: boolean
+          example: true
+
+    # Security Schemas
+    QuantumKeyPair:
+      type: object
+      properties:
+        key_id:
+          type: string
+          example: "qsl-1709564400000-abc123"
+        public_key_dilithium:
+          type: string
+        public_key_kyber:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        expires_at:
+          type: string
+          format: date-time
+
+    QuantumSignature:
+      type: object
+      properties:
+        algorithm:
+          type: string
+          enum: [Dilithium3, Dilithium5]
+          example: "Dilithium3"
+        public_key:
+          type: string
+        signature:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    # Transaction Schemas
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        from_user_id:
+          type: string
+          format: uuid
+        to_user_id:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          example: 100.50
+        currency:
+          type: string
+          enum: [USD, TAU, TCEP]
+          example: "TAU"
+        status:
+          type: string
+          enum: [pending, confirmed, failed]
+          example: "confirmed"
+        evidence_hash:
+          type: string
+        confirmed_at:
+          type: string
+          format: date-time
+
+    # Payment Schemas
+    Payment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        amount:
+          type: number
+        currency:
+          type: string
+        payment_method:
+          type: string
+          enum: [stripe, tau_ledger]
+        status:
+          type: string
+          enum: [pending, requires_confirmation, completed, failed, cancelled]
+        commission_rate:
+          type: number
+          example: 0.25
+        commission_amount:
+          type: number
+          example: 25.12
+        net_amount:
+          type: number
+          example: 75.38
+
+    # AI Schemas
+    EmotionVector:
+      type: object
+      properties:
+        joy:
+          type: number
+          minimum: 0
+          maximum: 1
+        sadness:
+          type: number
+          minimum: 0
+          maximum: 1
+        anger:
+          type: number
+          minimum: 0
+          maximum: 1
+        fear:
+          type: number
+          minimum: 0
+          maximum: 1
+        surprise:
+          type: number
+          minimum: 0
+          maximum: 1
+        neutral:
+          type: number
+          minimum: 0
+          maximum: 1
+      required:
+        - neutral
+
+    AIGenerationRequest:
+      type: object
+      required:
+        - prompt
+      properties:
+        prompt:
+          type: string
+          maxLength: 4000
+        model:
+          type: string
+          enum: [gpt-4, gpt-4-turbo, claude-3]
+          default: gpt-4
+        temperature:
+          type: number
+          minimum: 0
+          maximum: 2
+          default: 0.7
+        max_tokens:
+          type: integer
+          maximum: 4000
+          default: 1000
+        emotional_context:
+          $ref: '#/components/schemas/EmotionVector'
+
+    AIGenerationResponse:
+      type: object
+      properties:
+        content:
+          type: string
+        model_used:
+          type: string
+        tokens_used:
+          type: object
+          properties:
+            input:
+              type: integer
+            output:
+              type: integer
+            total:
+              type: integer
+        emotion_detected:
+          $ref: '#/components/schemas/EmotionVector'
+        dominant_emotion:
+          type: string
+        confidence:
+          type: number
+        eoct_hash:
+          type: string
+
+    # Voice Schemas
+    TTSRequest:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          maxLength: 5000
+        voice:
+          type: string
+          enum: [isabella, gabriel, sarah]
+          default: isabella
+        emotion:
+          type: string
+          enum: [neutral, happy, sad, excited, calm, professional]
+          default: neutral
+        stability:
+          type: number
+          minimum: 0
+          maximum: 1
+          default: 0.5
+        similarity_boost:
+          type: number
+          minimum: 0
+          maximum: 1
+          default: 0.75
+
+    # Embedding Schemas
+    EmbeddingRequest:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+        model:
+          type: string
+          enum: [text-embedding-3-small, text-embedding-3-large]
+          default: text-embedding-3-small
+        store:
+          type: boolean
+          default: false
+        metadata:
+          type: object
+
+    RAGQueryRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+        top_k:
+          type: integer
+          default: 5
+        threshold:
+          type: number
+          default: 0.7
+        filter:
+          type: object
+          properties:
+            user_id:
+              type: string
+            document_type:
+              type: string
+
+    # Policy Schemas
+    Policy:
+      type: object
+      properties:
+        policy_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        version:
+          type: string
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/PolicyRule'
+        enabled:
+          type: boolean
+
+    PolicyRule:
+      type: object
+      properties:
+        rule_id:
+          type: string
+        resource:
+          type: string
+        action:
+          type: string
+        conditions:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              operator:
+                type: string
+                enum: [eq, ne, gt, gte, lt, lte, in, contains]
+              value:
+                anyOf:
+                  - type: string
+                  - type: number
+                  - type: boolean
+                  - type: array
+        effect:
+          type: string
+          enum: [allow, deny]
+        priority:
+          type: integer
+
+    EvaluationRequest:
+      type: object
+      required:
+        - subject
+        - resource
+        - action
+      properties:
+        subject:
+          type: object
+          properties:
+            user_id:
+              type: string
+            role:
+              type: string
+            tier:
+              type: string
+            reputation:
+              type: number
+            mfa_enabled:
+              type: boolean
+        resource:
+          type: object
+          properties:
+            type:
+              type: string
+            id:
+              type: string
+            owner_id:
+              type: string
+        action:
+          type: string
+        context:
+          type: object
+          properties:
+            timestamp:
+              type: string
+            ip_address:
+              type: string
+            user_agent:
+              type: string
+
+    # Governance Schemas
+    Proposal:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        author_id:
+          type: string
+        category:
+          type: string
+          enum: [general, economic, constitutional]
+        status:
+          type: string
+          enum: [draft, voting, passed, rejected, executed]
+        votes_for:
+          type: integer
+        votes_against:
+          type: integer
+        votes_abstain:
+          type: integer
+        expires_at:
+          type: string
+          format: date-time
+
+    VoteRequest:
+      type: object
+      required:
+        - proposal_id
+        - vote
+      properties:
+        proposal_id:
+          type: string
+          format: uuid
+        vote:
+          type: string
+          enum: [for, against, abstain]
+        reason:
+          type: string
+
+# ============================================
+# PATHS
+# ============================================
+paths:
+  # Health
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      security: []
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+
+  # Auth Service (8001)
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register new user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                name:
+                  type: string
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  access_token:
+                    type: string
+                  refresh_token:
+                    type: string
+                  expires_in:
+                    type: integer
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: User login
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                mfa_code:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  access_token:
+                    type: string
+                  refresh_token:
+                    type: string
+
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Refresh access token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh_token]
+              properties:
+                refresh_token:
+                  type: string
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokens'
+
+  # Security Service (8002)
+  /security/hybrid-key:
+    post:
+      tags: [Security]
+      summary: Generate hybrid key pair
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Key pair generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuantumKeyPair'
+
+  /security/sign:
+    post:
+      tags: [Security]
+      summary: Sign payload with Dilithium
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [payload, key_id]
+              properties:
+                payload:
+                  type: string
+                key_id:
+                  type: string
+      responses:
+        '200':
+          description: Payload signed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  signature:
+                    $ref: '#/components/schemas/QuantumSignature'
+
+  /security/verify:
+    post:
+      tags: [Security]
+      summary: Verify Dilithium signature
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [payload, signature, public_key]
+              properties:
+                payload:
+                  type: string
+                signature:
+                  $ref: '#/components/schemas/QuantumSignature'
+                public_key:
+                  type: string
+      responses:
+        '200':
+          description: Verification result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+
+  # Transaction Service (8004)
+  /tx/create:
+    post:
+      tags: [Transactions]
+      summary: Create transaction (Saga pattern)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [to_user_id, amount]
+              properties:
+                to_user_id:
+                  type: string
+                amount:
+                  type: number
+                currency:
+                  type: string
+                  default: TAU
+                description:
+                  type: string
+      responses:
+        '201':
+          description: Transaction created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transaction:
+                    $ref: '#/components/schemas/Transaction'
+
+  /tx/history:
+    get:
+      tags: [Transactions]
+      summary: Get transaction history
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Transaction list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Transaction'
+
+  # Payment Service (8005)
+  /payments/create:
+    post:
+      tags: [Payments]
+      summary: Create payment intent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [amount]
+              properties:
+                amount:
+                  type: number
+                currency:
+                  type: string
+                  default: USD
+                payment_method:
+                  type: string
+                  enum: [stripe, tau_ledger]
+                description:
+                  type: string
+      responses:
+        '201':
+          description: Payment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+
+  /payments/{id}:
+    get:
+      tags: [Payments]
+      summary: Get payment status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+
+  /payments/webhook:
+    post:
+      tags: [Payments]
+      summary: Stripe webhook
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Webhook processed
+
+  # AI Generation Service (8101)
+  /ai/generate:
+    post:
+      tags: [AI]
+      summary: Generate content with AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIGenerationRequest'
+      responses:
+        '200':
+          description: Generation successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AIGenerationResponse'
+
+  /ai/analyze/emotion:
+    post:
+      tags: [AI]
+      summary: Analyze emotion (EOCT™)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text:
+                  type: string
+                context:
+                  type: string
+      responses:
+        '200':
+          description: Emotion analysis
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  emotion_vector:
+                    $ref: '#/components/schemas/EmotionVector'
+                  dominant_emotion:
+                    type: string
+                  confidence:
+                    type: number
+                  eoct_hash:
+                    type: string
+
+  # Voice Service (8105)
+  /voice/tts:
+    post:
+      tags: [Voice]
+      summary: Text-to-Speech
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TTSRequest'
+      responses:
+        '200':
+          description: Audio generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  audio:
+                    type: string
+                    description: Base64 encoded audio
+                  format:
+                    type: string
+                    example: mp3
+
+  /voice/voices:
+    get:
+      tags: [Voice]
+      summary: List available voices
+      responses:
+        '200':
+          description: Voice list
+
+  # Embedding Service (8102)
+  /ai/embeddings:
+    post:
+      tags: [Embeddings]
+      summary: Generate embeddings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmbeddingRequest'
+      responses:
+        '200':
+          description: Embeddings generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  embedding:
+                    type: array
+                    items:
+                      type: number
+                  model:
+                    type: string
+                  dimensions:
+                    type: integer
+
+  /ai/rag/query:
+    post:
+      tags: [Embeddings]
+      summary: RAG query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RAGQueryRequest'
+      responses:
+        '200':
+          description: RAG results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        content:
+                          type: string
+                        similarity:
+                          type: number
+
+  # Policy Engine (8201)
+  /policy/evaluate:
+    post:
+      tags: [Policy]
+      summary: Evaluate request against policies
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvaluationRequest'
+      responses:
+        '200':
+          description: Policy evaluation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  decision:
+                    type: string
+                    enum: [allow, deny]
+                  allowed:
+                    type: boolean
+                  matched_rules:
+                    type: array
+                    items:
+                      type: string
+                  explanation:
+                    type: string
+
+  /policies:
+    get:
+      tags: [Policy]
+      summary: List policies
+      responses:
+        '200':
+          description: Policy list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  policies:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Policy'
+
+    post:
+      tags: [Policy]
+      summary: Create policy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, rules]
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                rules:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/PolicyRule'
+      responses:
+        '201':
+          description: Policy created
+
+  # Governance Service (8202)
+  /governance/proposals:
+    get:
+      tags: [Governance]
+      summary: List proposals
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Proposal list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  proposals:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Proposal'
+
+    post:
+      tags: [Governance]
+      summary: Create proposal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, description]
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                category:
+                  type: string
+                impact_economic:
+                  type: number
+      responses:
+        '201':
+          description: Proposal created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  proposal:
+                    $ref: '#/components/schemas/Proposal'
+
+  /governance/vote:
+    post:
+      tags: [Governance]
+      summary: Cast vote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoteRequest'
+      responses:
+        '200':
+          description: Vote recorded
+
+  # Orchestrator (8200)
+  /services:
+    get:
+      tags: [Orchestrator]
+      summary: List all services
+      responses:
+        '200':
+          description: Service list
+
+  /metrics:
+    get:
+      tags: [Orchestrator]
+      summary: Prometheus metrics
+      responses:
+        '200':
+          description: Metrics in Prometheus format
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /health/global:
+    get:
+      tags: [Orchestrator]
+      summary: Global health status
+      responses:
+        '200':
+          description: Global health check
+
+# ============================================
+# WEBHOOKS (if needed)
+# ============================================
+webhooks:
+  paymentCompleted:
+    post:
+      summary: Payment completed webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payment_id:
+                  type: string
+                status:
+                  type: string

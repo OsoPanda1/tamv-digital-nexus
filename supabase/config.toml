@@ -92,6 +92,12 @@ verify_jwt = false
 [functions.tamv-unified-api]
 verify_jwt = false
 
+[functions.embedding-service]
+verify_jwt = false
+
+[functions.policy-engine]
+verify_jwt = false
+
 [analytics]
 enabled = false
 port = 54327

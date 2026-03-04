@@ -14,3 +14,6 @@ export * from './quantum.ts';
 
 // Response Utilities
 export * from './response.ts';
+
+// Distributed Tracing (OpenTelemetry)
+export * from './tracing.ts';
