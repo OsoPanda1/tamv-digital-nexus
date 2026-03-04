@@ -104,7 +104,7 @@ export interface Dashboard {
     title: string;
     query: string;
     refreshInterval: number;
-  }>);
+  }>;
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
@@ -230,4 +230,10 @@ class TracesDimension extends EventEmitter {
   private traces: Map<string, Trace> = new Map();
   private serviceMap: Map<string, Set<string>> = new Map();
 
-  public startTrace(traceData: Omit<
+  public startTrace(traceData: Omit<Trace, 'id' | 'startTime' | 'spans'>): string {
+    const id = `trace-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const trace: Trace = { ...traceData, id, startTime: Date.now(), spans: [] } as Trace;
+    this.traces.set(id, trace);
+    return id;
+  }
+}

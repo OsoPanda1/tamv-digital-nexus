@@ -112,13 +112,12 @@ export function useAuth() {
 
       // Create profile if not auto-created
       if (!profile) {
-        await supabase.from("profiles").insert({
-          id: data.user.id,
+        await supabase.from("profiles").insert([{
+          user_id: data.user.id,
           email: options.email,
           display_name: options.name || options.email.split("@")[0],
-          full_name: options.name,
           role: "public",
-        });
+        }]);
       }
 
       toast.success("¡Registro exitoso! Por favor verifica tu correo.");

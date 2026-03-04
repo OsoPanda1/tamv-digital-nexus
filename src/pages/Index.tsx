@@ -17,7 +17,7 @@ import {
   ChevronRight, ChevronLeft, Wifi, WifiOff, Volume2, VolumeX,
   Maximize2, Minimize2, MoreHorizontal, Bookmark, Flag, UserPlus,
   LogIn, Star, Crown, Diamond, Wallet, Activity, Headphones,
-  Wifi as LiveIcon, Ghost, Sparkle, Rocket, Aurora, Waves, Brain,
+  Wifi as LiveIcon, Ghost, Sparkle, Rocket, Waves, Brain,
   ShoppingCart, Store, GraduationCap, PiggyBank, CreditCard, Gem, Palette,
   Shield, BookOpen
 } from "lucide-react";

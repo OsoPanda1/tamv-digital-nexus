@@ -79,7 +79,7 @@ export interface MembershipUsage {
 export interface RateLimitConfig {
   windowMs: number;
   maxRequests: number;
-  skipFailedRequests: boolean;
+  skipFailedRequests?: boolean;
   keyGenerator?: (req: unknown) => string;
 }
 
@@ -324,7 +324,7 @@ export const MEMBERSHIP_TIERS: Record<MembershipTier, MembershipTierConfig> = {
     },
     visibility: {
       nodes: -1,
-      metrics: ['all'],
+      metrics: ['all'] as unknown as ('basic' | 'standard' | 'advanced' | 'complete')[],
       dashboards: ['all'],
       reports: ['all']
     }

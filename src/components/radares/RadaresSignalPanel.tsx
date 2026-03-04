@@ -16,7 +16,7 @@ import {
   Eye,
   Cpu,
   Radio,
-  Signal,
+  Signal as SignalIcon,
   Zap,
   Filter,
   Target,
@@ -26,7 +26,7 @@ import {
 import {
   useRadaresSignal,
   type RadarType,
-  type Signal,
+  type Signal as RadarSignal,
   type SignalSeverity,
   type RadarConfig,
 } from "@/systems/RadaresSignalSystem";
@@ -48,7 +48,7 @@ import {
 interface RadarVisualizerProps {
   type: RadarType;
   config: RadarConfig;
-  signals: Signal[];
+  signals: RadarSignal[];
   sweepAngle: number;
   isActive: boolean;
   onToggle: () => void;
@@ -279,7 +279,7 @@ const RadarVisualizer: React.FC<RadarVisualizerProps> = ({
 // ─── Signal List Item Component ──────────────────────────────────────────────
 
 const SignalItem: React.FC<{
-  signal: Signal;
+  signal: RadarSignal;
   onAcknowledge: () => void;
 }> = ({ signal, onAcknowledge }) => {
   const severityConfig: Record<SignalSeverity, { color: string; icon: React.ReactNode }> = {
@@ -398,7 +398,7 @@ export const RadaresSignalPanel: React.FC = () => {
                       className="h-8 px-2 border-slate-700"
                       onClick={() => injectTestSignal("quetzalcoatl", sev)}
                     >
-                      <Signal className={`w-3 h-3 mr-1 ${
+                      <SignalIcon className={`w-3 h-3 mr-1 ${
                         sev === "info" ? "text-blue-400" :
                         sev === "low" ? "text-emerald-400" :
                         sev === "medium" ? "text-amber-400" :
@@ -452,7 +452,7 @@ export const RadaresSignalPanel: React.FC = () => {
             Visualization
           </TabsTrigger>
           <TabsTrigger value="signals" className="data-[state=active]:bg-slate-800">
-            <Signal className="w-4 h-4 mr-2" />
+            <SignalIcon className="w-4 h-4 mr-2" />
             Signals ({state.signals.length})
           </TabsTrigger>
           <TabsTrigger value="anomalies" className="data-[state=active]:bg-slate-800">
