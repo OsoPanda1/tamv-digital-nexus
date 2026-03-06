@@ -1,30 +1,12 @@
 // =======================================================
-// TAMV ONLINE – AAA CINEMATIC INTRO CONTROLLER v2.0
-// Evolved Architecture: Act-based Timeline + R3F Modular
+// TAMV CINEMATIC INTRO – Product-focused for LATAM Creators
+// Clean, direct, no mystical noise. 4 acts in ~15s.
 // =======================================================
 
-import React, { useEffect, useRef, useState, useCallback, Suspense } from "react"
+import React, { useEffect, useRef, useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Canvas } from "@react-three/fiber"
-import { Environment, Stars as DreiStars } from "@react-three/drei"
-import * as THREE from "three"
-
-// Legacy imports (keep for compatibility)
 import introAudio from "@/assets/intro.mp3"
 import logoImg from "@/assets/LOGOTAMV2.jpg"
-
-// New Cinematic System
-import {
-  getActAtTime,
-  useTrailerClock,
-  CinematicCameraRig,
-  LightingRig,
-  CoreReactor,
-  MegaStructure,
-  MonumentCrown,
-  TextOverlay,
-  type ActId,
-} from "@/cinematic"
 
 interface CinematicIntroProps {
   onComplete: () => void
@@ -32,313 +14,386 @@ interface CinematicIntroProps {
   autoStart?: boolean
 }
 
-// =======================================================
-// PERMISSION GATE COMPONENT
-// =======================================================
+const TOTAL_DURATION = 18 // seconds
 
-const PermissionGate: React.FC<{ onAccept: () => void }> = ({ onAccept }) => {
-  const [hovered, setHovered] = useState(false)
+// =======================================================
+// PERMISSION GATE
+// =======================================================
+const PermissionGate: React.FC<{ onAccept: () => void }> = ({ onAccept }) => (
+  <motion.div
+    className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center"
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.8 }}
+  >
+    <motion.img
+      src={logoImg}
+      alt="TAMV"
+      className="w-20 h-20 object-contain rounded-xl mb-6"
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.6 }}
+    />
+    <motion.h1
+      className="text-3xl md:text-4xl font-bold tracking-wider text-white mb-2"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.3 }}
+    >
+      TAMV
+    </motion.h1>
+    <motion.p
+      className="text-white/50 text-sm tracking-widest uppercase mb-8"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.5 }}
+    >
+      La nueva casa de los creadores
+    </motion.p>
+    <motion.button
+      onClick={onAccept}
+      className="px-10 py-3 border border-white/30 text-white text-sm tracking-widest uppercase hover:bg-white/10 transition-colors"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.7 }}
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
+    >
+      Iniciar
+    </motion.button>
+  </motion.div>
+)
 
+// =======================================================
+// ACT 1: Logo + Tagline (0–3s)
+// =======================================================
+const ActLogo: React.FC = () => (
+  <motion.div
+    className="absolute inset-0 flex flex-col items-center justify-center"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.6 }}
+  >
+    <motion.img
+      src={logoImg}
+      alt="TAMV"
+      className="w-24 h-24 md:w-28 md:h-28 object-contain rounded-xl mb-6"
+      initial={{ scale: 0.7, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      style={{ filter: "drop-shadow(0 0 30px rgba(255,255,255,0.15))" }}
+    />
+    <motion.h1
+      className="text-4xl md:text-5xl font-bold text-white tracking-[0.2em] mb-4"
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.4, duration: 0.6 }}
+    >
+      TAMV
+    </motion.h1>
+    <motion.p
+      className="text-white/70 text-base md:text-lg tracking-wide text-center max-w-md px-4"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.8, duration: 0.5 }}
+    >
+      La nueva casa de los creadores de LATAM.
+    </motion.p>
+  </motion.div>
+)
+
+// =======================================================
+// ACT 2: The Problem (3–6s)
+// =======================================================
+const PROBLEMS = [
+  "Demasiados anuncios.",
+  "Tus datos no son tuyos.",
+  "Tus ingresos no alcanzan.",
+]
+
+const ActProblem: React.FC<{ t: number }> = ({ t }) => {
+  const idx = Math.min(Math.floor(t * PROBLEMS.length), PROBLEMS.length - 1)
   return (
     <motion.div
-      className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center overflow-hidden"
-      initial={{ opacity: 1 }}
+      className="absolute inset-0 flex flex-col items-center justify-center px-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 1.2 }}
+      transition={{ duration: 0.4 }}
     >
-      {/* Glowing background effect */}
-      <motion.div
-        className="absolute inset-0"
-        animate={{
-          background: hovered
-            ? "radial-gradient(circle at center, rgba(157,78,221,0.15) 0%, rgba(0,0,0,1) 70%)"
-            : "radial-gradient(circle at center, rgba(0,217,255,0.08) 0%, rgba(0,0,0,1) 70%)",
-        }}
-        transition={{ duration: 0.5 }}
-      />
-
-      {/* Floating particles background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(30)].map((_, i) => (
-          <motion.div
+      {/* Split screen hint - 3 grey columns */}
+      <div className="flex gap-3 mb-10 opacity-30">
+        {[
+          "Creadora editando de madrugada",
+          "Feed lleno de anuncios",
+          "Gráfica: tú creces, la plataforma gana",
+        ].map((alt, i) => (
+          <div
             key={i}
-            className="absolute w-1 h-1 rounded-full bg-cyan-400/30"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -30, 0],
-              opacity: [0.3, 0.8, 0.3],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-            }}
-          />
+            className="w-24 h-16 md:w-32 md:h-20 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center"
+          >
+            <span className="text-[9px] text-white/20 text-center px-1 leading-tight">{alt}</span>
+          </div>
         ))}
       </div>
 
-      {/* Main content */}
-      <motion.div
-        className="relative z-10 flex flex-col items-center gap-8"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-      >
-        {/* Logo */}
-        <motion.div
-          className="relative"
-          whileHover={{ scale: 1.05 }}
+      <AnimatePresence mode="wait">
+        <motion.p
+          key={idx}
+          className="text-red-400/90 text-xl md:text-2xl font-semibold tracking-wide text-center"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.3 }}
         >
-          <img
-            src={logoImg}
-            alt="TAMV"
-            className="w-24 h-24 object-contain rounded-lg"
-          />
-          <motion.div
-            className="absolute -inset-4 rounded-xl"
-            animate={{
-              boxShadow: hovered
-                ? "0 0 40px rgba(157,78,221,0.5), inset 0 0 20px rgba(157,78,221,0.2)"
-                : "0 0 20px rgba(0,217,255,0.3), inset 0 0 10px rgba(0,217,255,0.1)",
-            }}
-          />
-        </motion.div>
-
-        {/* Wordmark */}
-        <div className="text-center">
-          <motion.h1
-            className="text-4xl md:text-5xl font-bold tracking-[0.3em] text-white mb-2"
-            style={{
-              textShadow: "0 0 30px rgba(0,217,255,0.5)",
-            }}
-          >
-            TAMV
-          </motion.h1>
-          <motion.p
-            className="text-cyan-400/80 text-sm tracking-[0.4em] uppercase"
-            animate={{
-              opacity: [0.6, 1, 0.6],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-            }}
-          >
-            DIGITAL NEXUS
-          </motion.p>
-        </div>
-
-        {/* Enter button */}
-        <motion.button
-          onClick={onAccept}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-          className="relative px-12 py-4 bg-transparent border border-cyan-400/50 text-cyan-400 font-medium tracking-[0.2em] uppercase overflow-hidden group"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-cyan-400/20 to-purple-600/20"
-            initial={{ x: "-100%" }}
-            whileHover={{ x: "100%" }}
-            transition={{ duration: 0.6 }}
-          />
-          <span className="relative z-10">Iniciar Experiencia</span>
-        </motion.button>
-
-        {/* Subtitle */}
-        <motion.p
-          className="text-white/40 text-xs tracking-wider max-w-md text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          Sistema Cinematico Genesis v8.0
-          <br />
-          Powered by Isabella AI · HEXA-EDIMAP Architecture
+          {PROBLEMS[idx]}
         </motion.p>
-      </motion.div>
+      </AnimatePresence>
     </motion.div>
   )
 }
 
 // =======================================================
-// 3D CINEMATIC SCENE
+// ACT 3: The TAMV Solution (6–12s)
 // =======================================================
+const FEATURES = ["Comunidad", "Membresías", "Cursos", "Propinas", "IA para Creadores"]
 
-interface TrailerSceneProps {
-  act: ActId
-  t: number
-}
-
-function TrailerScene({ act, t }: TrailerSceneProps) {
+const ActSolution: React.FC<{ t: number }> = ({ t }) => {
+  const showCards = t > 0.5
   return (
-    <>
-      {/* Background and fog */}
-      <color attach="background" args={["#020203"]} />
-      <fog attach="fog" args={["#020203", 20, 80]} />
-
-      {/* Lighting */}
-      <LightingRig act={act} />
-
-      {/* Stars background */}
-      <DreiStars
-        radius={200}
-        depth={120}
-        count={16000}
-        factor={4.5}
-        saturation={0.4}
-        fade
-        speed={act === "CIVILIZATORY_EXPANSION" || act === "REVELATION" ? 2 : 0.5}
-      />
-
-      {/* Ground plane - visible when there's geometry */}
-      {(act === "CORE_AWAKENS" ||
-        act === "SYSTEM_FAILURE" ||
-        act === "CIVILIZATORY_EXPANSION" ||
-        act === "REVELATION") && (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 2, 0]}>
-          <planeGeometry args={[120, 120]} />
-          <meshStandardMaterial
-            color={"#050505"}
-            metalness={0.3}
-            roughness={0.9}
-          />
-        </mesh>
+    <motion.div
+      className="absolute inset-0 flex flex-col items-center justify-center px-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Creator panel mockup */}
+      {!showCards && (
+        <motion.div
+          className="w-full max-w-sm rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm p-6 mb-6"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-sm font-bold text-black">
+              CR
+            </div>
+            <div>
+              <p className="text-white text-sm font-medium">Tu Panel de Creador</p>
+              <p className="text-white/40 text-xs">TAMV Dashboard</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { label: "Miembros", value: "+327" },
+              { label: "ARPU", value: "$35 USD" },
+              { label: "En línea", value: "89" },
+            ].map((m) => (
+              <div key={m.label} className="text-center p-3 rounded-xl bg-white/[0.04]">
+                <p className="text-lg font-bold text-white">{m.value}</p>
+                <p className="text-[10px] text-white/40 mt-1">{m.label}</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       )}
 
-      {/* Core Reactor */}
-      <CoreReactor act={act} t={t} />
+      {/* Main message */}
+      <motion.p
+        className="text-white text-lg md:text-xl font-medium text-center max-w-md mb-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+      >
+        {showCards
+          ? "Un solo ecosistema para crear, cobrar y crecer."
+          : "Menos explotación. Más control sobre tu comunidad."}
+      </motion.p>
 
-      {/* Mega Structure */}
-      <MegaStructure act={act} t={t} />
+      {/* Feature cards */}
+      {showCards && (
+        <motion.div
+          className="flex flex-wrap justify-center gap-3"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {FEATURES.map((f, i) => (
+            <motion.div
+              key={f}
+              className="px-4 py-2 rounded-full border border-white/15 bg-white/[0.04] text-white/80 text-sm"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1, duration: 0.3 }}
+            >
+              {f}
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
+    </motion.div>
+  )
+}
 
-      {/* Monument Crown */}
-      <MonumentCrown act={act} t={t} />
+// =======================================================
+// ACT 4: CTA + Dedication (12–18s)
+// =======================================================
+const ActCTA: React.FC<{ t: number; onAction: () => void }> = ({ t, onAction }) => {
+  const showDedication = t > 0.6
+  return (
+    <motion.div
+      className="absolute inset-0 flex flex-col items-center justify-center px-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      <motion.img
+        src={logoImg}
+        alt="TAMV"
+        className="w-16 h-16 object-contain rounded-xl mb-6"
+        initial={{ scale: 0.8 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.5 }}
+      />
 
-      {/* Environment for specularity */}
-      <Environment preset="night" />
-    </>
+      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <motion.button
+          onClick={onAction}
+          className="px-8 py-3 bg-white text-black font-semibold text-sm tracking-wide rounded-lg hover:bg-white/90 transition-colors"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+        >
+          Soy creador inconforme
+        </motion.button>
+        <motion.button
+          onClick={onAction}
+          className="px-8 py-3 border border-white/30 text-white font-medium text-sm tracking-wide rounded-lg hover:bg-white/10 transition-colors"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+        >
+          Quiero construir mi comunidad aquí
+        </motion.button>
+      </div>
+
+      <motion.p
+        className="text-white/25 text-[10px] text-center max-w-sm mb-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        TAMV no promete ingresos garantizados. Es una plataforma para que tú tengas más herramientas y control.
+      </motion.p>
+
+      {/* Dedication to mother */}
+      {showDedication && (
+        <motion.div
+          className="text-center"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <p className="text-white/40 text-xs tracking-wider uppercase mb-1">
+            Proyecto dedicado a
+          </p>
+          <p className="text-white/70 text-sm font-medium tracking-wide">
+            Reina Trejo Serrano
+          </p>
+          <p className="text-white/30 text-[10px] mt-1 italic">
+            Sonríe: tu oveja negra lo logró.
+          </p>
+        </motion.div>
+      )}
+    </motion.div>
   )
 }
 
 // =======================================================
 // MAIN COMPONENT
 // =======================================================
-
 export default function CinematicIntro({
   onComplete,
   skipEnabled = true,
   autoStart = false,
 }: CinematicIntroProps) {
   const [accepted, setAccepted] = useState(autoStart)
-  // Clock always runs in background, but 3D scene only shows when accepted
-  const { time, completed, restart } = useTrailerClock(32, true)
-
+  const [time, setTime] = useState(0)
+  const [completed, setCompleted] = useState(false)
+  const lastRef = useRef<number | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
-  // Get current act
-  const { act, t } = getActAtTime(time)
+  // Determine current act
+  const getAct = (t: number): { act: number; localT: number } => {
+    if (t < 3) return { act: 1, localT: t / 3 }
+    if (t < 6) return { act: 2, localT: (t - 3) / 3 }
+    if (t < 12) return { act: 3, localT: (t - 6) / 6 }
+    return { act: 4, localT: Math.min((t - 12) / 6, 1) }
+  }
 
-  // Audio control with enhanced volume and echo/reverb for enveloping effect
+  const { act, localT } = getAct(time)
+
+  // RAF loop
+  useEffect(() => {
+    if (!accepted || completed) return
+    let raf: number
+    const loop = (now: number) => {
+      if (lastRef.current == null) lastRef.current = now
+      const delta = (now - lastRef.current) / 1000
+      lastRef.current = now
+      setTime((prev) => {
+        const next = prev + delta
+        if (next >= TOTAL_DURATION) {
+          setCompleted(true)
+          return TOTAL_DURATION
+        }
+        return next
+      })
+      raf = requestAnimationFrame(loop)
+    }
+    raf = requestAnimationFrame(loop)
+    return () => cancelAnimationFrame(raf)
+  }, [accepted, completed])
+
+  // Audio
   const initAudio = useCallback(async () => {
     try {
       const audio = new Audio(introAudio)
-      audio.volume = 1.0 // Maximum volume for full immersion
+      audio.volume = 1.0
       audio.loop = false
       audioRef.current = audio
-      
-      // Create audio context for echo/reverb effect
-      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext
-      if (AudioContextClass) {
-        const audioContext = new AudioContextClass()
-        const source = audioContext.createMediaElementSource(audio)
-        
-        // Create convolver for reverb/echo effect
-        const convolver = audioContext.createConvolver()
-        
-        // Generate impulse response for large hall reverb
-        const sampleRate = audioContext.sampleRate
-        const length = sampleRate * 3.5 // 3.5 second reverb tail
-        const impulse = audioContext.createBuffer(2, length, sampleRate)
-        
-        for (let channel = 0; channel < 2; channel++) {
-          const channelData = impulse.getChannelData(channel)
-          for (let i = 0; i < length; i++) {
-            // Exponential decay with random diffusion for natural echo
-            channelData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 2.5)
-          }
+
+      // Simple reverb via Web Audio
+      const Ctx = window.AudioContext || (window as any).webkitAudioContext
+      if (Ctx) {
+        const ctx = new Ctx()
+        const src = ctx.createMediaElementSource(audio)
+        const convolver = ctx.createConvolver()
+        const sr = ctx.sampleRate
+        const len = sr * 2.5
+        const impulse = ctx.createBuffer(2, len, sr)
+        for (let ch = 0; ch < 2; ch++) {
+          const d = impulse.getChannelData(ch)
+          for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.5)
         }
         convolver.buffer = impulse
-        
-        // Create multiple delay lines for different tonalities (echo effect)
-        const delay1 = audioContext.createDelay(2.0)
-        delay1.delayTime.value = 0.15 // 150ms - short echo
-        const delay2 = audioContext.createDelay(2.0)
-        delay2.delayTime.value = 0.35 // 350ms - medium echo
-        const delay3 = audioContext.createDelay(2.0)
-        delay3.delayTime.value = 0.65 // 650ms - long echo
-        
-        // Gain nodes for mixing
-        const masterGain = audioContext.createGain()
-        masterGain.gain.value = 0.9
-        const reverbGain = audioContext.createGain()
-        reverbGain.gain.value = 0.4 // Reverb intensity
-        const delay1Gain = audioContext.createGain()
-        delay1Gain.gain.value = 0.25
-        const delay2Gain = audioContext.createGain()
-        delay2Gain.gain.value = 0.15
-        const delay3Gain = audioContext.createGain()
-        delay3Gain.gain.value = 0.08
-        
-        // Filters for different tonalities in echo
-        const lowpassFilter = audioContext.createBiquadFilter()
-        lowpassFilter.type = 'lowpass'
-        lowpassFilter.frequency.value = 4000
-        const highpassFilter = audioContext.createBiquadFilter()
-        highpassFilter.type = 'highpass'
-        highpassFilter.frequency.value = 200
-        const bandpassFilter = audioContext.createBiquadFilter()
-        bandpassFilter.type = 'bandpass'
-        bandpassFilter.frequency.value = 1500
-        bandpassFilter.Q.value = 0.8
-        
-        // Connect the audio graph
-        // Main signal path
-        source.connect(lowpassFilter)
-        lowpassFilter.connect(masterGain)
-        
-        // Reverb path
-        source.connect(convolver)
-        convolver.connect(reverbGain)
-        reverbGain.connect(masterGain)
-        
-        // Delay paths with different tonalities
-        source.connect(delay1)
-        delay1.connect(delay1Gain)
-        delay1Gain.connect(masterGain)
-        
-        source.connect(delay2)
-        delay2.connect(bandpassFilter) // Mid-tone echo
-        bandpassFilter.connect(delay2Gain)
-        delay2Gain.connect(masterGain)
-        
-        source.connect(delay3)
-        delay3.connect(highpassFilter) // Treble echo
-        highpassFilter.connect(delay3Gain)
-        delay3Gain.connect(masterGain)
-        
-        // Output to speakers
-        masterGain.connect(audioContext.destination)
+        const dry = ctx.createGain()
+        dry.gain.value = 0.85
+        const wet = ctx.createGain()
+        wet.gain.value = 0.35
+        src.connect(dry).connect(ctx.destination)
+        src.connect(convolver).connect(wet).connect(ctx.destination)
       }
-      
       await audio.play()
     } catch {
-      console.warn("Autoplay bloqueado por el navegador.")
+      console.warn("Autoplay blocked")
     }
   }, [])
 
@@ -347,36 +402,29 @@ export default function CinematicIntro({
     audioRef.current = null
   }, [])
 
-  // Handle start
   const handleStart = useCallback(() => {
     setAccepted(true)
+    setTime(0)
+    lastRef.current = null
     initAudio()
-    restart()
-  }, [initAudio, restart])
+  }, [initAudio])
 
-  // Handle skip
   const handleSkip = useCallback(() => {
-    if (!skipEnabled) return
     stopAudio()
     onComplete()
-  }, [skipEnabled, stopAudio, onComplete])
+  }, [stopAudio, onComplete])
 
-  // Watch for completion
+  // Complete
   useEffect(() => {
     if (completed) {
       stopAudio()
-      setTimeout(onComplete, 500)
+      setTimeout(onComplete, 600)
     }
   }, [completed, onComplete, stopAudio])
 
-  // Cleanup
-  useEffect(() => {
-    return () => {
-      stopAudio()
-    }
-  }, [stopAudio])
+  useEffect(() => () => stopAudio(), [stopAudio])
 
-  // Show permission gate if not accepted
+  // Permission gate
   if (!accepted) {
     return (
       <AnimatePresence>
@@ -387,55 +435,34 @@ export default function CinematicIntro({
 
   return (
     <div className="fixed inset-0 bg-black overflow-hidden z-[9999]">
-      {/* 3D SCENE */}
-      <Canvas
-        gl={{
-          antialias: true,
-          toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1.2,
-        }}
-        camera={{ position: [0, 1, 38], fov: 35, near: 0.1, far: 200 }}
-      >
-        <Suspense fallback={null}>
-          <CinematicCameraRig act={act} t={t} />
-          <TrailerScene act={act} t={t} />
-        </Suspense>
-      </Canvas>
+      {/* Acts */}
+      <AnimatePresence mode="wait">
+        {act === 1 && <ActLogo key="act1" />}
+        {act === 2 && <ActProblem key="act2" t={localT} />}
+        {act === 3 && <ActSolution key="act3" t={localT} />}
+        {act === 4 && <ActCTA key="act4" t={localT} onAction={handleSkip} />}
+      </AnimatePresence>
 
-      {/* TEXT OVERLAY */}
-      <TextOverlay act={act} time={time} />
-
-      {/* PROGRESS BAR */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-neutral-900">
+      {/* Progress bar */}
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/5">
         <motion.div
-          className="h-full bg-gradient-to-r from-amber-400 via-sky-400 to-emerald-400"
-          animate={{ width: `${(time / 32) * 100}%` }}
+          className="h-full bg-white/40"
+          animate={{ width: `${(time / TOTAL_DURATION) * 100}%` }}
           transition={{ duration: 0.05 }}
         />
       </div>
 
-      {/* HEADER INFO */}
-      <div className="absolute top-6 left-6 text-xs tracking-[0.4em] uppercase text-white/40">
-        TAMV ONLINE · SIMULACIÓN CIVILIZATORIA
-      </div>
-
-      {/* ACT INDICATOR */}
-      <div className="absolute top-6 right-6 text-xs tracking-[0.3em] uppercase text-white/30">
-        {act.replace(/_/g, " ")}
-      </div>
-
-      {/* SKIP BUTTON */}
+      {/* Skip */}
       {skipEnabled && (
         <button
           onClick={handleSkip}
-          className="absolute top-4 right-24 text-xs uppercase tracking-widest text-white/40 hover:text-white transition-colors z-50"
+          className="absolute top-5 right-6 text-[11px] uppercase tracking-widest text-white/30 hover:text-white/70 transition-colors z-50"
         >
-          Saltar Intro
+          Saltar
         </button>
       )}
     </div>
   )
 }
 
-// Re-export for compatibility
 export { CinematicIntro }
