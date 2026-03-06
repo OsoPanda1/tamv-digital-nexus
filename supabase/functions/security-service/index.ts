@@ -355,7 +355,10 @@ const handler = createHandler(SERVICE_NAME, PIPELINE, async (ctx) => {
       return errors.forbidden('Auditor role required');
     }
 
-    const { page = 1, limit = 20, severity, event_type } = ctx.url.searchParams;
+    const page = ctx.url.searchParams.get('page') || '1';
+    const limit = ctx.url.searchParams.get('limit') || '20';
+    const severity = ctx.url.searchParams.get('severity');
+    const event_type = ctx.url.searchParams.get('event_type');
     const offset = (parseInt(page as string) - 1) * parseInt(limit as string);
 
     let query = supabase

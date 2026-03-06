@@ -54,12 +54,12 @@ class NormalPipeline {
         };
       }
 
-      const enrichedContext: PipelineContext = { ...context };
+      const enrichedContext: PipelineContext = Object.assign({}, context);
       const inferenceResult = await this.performInference(enrichedContext);
 
       return {
         pipeline: PipelineType.NORMAL, success: true,
-        data: { ...inferenceResult, _pipeline: PipelineType.NORMAL, _timestamp: Date.now() },
+        data: Object.assign({}, inferenceResult, { _pipeline: PipelineType.NORMAL, _timestamp: Date.now() }),
         latency: Date.now() - startTime,
         metadata: { filterDecision: filterResult.decision, confidence: filterResult.confidence, layer: filterResult.layer }
       };
@@ -202,7 +202,7 @@ class RiskPipeline {
         user_id: context.userId || '00000000-0000-0000-0000-000000000000',
         message_role: 'system',
         content: `RISK_LOG: ${action} - ${context.input.substring(0, 200)}`,
-        metadata: { filter_result: filterResult, pipeline: PipelineType.RISK, session_id: context.sessionId } as Record<string, unknown>,
+        metadata: { filter_result: filterResult, pipeline: PipelineType.RISK, session_id: context.sessionId } as unknown as Record<string, string>,
         ethical_flag: 'risk_detected',
       }]);
     } catch (error) {

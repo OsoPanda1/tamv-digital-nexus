@@ -122,7 +122,10 @@ const handler = createHandler(SERVICE_NAME, PIPELINE, async (ctx) => {
 
   // GET /governance/proposals - List proposals
   if (path === '/governance/proposals' && request.method === 'GET') {
-    const { page = '1', limit = '20', status, category } = ctx.url.searchParams;
+    const page = ctx.url.searchParams.get('page') || '1';
+    const limit = ctx.url.searchParams.get('limit') || '20';
+    const status = ctx.url.searchParams.get('status');
+    const category = ctx.url.searchParams.get('category');
     const offset = (parseInt(page) - 1) * parseInt(limit);
 
     let query = supabase

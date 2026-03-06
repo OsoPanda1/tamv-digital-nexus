@@ -96,7 +96,7 @@ export async function logAuditEntry(
       user_id: userId || '00000000-0000-0000-0000-000000000000',
       message_role: 'system',
       content: `AUDIT: ${action}`,
-      metadata: details as Record<string, unknown>,
+      metadata: details as unknown as Record<string, string>,
       created_at: new Date().toISOString(),
     }]);
   } catch (error) {

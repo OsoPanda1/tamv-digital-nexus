@@ -142,8 +142,7 @@ serve(async (req) => {
 
         const token = authHeader.replace("Bearer ", "");
         const { data: { user }, error: updateError } = await supabase.auth.updateUser(
-          { password },
-          { bypassRouter: true }
+          { password }
         );
 
         if (updateError) throw updateError;
@@ -184,7 +183,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Auth Service Error:", error);
     return new Response(
-      JSON.stringify({ error: error.message || "Error de autenticación" }),
+      JSON.stringify({ error: (error as Error).message || "Error de autenticación" }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 400,

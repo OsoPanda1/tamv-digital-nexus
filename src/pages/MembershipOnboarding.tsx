@@ -152,7 +152,7 @@ const MembershipOnboarding = () => {
     if (!email || !password || !displayName) return;
     setIsLoading(true);
     try {
-      await signUp(email, password, { display_name: displayName });
+      await signUp({ email, password, name: displayName });
       handleNext();
     } catch (error) {
       console.error("Sign up error:", error);

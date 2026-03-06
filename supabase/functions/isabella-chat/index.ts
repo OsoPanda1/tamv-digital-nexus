@@ -254,8 +254,7 @@ Soy Isabella, tu asistente en el ecosistema TAMV. Puedo ayudarte con informació
     await supabase
       .from("isabella_conversations")
       .update({
-        message_count: supabase.raw("message_count + 1"),
-        emotion_tracking: supabase.raw(`emotion_tracking || '${JSON.stringify({ emotion, timestamp: Date.now() })}'::jsonb`),
+        updated_at: new Date().toISOString(),
       })
       .eq("id", convId);
 
@@ -284,7 +283,7 @@ Soy Isabella, tu asistente en el ecosistema TAMV. Puedo ayudarte con informació
     console.error("Isabella AI Error:", error);
     return new Response(
       JSON.stringify({
-        error: error.message || "Internal server error",
+        error: (error as Error).message || "Internal server error",
       }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },

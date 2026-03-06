@@ -48,6 +48,7 @@ export interface TAMVSoundEntry {
   url: string;
   volume: number;
   preload: boolean;
+  loop?: boolean;
 }
 
 // ============== SOUND DEFINITIONS ==============

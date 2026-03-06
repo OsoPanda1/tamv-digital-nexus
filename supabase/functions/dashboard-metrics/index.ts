@@ -133,7 +133,7 @@ Deno.serve(async (req) => {
       .single();
     
     const tierId = membership?.tier_id || 'free';
-    const visibility = TIER_VISIBILITY[tierId] || TIER_VISIBILITY.free;
+    const visibility = TIER_VISIBILITY[tierId as keyof typeof TIER_VISIBILITY] || TIER_VISIBILITY.free;
     
     // Get nodes based on visibility
     const visibleNodes = visibility.nodes === 0 
@@ -328,7 +328,7 @@ Deno.serve(async (req) => {
     }
   } catch (error) {
     console.error('Dashboard Metrics Error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: (error as Error).message }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
