@@ -309,7 +309,7 @@ serve(async (req) => {
   } catch (error) {
     console.error("Wallet Service Error:", error);
     return new Response(
-      JSON.stringify({ error: error.message || "Error de wallet" }),
+      JSON.stringify({ error: (error as Error).message || "Error de wallet" }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 400,

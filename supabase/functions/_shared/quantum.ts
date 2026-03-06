@@ -34,7 +34,7 @@ export async function sha3_256(data: string | Uint8Array): Promise<string> {
   const buffer = typeof data === 'string' ? encoder.encode(data) : data;
   
   // Use Web Crypto SHA-256 as base (in production: use SHA3-256 library)
-  const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', buffer as ArrayBuffer);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
@@ -263,7 +263,7 @@ export async function encryptWithPQC(
   }
   
   const ciphertext = btoa(String.fromCharCode(...ciphertextBytes));
-  const tag = await sha3_256(ciphertext + encapsulation.sharedSecret).slice(0, 32);
+  const tag = (await sha3_256(ciphertext + encapsulation.sharedSecret)).slice(0, 32);
   
   return {
     ciphertext,
@@ -284,7 +284,7 @@ export async function decryptWithPQC(
   );
   
   // Verify tag
-  const expectedTag = await sha3_256(encryptedData.ciphertext + sharedSecret).slice(0, 32);
+  const expectedTag = (await sha3_256(encryptedData.ciphertext + sharedSecret)).slice(0, 32);
   if (encryptedData.tag !== expectedTag) {
     throw new Error('Decryption failed: authentication tag mismatch');
   }
@@ -369,7 +369,7 @@ export class QuantumSecurityLayer {
     
     // In production: retrieve private key from secure storage
     const privateKey = await sha3_256(keyPair.key_id + 'private');
-    return signWithDilithium(message, privateKey, this.config.signatureAlgorithm);
+    return signWithDilithium(message, privateKey, this.config.signatureAlgorithm as 'Dilithium3' | 'Dilithium5');
   }
 
   async verify(message: string, signature: QuantumSignature): Promise<boolean> {

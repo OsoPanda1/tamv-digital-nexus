@@ -141,7 +141,7 @@ const handler = createHandler(SERVICE_NAME, PIPELINE, async (ctx) => {
       return errors.badRequest('text required');
     }
 
-    if (!EMBEDDING_MODELS[model]) {
+    if (!EMBEDDING_MODELS[model as keyof typeof EMBEDDING_MODELS]) {
       return errors.validation('Invalid embedding model');
     }
 

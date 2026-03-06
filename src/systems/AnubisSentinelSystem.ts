@@ -28,6 +28,8 @@ export interface SecurityEvent {
     ip?: string;
     userAgent?: string;
     geoLocation?: string;
+    blockHeight?: string;
+    [key: string]: string | undefined;
   };
 }
 

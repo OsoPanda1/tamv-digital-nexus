@@ -52,7 +52,7 @@ function LessonRow({
   canAccess,
   onClick,
 }: {
-  lesson: CourseLessonRow;
+  lesson: { id: string; title: string; order: number };
   index: number;
   isCompleted: boolean;
   isActive: boolean;
@@ -84,7 +84,7 @@ function LessonRow({
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium truncate">{lesson.title}</p>
         <p className="text-xs text-muted-foreground">
-          {LESSON_TYPE_ICONS[lesson.lesson_type]} {lesson.duration_minutes} min
+          Lección {index + 1}
         </p>
       </div>
     </button>
@@ -107,7 +107,7 @@ function CourseDetail({
     completeLesson,
   } = useUniversity();
 
-  const [activeLesson, setActiveLesson] = useState<CourseLessonRow | null>(null);
+  const [activeLesson, setActiveLesson] = useState<{ id: string; title: string; order: number } | null>(null);
   const enrolled = isEnrolled(course.id);
   const progress = getCourseProgress(course.id);
   const certified = hasCertificate(course.id);
@@ -176,25 +176,14 @@ function CourseDetail({
                     <Card className="glass-panel p-8 mb-6">
                       <div className="flex items-center justify-between mb-4">
                         <h2 className="text-xl font-bold">{activeLesson.title}</h2>
-                        <Badge variant="outline">
-                          {LESSON_TYPE_ICONS[activeLesson.lesson_type]}{' '}
-                          {activeLesson.lesson_type === 'video'
-                            ? 'Video'
-                            : activeLesson.lesson_type === 'quiz'
-                            ? 'Quiz'
-                            : activeLesson.lesson_type === 'practice'
-                            ? 'Práctica'
-                            : 'Lectura'}
-                        </Badge>
+                        <Badge variant="outline">Lección</Badge>
                       </div>
 
                       <div className="aspect-video rounded-xl bg-gradient-to-br from-primary/20 via-background to-secondary/20 border border-border/30 flex items-center justify-center mb-6">
                         <div className="text-center">
                           <Play className="w-16 h-16 text-primary mx-auto mb-4 opacity-60" />
                           <p className="text-muted-foreground">Contenido de la lección</p>
-                          <p className="text-sm text-muted-foreground mt-1">
-                            {activeLesson.duration_minutes} min
-                          </p>
+                          <p className="text-sm text-muted-foreground mt-1">Lección interactiva</p>
                         </div>
                       </div>
 
@@ -252,7 +241,7 @@ function CourseDetail({
                       index={i}
                       isCompleted={isLessonCompleted(lesson.id)}
                       isActive={activeLesson?.id === lesson.id}
-                      canAccess={enrolled || lesson.is_free_preview}
+                      canAccess={enrolled || isFree}
                       onClick={() => setActiveLesson(lesson)}
                     />
                   ))}

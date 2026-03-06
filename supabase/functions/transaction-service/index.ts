@@ -261,7 +261,7 @@ const handler = createHandler(SERVICE_NAME, PIPELINE, async (ctx) => {
 
     // Execute Saga
     const saga = new Saga();
-    let txId: string;
+    let txId: string = '';
 
     saga.addStep({
       name: 'create_transaction',
@@ -387,7 +387,10 @@ const handler = createHandler(SERVICE_NAME, PIPELINE, async (ctx) => {
       return errors.unauthorized();
     }
 
-    const { page = '1', limit = '20', status, currency } = ctx.url.searchParams;
+    const page = ctx.url.searchParams.get('page') || '1';
+    const limit = ctx.url.searchParams.get('limit') || '20';
+    const status = ctx.url.searchParams.get('status');
+    const currency = ctx.url.searchParams.get('currency');
     const offset = (parseInt(page) - 1) * parseInt(limit);
 
     let query = supabase

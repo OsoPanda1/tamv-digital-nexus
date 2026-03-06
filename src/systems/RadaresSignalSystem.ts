@@ -303,7 +303,7 @@ function calculatePriority(severity: SignalSeverity): number {
 }
 
 function generateTags(source: SignalSource, severity: SignalSeverity): string[] {
-  const tags = [source, severity];
+  const tags: string[] = [source, severity];
   if (severity === "critical" || severity === "high") {
     tags.push("requires_attention");
   }

@@ -127,9 +127,9 @@ Deno.serve(async (req) => {
           });
         }
         
-        const features = tierConfig.features || [];
+        const features: string[] = tierConfig.features || [];
         const hasAccess = features.includes(feature) || 
-          features.some(f => f.startsWith('everything_in_'));
+          features.some((f: string) => f.startsWith('everything_in_'));
         
         return new Response(JSON.stringify({
           hasAccess,
@@ -272,7 +272,7 @@ Deno.serve(async (req) => {
     }
   } catch (error) {
     console.error('Membership Validator Error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: (error as Error).message }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });

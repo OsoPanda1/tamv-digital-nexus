@@ -743,7 +743,7 @@ export class UniversitySystem {
       };
     }
 
-    const { state, dimensions } = embedding;
+    const { state, dimensions } = embedding as any;
     const course = this.getCourse(courseId);
     const isBCICourse = course?.bciConfig?.adaptiveContent;
 

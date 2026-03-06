@@ -415,7 +415,7 @@ const handler = createHandler(SERVICE_NAME, PIPELINE, async (ctx) => {
 
     try {
       const payload = await verifyToken(refresh_token);
-      if (!payload || payload.type !== 'refresh') {
+      if (!payload || (payload as any).type !== 'refresh') {
         return errors.unauthorized('Invalid refresh token');
       }
 
