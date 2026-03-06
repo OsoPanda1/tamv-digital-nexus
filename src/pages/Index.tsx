@@ -114,7 +114,7 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setBackground("quantum", 0.5);
+    setBackground("particles", 0.5);
   }, [setBackground]);
 
   if (showIntro) {
