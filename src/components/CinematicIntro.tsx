@@ -14,7 +14,7 @@ interface CinematicIntroProps {
   autoStart?: boolean
 }
 
-const TOTAL_DURATION = 18
+const TOTAL_DURATION = 40
 
 // --- Sub-componente: Grano de Película & Glitch sutil ---
 const CinematicOverlay: React.FC = () => (
@@ -30,7 +30,7 @@ const PermissionGate: React.FC<{ onAccept: () => void }> = ({ onAccept }) => (
   <motion.div
     className="fixed inset-0 z-[9999] bg-[#050505] flex flex-col items-center justify-center cursor-none"
     exit={{ opacity: 0, filter: "blur(20px)" }}
-    transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+    transition={{ duration: 2.2, ease: [0.22, 1, 0.36, 1] }}
   >
     <motion.div 
       initial={{ opacity: 0, scale: 0.9 }}
@@ -38,7 +38,7 @@ const PermissionGate: React.FC<{ onAccept: () => void }> = ({ onAccept }) => (
       className="relative"
     >
       <div className="absolute inset-0 blur-2xl bg-white/5 rounded-full" />
-      <img src={logoImg} alt="TAMV" className="w-24 h-24 object-contain rounded-2xl relative z-10 grayscale hover:grayscale-0 transition-all duration-700" />
+      <img src={logoImg} alt="TAMV" className="w-24 h-24 object-contain rounded-2xl relative z-10 grayscale hover:grayscale-0 transition-all duration-1700" />
     </motion.div>
     
     <div className="mt-12 text-center overflow-hidden">
@@ -69,7 +69,7 @@ const PermissionGate: React.FC<{ onAccept: () => void }> = ({ onAccept }) => (
       whileHover={{ borderColor: "rgba(255,255,255,0.4)" }}
     >
       <span className="relative z-10 text-white text-xs tracking-[0.3em] uppercase group-hover:text-white transition-colors">Iniciar Secuencia</span>
-      <motion.div className="absolute inset-0 bg-white/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+      <motion.div className="absolute inset-0 bg-white/5 translate-y-full group-hover:translate-y-0 transition-transform duration-1600" />
     </motion.button>
   </motion.div>
 )
