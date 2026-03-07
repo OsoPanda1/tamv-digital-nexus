@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 
 // Import enhanced components
-import { CinematicIntro } from "@/components/CinematicIntro";
+import CinematicIntro from "@/components/CinematicIntro";
 import { EpicHero } from "@/components/effects/EpicHero";
 import { PremiumCard, StatCard, FeatureCard } from "@/components/effects/PremiumCard";
 import { EpicBackground } from "@/components/effects/EpicBackground";
