@@ -38,6 +38,7 @@ import Governance from "./pages/Governance";
 import Economy from "./pages/Economy";
 import MDXOperations from "./pages/MDXOperations";
 import MembershipOnboarding from "./pages/MembershipOnboarding";
+import Evolution from "./pages/Evolution";
 
 // Configure React Query
 const queryClient = new QueryClient({
@@ -98,6 +99,7 @@ const App = () => (
 
             {/* MD-X Operations */}
             <Route path="/operations" element={<MDXOperations />} />
+            <Route path="/evolution" element={<Evolution />} />
             <Route path="/onboarding/membership" element={<MembershipOnboarding />} />
 
             {/* 404 */}
