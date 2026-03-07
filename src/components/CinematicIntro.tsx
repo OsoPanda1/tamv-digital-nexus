@@ -1,506 +1,8 @@
-// =======================================================
-// TAMV ESLint Plugin + CINEMATIC INTRO – Reinforced Edition
-// =======================================================
-
-/**
- * ESLint Plugin TAMV - Constitutional Quality Control
- * QC-TAMV-01 v1.1 Implementation
- * 
- * This plugin enforces the invariant laws of the TAMV Civilizatory Client
- */
-
-import path from "node:path";
-
-/**
- * L1 - Root único
- * ReactDOM.createRoot only allowed in src/main.tsx
- */
-const noReactDOMOutsideMain = {
-  meta: {
-    type: 'problem',
-    docs: {
-      description: 'ReactDOM.createRoot only allowed in src/main.tsx (L1 - Root único)',
-      category: 'TAMV Constitutional',
-      recommended: 'error',
-    },
-    messages: {
-      invalidRoot: 'L1 Violation: ReactDOM.createRoot is only allowed in src/main.tsx. Found in {{file}}',
-    },
-    schema: [],
-  },
-  create(context) {
-    const filePath = context.getFilename();
-    const normalizedPath = path.normalize(filePath);
-    const isMainFile = normalizedPath.endsWith(path.join('src', 'main.tsx')) || 
-                       normalizedPath.endsWith(path.join('src', 'main.ts'));
-    
-    return {
-      CallExpression(node) {
-        if (
-          node.callee && 
-          (node.callee as any).object && 
-          (node.callee as any).object.name === 'ReactDOM' && 
-          (node.callee as any).property && 
-          (node.callee as any).property.name === 'createRoot'
-        ) {
-          if (!isMainFile) {
-            context.report({
-              node,
-              messageId: 'invalidRoot',
-              data: {
-                file: path.basename(filePath),
-              },
-            });
-          }
-        }
-      },
-      ImportDeclaration(node) {
-        if (node.source && node.source.value === 'react-dom/client') {
-          if (!isMainFile) {
-            context.report({
-              node,
-              messageId: 'invalidRoot',
-              data: {
-                file: path.basename(filePath),
-              },
-            });
-          }
-        }
-      },
-    };
-  },
-};
-
-/**
- * L2 - Router único
- * BrowserRouter only allowed in src/App.tsx
- */
-const noRouterOutsideApp = {
-  meta: {
-    type: 'problem',
-    docs: {
-      description: 'BrowserRouter only allowed in src/App.tsx (L2 - Router único)',
-      category: 'TAMV Constitutional',
-      recommended: 'error',
-    },
-    messages: {
-      invalidRouter: 'L2 Violation: BrowserRouter is only allowed in src/App.tsx. Found in {{file}}',
-    },
-    schema: [],
-  },
-  create(context) {
-    const filePath = context.getFilename();
-    const normalizedPath = path.normalize(filePath);
-    const isAppFile = normalizedPath.endsWith(path.join('src', 'App.tsx')) || 
-                      normalizedPath.endsWith(path.join('src', 'App.ts'));
-    
-    return {
-      JSXElement(node) {
-        const opening = (node as any).openingElement;
-        const name = opening?.name?.name;
-        if (name === 'BrowserRouter' || name === 'Router') {
-          if (!isAppFile) {
-            context.report({
-              node,
-              messageId: 'invalidRouter',
-              data: {
-                file: path.basename(filePath),
-              },
-            });
-          }
-        }
-      },
-      CallExpression(node) {
-        if ((node.callee as any)?.name === 'createBrowserRouter') {
-          if (!isAppFile) {
-            context.report({
-              node,
-              messageId: 'invalidRouter',
-              data: {
-                file: path.basename(filePath),
-              },
-            });
-          }
-        }
-      },
-    };
-  },
-};
-
-/**
- * L3 - Layout único
- * Layout component only allowed in src/App.tsx
- */
-const noLayoutOutsideApp = {
-  meta: {
-    type: 'problem',
-    docs: {
-      description: 'Layout component only allowed in src/App.tsx (L3 - Layout único)',
-      category: 'TAMV Constitutional',
-      recommended: 'error',
-    },
-    messages: {
-      invalidLayout: 'L3 Violation: Layout component is only allowed in src/App.tsx. Found in {{file}}',
-      invalidLayoutImport: 'L3 Violation: Importing Layout from core/Layout is only allowed in src/App.tsx. Found in {{file}}',
-    },
-    schema: [],
-  },
-  create(context) {
-    const filePath = context.getFilename();
-    const normalizedPath = path.normalize(filePath);
-    const isAppFile = normalizedPath.endsWith(path.join('src', 'App.tsx')) || 
-                      normalizedPath.endsWith(path.join('src', 'App.ts'));
-    
-    return {
-      ImportDeclaration(node) {
-        if (
-          node.source && 
-          typeof node.source.value === 'string' && 
-          (node.source.value.includes('core/Layout') || 
-           node.source.value.includes('components/Layout'))
-        ) {
-          if (!isAppFile) {
-            context.report({
-              node,
-              messageId: 'invalidLayoutImport',
-              data: {
-                file: path.basename(filePath),
-              },
-            });
-          }
-        }
-      },
-      JSXElement(node) {
-        const opening = (node as any).openingElement;
-        const name = opening?.name?.name;
-        if (name === 'Layout') {
-          if (!isAppFile) {
-            context.report({
-              node,
-              messageId: 'invalidLayout',
-              data: {
-                file: path.basename(filePath),
-              },
-            });
-          }
-        }
-      },
-    };
-  },
-};
-
-/**
- * L6 - Modules agnósticos de navegación
- * No react-router-dom imports in src/modules/*
- */
-const noRouterInModules = {
-  meta: {
-    type: 'problem',
-    docs: {
-      description: 'No react-router-dom imports allowed in src/modules/* (L6 - Modules agnósticos)',
-      category: 'TAMV Constitutional',
-      recommended: 'error',
-    },
-    messages: {
-      routerInModule: 'L6 Violation: react-router-dom imports are not allowed in modules. Found in {{file}}',
-    },
-    schema: [],
-  },
-  create(context) {
-    const filePath = context.getFilename();
-    const normalizedPath = path.normalize(filePath);
-    const isModule = normalizedPath.includes(path.join('src', 'modules')) || 
-                     normalizedPath.includes(path.join('src', 'components'));
-    
-    return {
-      ImportDeclaration(node) {
-        if (node.source && node.source.value === 'react-router-dom') {
-          if (isModule) {
-            context.report({
-              node,
-              messageId: 'routerInModule',
-              data: {
-                file: path.basename(filePath),
-              },
-            });
-          }
-        }
-      },
-    };
-  },
-};
-
-/**
- * L4 - Correspondencia ruta-page
- * Pages cannot import other pages
- */
-const noPageToPageImport = {
-  meta: {
-    type: 'problem',
-    docs: {
-      description: 'Pages cannot import other pages (L4 - Correspondencia ruta-page)',
-      category: 'TAMV Constitutional',
-      recommended: 'error',
-    },
-    messages: {
-      pageToPageImport: 'L4 Violation: Pages cannot import other pages. {{file}} imports from {{imported}}',
-    },
-    schema: [],
-  },
-  create(context) {
-    const filePath = context.getFilename();
-    const normalizedPath = path.normalize(filePath);
-    const isPage = normalizedPath.includes(path.join('src', 'pages'));
-    
-    return {
-      ImportDeclaration(node) {
-        if (isPage && node.source && typeof node.source.value === 'string') {
-          const importPath = node.source.value;
-          if (importPath.includes('/pages/') || importPath.startsWith('@/pages/')) {
-            context.report({
-              node,
-              messageId: 'pageToPageImport',
-              data: {
-                file: path.basename(filePath),
-                imported: importPath,
-              },
-            });
-          }
-        }
-      },
-    };
-  },
-};
-
-/**
- * L5 - Pages sin lógica de dominio
- * Pages should not contain business logic, side effects, or global state
- */
-const noDomainLogicInPages = {
-  meta: {
-    type: 'suggestion',
-    docs: {
-      description: 'Pages should not contain business logic, side effects, or global state (L5 - Pages sin lógica de dominio)',
-      category: 'TAMV Constitutional',
-      recommended: 'warn',
-    },
-    messages: {
-      useEffectInPage: 'L5 Warning: useEffect with side effects detected in page. Consider moving to a module or domain.',
-      useStateInPage: 'L5 Warning: Multiple useState hooks detected. Consider if this state belongs in a domain.',
-      serviceImport: 'L5 Warning: Direct service import in page. Services should be initialized in integrations/ or domains/.',
-    },
-    schema: [],
-  },
-  create(context) {
-    const filePath = context.getFilename();
-    const normalizedPath = path.normalize(filePath);
-    const isPage = normalizedPath.includes(path.join('src', 'pages'));
-    
-    let useStateCount = 0;
-    
-    return {
-      CallExpression(node) {
-        if (!isPage) return;
-        
-        if ((node.callee as any)?.name === 'useState') {
-          useStateCount++;
-          if (useStateCount > 3) {
-            context.report({
-              node,
-              messageId: 'useStateInPage',
-            });
-          }
-        }
-        
-        if ((node.callee as any)?.name === 'useEffect') {
-          context.report({
-            node,
-            messageId: 'useEffectInPage',
-          });
-        }
-      },
-      ImportDeclaration(node) {
-        if (!isPage) return;
-        
-        if (node.source && typeof node.source.value === 'string') {
-          const importPath = node.source.value;
-          if (
-            importPath.includes('supabase') || 
-            importPath.includes('services/') || 
-            importPath.includes('api/')
-          ) {
-            context.report({
-              node,
-              messageId: 'serviceImport',
-            });
-          }
-        }
-      },
-    };
-  },
-};
-
-/**
- * TAMV Constitutional Rules
- * Prohibits DAO-related terminology and patterns
- */
-const noDao = {
-  meta: {
-    type: 'problem',
-    docs: {
-      description: 'DAO is constitutionally prohibited in TAMV. Use SCAO or mark as [HISTORICAL]/[EXTERNAL].',
-      category: 'TAMV Constitutional',
-      recommended: 'error',
-    },
-    messages: {
-      daoTerm: 'Constitutional Violation: DAO term prohibited. Use SCAO or mark as [HISTORICAL]/[EXTERNAL].',
-    },
-    schema: [],
-  },
-  create(context) {
-    const sourceCode = context.getSourceCode();
-    const text = sourceCode.getText();
-    const hasAllowedMark = /\[HISTORICAL\]|\[EXTERNAL\]|\[LEGACY\]/.test(text);
-
-    if (hasAllowedMark) {
-      return {};
-    }
-
-    const shouldReport = (value: string) => /\bDAOs?\b/i.test(value);
-
-    return {
-      Identifier(node) {
-        if (shouldReport((node as any).name)) {
-          context.report({ node, messageId: 'daoTerm' });
-        }
-      },
-      Literal(node) {
-        if (typeof (node as any).value === 'string' && shouldReport((node as any).value)) {
-          context.report({ node, messageId: 'daoTerm' });
-        }
-      },
-      TemplateElement(node) {
-        if (shouldReport((node as any).value.raw)) {
-          context.report({ node, messageId: 'daoTerm' });
-        }
-      },
-    };
-  },
-};
-
-/**
- * TAMV Constitutional Rules
- * Detects hidden economic logic without UI transparency
- */
-const noHiddenEconomy = {
-  meta: {
-    type: 'problem',
-    docs: {
-      description: 'Economic logic must have explicit UI transparency.',
-      category: 'TAMV Constitutional',
-      recommended: 'error',
-    },
-    messages: {
-      hiddenEconomy: 'Constitutional Violation: Hidden economic logic detected. Must provide explicit UI transparency.',
-    },
-    schema: [],
-  },
-  create(context) {
-    return {
-      CallExpression(node) {
-        const functionNames = ['processPayment', 'calculateFee', 'transferFunds', 'withdraw', 'deposit'];
-        const callee = node.callee as any;
-        const name = callee?.name || callee?.property?.name;
-        const hasEconomicFunction = functionNames.some(fn => name && name.includes(fn));
-        
-        if (hasEconomicFunction) {
-          const source = context.getSourceCode().getText();
-          const hasUIReference = /tooltip|modal|dialog|notification|alert/.test(source.toLowerCase());
-          
-          if (!hasUIReference) {
-            context.report({
-              node,
-              messageId: 'hiddenEconomy',
-            });
-          }
-        }
-      },
-    };
-  },
-};
-
-/**
- * TAMV Constitutional Rules
- * Prohibits unaudited AI systems without proper logging
- */
-const noUnauditedAi = {
-  meta: {
-    type: 'problem',
-    docs: {
-      description: 'AI systems must have proper logging and audit trails.',
-      category: 'TAMV Constitutional',
-      recommended: 'error',
-    },
-    messages: {
-      unauditedAi: 'Constitutional Violation: Unaudited AI system detected. Must implement proper logging and audit trails.',
-    },
-    schema: [],
-  },
-  create(context) {
-    return {
-      ImportDeclaration(node) {
-        const aiPatterns = /openai|anthropic|cohere|huggingface|llama|gpt|ai\//i;
-        if (node.source && aiPatterns.test(node.source.value as string)) {
-          const source = context.getSourceCode().getText();
-          const hasLogging = /console\.log|logger|audit|logEvent/.test(source);
-          
-          if (!hasLogging) {
-            context.report({
-              node,
-              messageId: 'unauditedAi',
-            });
-          }
-        }
-      },
-    };
-  },
-};
-
-const plugin = {
-  rules: {
-    'no-reactdom-outside-main': noReactDOMOutsideMain,
-    'no-router-outside-app': noRouterOutsideApp,
-    'no-layout-outside-app': noLayoutOutsideApp,
-    'no-router-in-modules': noRouterInModules,
-    'no-page-to-page-import': noPageToPageImport,
-    'no-domain-logic-in-pages': noDomainLogicInPages,
-    'no-dao': noDao,
-    'no-hidden-economy': noHiddenEconomy,
-    'no-unaudited-ai': noUnauditedAi,
-  },
-  configs: {
-    recommended: {
-      plugins: ['tamv'],
-      rules: {
-        'tamv/no-reactdom-outside-main': 'error',
-        'tamv/no-router-outside-app': 'error',
-        'tamv/no-layout-outside-app': 'error',
-        'tamv/no-router-in-modules': 'error',
-        'tamv/no-page-to-page-import': 'error',
-        'tamv/no-domain-logic-in-pages': 'warn',
-        'tamv/no-dao': 'error',
-        'tamv/no-hidden-economy': 'error',
-        'tamv/no-unaudited-ai': 'error',
-      },
-    },
-  },
-};
-
-export default plugin;
-
-// =======================================================
-// TAMV CINEMATIC INTRO – Creator LATAM Edition
-// =======================================================
+// ============================================================================
+// TAMV MD-X4™ CINEMATIC INTRO – Creator LATAM Edition
+// Autor visionario y propietario: Edwin Oswaldo Castillo Trejo
+// Dedicatoria: Para mi madre, Reina Trejo Serrano ✦
+// ============================================================================
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useSpring, useTransform } from "framer-motion";
@@ -513,20 +15,17 @@ interface CinematicIntroProps {
   autoStart?: boolean;
 }
 
-const TOTAL_DURATION = 20; // segundos duros, pero intensos
-const MAX_INTRO_TIME = 22000; // watchdog extra para no bloquear nunca
+const TOTAL_DURATION = 22;
+const MAX_INTRO_TIME = 25000;
 
-// Overlay de grano / textura
+// Grain overlay
 const CinematicOverlay: React.FC = () => (
   <div className="pointer-events-none absolute inset-0 z-50 overflow-hidden opacity-[0.04] mix-blend-soft-light">
     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] brightness-100 contrast-150" />
   </div>
 );
 
-// =======================================================
-// PERMISSION GATE reforzado (no bloquea jamás)
-// =======================================================
-
+// Permission gate
 const PermissionGate: React.FC<{ onAccept: () => void }> = ({ onAccept }) => (
   <motion.div
     className="fixed inset-0 z-[9999] bg-[#050505] flex flex-col items-center justify-center"
@@ -542,7 +41,7 @@ const PermissionGate: React.FC<{ onAccept: () => void }> = ({ onAccept }) => (
       <img
         src={logoImg}
         alt="TAMV"
-        className="w-24 h-24 object-contain rounded-2xl relative z-10 grayscale hover:grayscale-0 transition-all duration-1700"
+        className="w-24 h-24 object-contain rounded-2xl relative z-10 grayscale hover:grayscale-0 transition-all duration-1000"
       />
     </motion.div>
 
@@ -581,12 +80,13 @@ const PermissionGate: React.FC<{ onAccept: () => void }> = ({ onAccept }) => (
   </motion.div>
 );
 
-// =======================================================
-// ESCENAS NUEVAS (creador LATAM / MD-X4 / Ignición)
-// =======================================================
+// ============================================================================
+// SCENES
+// ============================================================================
 
-type SceneId = 0 | 1 | 2 | 3;
+type SceneId = 0 | 1 | 2 | 3 | 4;
 
+// Scene 0: Logo + tagline
 const SceneLogoIntro: React.FC = () => (
   <motion.div
     className="absolute inset-0 flex flex-col items-center justify-center bg-black"
@@ -616,6 +116,7 @@ const SceneLogoIntro: React.FC = () => (
   </motion.div>
 );
 
+// Scene 1: The problem
 const SceneCollapse: React.FC = () => (
   <motion.div
     className="absolute inset-0 flex flex-col md:flex-row bg-black"
@@ -630,10 +131,10 @@ const SceneCollapse: React.FC = () => (
         </p>
         <p className="text-sm text-white/70">
           18.9M creadores en LATAM viviendo bajo algoritmos que priorizan anuncios, no
-          comunidades. [web:18]
+          comunidades.
         </p>
         <p className="mt-3 text-xs text-red-500/80 uppercase tracking-[0.3em]">
-          La mayoría cobra centavos por horas de trabajo creativo. [web:19]
+          La mayoría cobra centavos por horas de trabajo creativo.
         </p>
       </div>
     </div>
@@ -644,7 +145,7 @@ const SceneCollapse: React.FC = () => (
         </p>
         <p className="text-sm text-white/70">
           Datos personales extraídos, decisiones tomadas por modelos cerrados y cero control
-          sobre el destino de tu comunidad. [web:16][web:20]
+          sobre el destino de tu comunidad.
         </p>
         <p className="mt-3 text-xs text-white/50">
           El TAMV nace como infraestructura de escape, no como otra timeline infinita.
@@ -652,6 +153,13 @@ const SceneCollapse: React.FC = () => (
       </div>
     </div>
   </motion.div>
+);
+
+// Scene 2: MD-X4 Architecture
+const SceneRingLabel: React.FC<{ label: string; className?: string }> = ({ label, className }) => (
+  <div className={"absolute text-[10px] sm:text-xs uppercase tracking-[0.25em] text-white/60 " + (className ?? "")}>
+    {label}
+  </div>
 );
 
 const SceneCoreMDX4: React.FC = () => (
@@ -664,42 +172,22 @@ const SceneCoreMDX4: React.FC = () => (
     <div className="relative h-64 w-64 sm:h-80 sm:w-80">
       <div className="absolute inset-10 rounded-full border border-white/10" />
       <div className="absolute inset-16 rounded-full border border-[#ff4f9a]/35" />
-      <div className="absolute inset-22 rounded-full border border-[#4ff6ff]/35" />
+      <div className="absolute inset-[5.5rem] rounded-full border border-[#4ff6ff]/35" />
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="text-3xl sm:text-4xl font-semibold tracking-[0.25em]">
-          TAMV
-        </div>
+        <div className="text-3xl sm:text-4xl font-semibold tracking-[0.25em]">TAMV</div>
       </div>
       <SceneRingLabel label="Identidad" className="top-2 left-1/2 -translate-x-1/2" />
       <SceneRingLabel label="Membresías" className="right-2 top-1/2 -translate-y-1/2" />
       <SceneRingLabel label="Economía" className="bottom-2 left-1/2 -translate-x-1/2" />
       <SceneRingLabel label="IA" className="left-2 top-1/2 -translate-y-1/2" />
-      <SceneRingLabel
-        label="Gobernanza"
-        className="top-1/2 left-1/2 -translate-x-1/2 -translate-y-[140%]"
-      />
     </div>
     <p className="mt-6 max-w-xl text-center text-sm sm:text-base text-white/70">
-      Arquitectura MD‑X4: el núcleo donde identidad, comunidad, monetización e IA se alinean
-      para servir al creador, no al algoritmo.
+      Arquitectura MD‑X4: identidad, comunidad, monetización e IA alineados para servir al creador.
     </p>
   </motion.div>
 );
 
-const SceneRingLabel: React.FC<{ label: string; className?: string }> = ({
-  label,
-  className,
-}) => (
-  <div
-    className={
-      "absolute text-[10px] sm:text-xs uppercase tracking-[0.25em] text-white/60 " +
-      (className ?? "")
-    }
-  >
-    {label}
-  </div>
-);
-
+// Scene 3: Creator impact dashboard
 const SceneCreatorImpact: React.FC = () => (
   <motion.div
     className="absolute inset-0 flex flex-col md:flex-row bg-black"
@@ -719,26 +207,18 @@ const SceneCreatorImpact: React.FC = () => (
           </div>
           <div className="flex justify-between items-baseline">
             <div>
-              <div className="text-[11px] text-white/50 uppercase tracking-[0.2em]">
-                Miembros activos
-              </div>
+              <div className="text-[11px] text-white/50 uppercase tracking-[0.2em]">Miembros activos</div>
               <div className="text-2xl font-semibold">1,245</div>
             </div>
             <div className="text-right">
-              <div className="text-[11px] text-white/50 uppercase tracking-[0.2em]">
-                ARPU ilustrativo
-              </div>
+              <div className="text-[11px] text-white/50 uppercase tracking-[0.2em]">ARPU ilustrativo</div>
               <div className="text-xl font-semibold">$35 USD</div>
             </div>
           </div>
           <p className="text-[10px] text-white/40 mt-1">
-            Valores de ejemplo. No representan promesas de rendimiento individual.
+            Valores de ejemplo. No representan promesas de rendimiento.
           </p>
         </div>
-        <p className="mt-4 text-xs sm:text-sm text-white/70">
-          El TAMV existe para maximizar la parte del valor que captura el creador, conectando
-          herramientas, comunidad y economía en un solo ecosistema.
-        </p>
       </div>
     </div>
     <div className="flex-1 flex items-center justify-center">
@@ -748,14 +228,14 @@ const SceneCreatorImpact: React.FC = () => (
           infraestructura que los recibe y coordina.
         </p>
         <p className="text-xs text-white/50">
-          Tu historia deja de ser un hilo perdido en un feed infinito y se convierte en una
-          ciudad digital construida alrededor de tu trabajo.
+          Tu historia deja de ser un hilo perdido en un feed infinito.
         </p>
       </div>
     </div>
   </motion.div>
 );
 
+// Scene 4: CTA + Dedication
 const SceneIgnitionCall: React.FC<{ onAction: () => void }> = ({ onAction }) => (
   <motion.div
     className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-black via-[#05020b] to-black px-6"
@@ -789,6 +269,22 @@ const SceneIgnitionCall: React.FC<{ onAction: () => void }> = ({ onAction }) => 
         Quiero construir mi comunidad aquí
       </button>
     </div>
+
+    {/* Dedication */}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 1.5, duration: 2 }}
+      className="mt-8 text-center"
+    >
+      <p className="text-[10px] text-white/30 uppercase tracking-[0.4em]">
+        Dedicado a mi madre, Reina Trejo Serrano ✦
+      </p>
+      <p className="text-[9px] text-white/20 mt-1 tracking-[0.3em]">
+        Visión y creación: Edwin Oswaldo Castillo Trejo
+      </p>
+    </motion.div>
+
     <p className="mt-4 text-[10px] text-white/40 max-w-md text-center">
       TAMV ofrece infraestructura y herramientas. No garantiza resultados económicos
       específicos; cada creador construye su propia trayectoria.
@@ -796,15 +292,11 @@ const SceneIgnitionCall: React.FC<{ onAction: () => void }> = ({ onAction }) => 
   </motion.div>
 );
 
-// =======================================================
-// MAIN ENGINE COMPATIBLE CON TU FIRMA
-// =======================================================
+// ============================================================================
+// MAIN ENGINE
+// ============================================================================
 
-export function CinematicIntroEngine({
-  onComplete,
-  skipEnabled,
-  autoStart,
-}: CinematicIntroProps) {
+function CinematicIntroEngine({ onComplete, skipEnabled, autoStart }: CinematicIntroProps) {
   const [accepted, setAccepted] = useState(!!autoStart);
   const [time, setTime] = useState(0);
   const [completed, setCompleted] = useState(false);
@@ -834,12 +326,8 @@ export function CinematicIntroEngine({
 
     frameId = requestAnimationFrame(loop);
 
-    if (watchdogRef.current) {
-      clearTimeout(watchdogRef.current);
-    }
-    watchdogRef.current = window.setTimeout(() => {
-      setCompleted(true);
-    }, MAX_INTRO_TIME);
+    if (watchdogRef.current) clearTimeout(watchdogRef.current);
+    watchdogRef.current = window.setTimeout(() => setCompleted(true), MAX_INTRO_TIME);
 
     return () => {
       cancelAnimationFrame(frameId);
@@ -858,7 +346,7 @@ export function CinematicIntroEngine({
       audioRef.current = audio;
       await audio.play();
     } catch {
-      // Si falla, seguimos sin audio
+      // Silent fallback
     }
   }, []);
 
@@ -866,10 +354,10 @@ export function CinematicIntroEngine({
     if (time < 4) return 0;
     if (time < 9) return 1;
     if (time < 14) return 2;
-    return 3;
+    if (time < 18) return 3;
+    return 4;
   }, [time]);
 
-  // salida garantizada
   useEffect(() => {
     if (completed) {
       if (audioRef.current) {
@@ -896,11 +384,11 @@ export function CinematicIntroEngine({
       <CinematicOverlay />
 
       <AnimatePresence mode="wait">
-        {scene === 0 && <SceneLogoIntro key="scene-0" />}
-        {scene === 1 && <SceneCollapse key="scene-1" />}
-        {scene === 2 && <SceneCoreMDX4 key="scene-2" />}
-        {scene === 3 && <SceneCreatorImpact key="scene-3" />}
-        {scene === 3 && <SceneIgnitionCall key="scene-4" onAction={() => setCompleted(true)} />}
+        {scene === 0 && <SceneLogoIntro key="s0" />}
+        {scene === 1 && <SceneCollapse key="s1" />}
+        {scene === 2 && <SceneCoreMDX4 key="s2" />}
+        {scene === 3 && <SceneCreatorImpact key="s3" />}
+        {scene === 4 && <SceneIgnitionCall key="s4" onAction={() => setCompleted(true)} />}
       </AnimatePresence>
 
       <div className="absolute top-0 left-0 w-full h-1 bg-white/5">
@@ -922,7 +410,4 @@ export function CinematicIntroEngine({
   );
 }
 
-// Mantener export default con la misma firma que usas en el TAMV
-export default function CinematicIntro(props: CinematicIntroProps) {
-  return <CinematicIntroEngine {...props} />;
-}
+export default CinematicIntroEngine;
