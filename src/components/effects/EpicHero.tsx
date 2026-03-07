@@ -1,49 +1,51 @@
 // ============================================================================
-// TAMV MD-X4™ - EPIC HERO COMPONENT v7.0
-// Ultra-Premium Hero Section with 100x Visual Quality
-// Unified from all OsoPanda1 repos
+// TAMV MD-X4™ - EPIC HERO COMPONENT v8.0
+// Autor visionario y propietario: Edwin Oswaldo Castillo Trejo
+// Ecosistema Civilizatorio Latinoamericano — Evolución OMNI-KERNEL
 // ============================================================================
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { 
-  Sparkles, Zap, Globe, Users, 
+  Sparkles, Globe, Users, 
   Rocket, Brain, Shield, Crown,
-  ChevronRight, Play
+  ChevronRight, Play, Cpu, Layers,
+  Zap, Eye
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 interface EpicHeroProps {
   onEnter?: () => void;
 }
 
-const UNIFIED_FEATURES = [
-  {
-    icon: <Globe className="w-5 h-5" />,
-    label: "Ecosistema Federado",
-    desc: "7 Capas Civilizatorias"
-  },
+const EVOLUTION_PILLARS = [
   {
     icon: <Brain className="w-5 h-5" />,
-    label: "Isabella AI",
-    desc: "IA Emocional Avanzada"
+    label: "Isabella AI Prime",
+    desc: "Orquestadora Civilizatoria",
   },
   {
     icon: <Shield className="w-5 h-5" />,
-    label: "Blindaje Legal",
-    desc: "Protección Internacional"
+    label: "Self-Healing",
+    desc: "Autocuración de Código",
   },
   {
-    icon: <Crown className="w-5 h-5" />,
-    label: "Tecnología XR",
-    desc: "Inmersión Total 4D"
+    icon: <Cpu className="w-5 h-5" />,
+    label: "OMNI-KERNEL",
+    desc: "Organismo Digital Vivo",
+  },
+  {
+    icon: <Eye className="w-5 h-5" />,
+    label: "Soberanía 100%",
+    desc: "Identidad & Datos Tuyos",
   },
 ];
 
 const STATS = [
-  { value: "30+", label: "Formas de Monetización" },
-  { value: "7", label: "Capas Federadas" },
-  { value: "∞", label: "DreamSpaces" },
+  { value: "7", label: "Federaciones Core" },
+  { value: "L0–L3", label: "Capas Antifrágiles" },
+  { value: "∞", label: "DreamSpaces XR" },
   { value: "100%", label: "Soberanía Digital" },
 ];
 
@@ -63,9 +65,8 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Animated background elements */}
+      {/* Animated background orbs */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Floating orbs */}
         {[...Array(5)].map((_, i) => (
           <motion.div
             key={i}
@@ -76,8 +77,8 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
               left: `${15 + i * 15}%`,
               top: `${20 + (i % 3) * 20}%`,
               background: `radial-gradient(circle, ${
-                i % 2 === 0 
-                  ? "rgba(0, 217, 255, 0.08)" 
+                i % 2 === 0
+                  ? "rgba(0, 217, 255, 0.08)"
                   : "rgba(157, 78, 221, 0.08)"
               } 0%, transparent 70%)`,
               filter: "blur(60px)",
@@ -102,10 +103,10 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
         >
           <Sparkles className="w-4 h-4 text-cyan-400" />
           <span className="text-sm text-white/80">
-            Ecosistema Civilizatorio Latinoamericano
+            Ecosistema Civilizatorio OMNI-KERNEL
           </span>
           <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 text-xs font-bold text-white">
-            v7.0
+            MD-X4
           </span>
         </motion.div>
 
@@ -118,21 +119,28 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
         >
           <span className="text-gradient-quantum">TAMV</span>
           <br />
-          <span className="text-white">Territorio Autónomo</span>
+          <span className="text-white text-4xl md:text-5xl lg:text-6xl font-bold">
+            La Nueva Casa de los
+          </span>
           <br />
-          <span className="text-white/60">de Memoria Viva</span>
+          <span className="text-gradient-quantum text-4xl md:text-5xl lg:text-6xl font-bold">
+            Creadores de LATAM
+          </span>
         </motion.h1>
 
-        {/* Subtitle */}
+        {/* Subtitle — product-led, no mysticism */}
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-body-large text-white/70 max-w-3xl mx-auto mb-10 leading-relaxed"
         >
-          El primer <span className="text-cyan-400 font-semibold">ecosistema civilizatorio federado antifrágil</span> a nivel mundial. 
-          Uniendo la visión de todos los repos de OsoPanda1 en una experiencia única de realidad extendida, 
-          IA emocional y soberanía digital.
+          Un solo ecosistema para <span className="text-cyan-400 font-semibold">crear, cobrar y crecer</span>.
+          Menos explotación, más control sobre tu comunidad, tu contenido y tus ingresos.
+          <br />
+          <span className="text-white/50 text-sm mt-2 inline-block">
+            Visión y creación de Edwin Oswaldo Castillo Trejo · Desde Real del Monte, Hidalgo
+          </span>
         </motion.p>
 
         {/* CTA Buttons */}
@@ -148,27 +156,29 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
             className="btn-premium px-8 py-6 text-lg font-semibold rounded-xl group"
           >
             <Rocket className="w-5 h-5 mr-2" />
-            Entrar al Ecosistema
+            Soy Creador Inconforme
             <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            className="glass-crystal px-8 py-6 text-lg font-semibold rounded-xl border-white/20 hover:border-cyan-400/50 hover:bg-white/5"
-          >
-            <Play className="w-5 h-5 mr-2" />
-            Ver Demo
-          </Button>
+          <Link to="/evolution">
+            <Button
+              size="lg"
+              variant="outline"
+              className="glass-crystal px-8 py-6 text-lg font-semibold rounded-xl border-white/20 hover:border-cyan-400/50 hover:bg-white/5"
+            >
+              <Cpu className="w-5 h-5 mr-2" />
+              Ver Evolución OMNI-KERNEL
+            </Button>
+          </Link>
         </motion.div>
 
-        {/* Feature Pills */}
+        {/* Evolution Pillars */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="flex flex-wrap justify-center gap-3 mb-16"
         >
-          {UNIFIED_FEATURES.map((feature, index) => (
+          {EVOLUTION_PILLARS.map((feature, index) => (
             <motion.div
               key={feature.label}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -210,7 +220,7 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
           ))}
         </motion.div>
 
-        {/* Bottom decorative line */}
+        {/* Bottom line */}
         <motion.div
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
