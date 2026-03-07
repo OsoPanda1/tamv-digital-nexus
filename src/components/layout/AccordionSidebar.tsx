@@ -104,6 +104,16 @@ const NAV_GROUPS: NavGroup[] = [
       { icon: Settings, label: 'Admin', path: '/admin', badge: 'Admin' },
     ],
   },
+  {
+    id: 'omnikernel',
+    title: 'OMNI-KERNEL',
+    icon: Zap,
+    items: [
+      { icon: Zap, label: 'Singularity Ops', path: '/singularity', badge: 'NEW', color: '#F59E0B' },
+      { icon: Layers, label: 'Evolución', path: '/evolution' },
+      { icon: Infinity, label: 'MD-X Operations', path: '/operations' },
+    ],
+  },
 ];
 
 export const AccordionSidebar = () => {
