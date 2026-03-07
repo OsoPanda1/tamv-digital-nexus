@@ -153,8 +153,8 @@ const Index = () => {
                 Repositorios <span className="text-gradient-quantum">Unificados</span>
               </h2>
               <p className="text-body-large text-white/60 max-w-2xl mx-auto">
-                Todo el conocimiento y código de los repos de OsoPanda1 ahora en una 
-                sola plataforma civilizatoria épica.
+                Todo el conocimiento y código del ecosistema TAMV ahora en una 
+                sola plataforma civilizatoria unificada.
               </p>
             </motion.div>
 
@@ -200,7 +200,7 @@ const Index = () => {
               </h2>
               <p className="text-body-large text-white/60 max-w-2xl mx-auto">
                 Red social, metaverso, universidad, marketplace, IA y más. 
-                El ecosistema más ambicioso creado por una sola mente.
+                Un solo ecosistema para crear, cobrar y crecer.
               </p>
             </motion.div>
 
@@ -398,9 +398,9 @@ const Index = () => {
                   Únete a la <span className="text-gradient-quantum">Revolución</span>
                 </h2>
                 <p className="text-body-large text-white/60 max-w-2xl mx-auto mb-8">
-                  El ecosistema civilizatorio más ambicioso de la historia está aquí. 
-                  Creado por Anubis Villaseñor, desde Real del Monte, Hidalgo, 
-                  poniendo a México en la cima tecnológica mundial.
+                  Visión y creación de <span className="text-cyan-400 font-semibold">Edwin Oswaldo Castillo Trejo</span>. 
+                  Desde Real del Monte, Hidalgo — un ecosistema civilizatorio para que los creadores 
+                  de LATAM tengan más herramientas, más control y más soberanía digital.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -440,7 +440,9 @@ const Index = () => {
                 </div>
 
                 <p className="text-sm text-white/40 mt-6">
-                  Orgullosamente Latinoamericano · Dedicado a Reina Trejo Serrano
+                  Orgullosamente Latinoamericano · Dedicado a Reina Trejo Serrano ✦
+                  <br />
+                  <span className="text-white/30">Visión de Edwin Oswaldo Castillo Trejo</span>
                 </p>
               </div>
             </motion.div>
@@ -471,7 +473,7 @@ const Index = () => {
               </div>
 
               <p className="text-sm text-white/40">
-                © 2026 TAMV · Todos los derechos reservados
+                © 2026 TAMV MD-X4™ · Edwin Oswaldo Castillo Trejo · Todos los derechos reservados
               </p>
             </div>
           </div>
