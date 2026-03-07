@@ -1,6 +1,7 @@
 // ============================================================================
 // TAMV MD-X4™ - Main Application Entry
 // Ecosystem Civilizatory Digital Mexicano
+// OMNI-KERNEL Integration Active
 // ============================================================================
 
 import { Toaster } from "@/components/ui/toaster";
@@ -8,6 +9,9 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+// OMNI-KERNEL Provider
+import { OmniKernelProvider } from "@/lib/omni-kernel";
 
 // Layout System
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -39,6 +43,7 @@ import Economy from "./pages/Economy";
 import MDXOperations from "./pages/MDXOperations";
 import MembershipOnboarding from "./pages/MembershipOnboarding";
 import Evolution from "./pages/Evolution";
+import Singularity from "./pages/Singularity";
 
 // Configure React Query
 const queryClient = new QueryClient({
@@ -61,51 +66,54 @@ const App = () => (
       <Sonner position="top-right" />
 
       <BrowserRouter>
-        <AppLayout>
-          <Routes>
-            {/* Core Routes */}
-            <Route path="/" element={<Index />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/metaverse" element={<Metaverse />} />
-            <Route path="/community" element={<Community />} />
-            <Route path="/docs" element={<Docs />} />
-            <Route path="/profile" element={<Profile />} />
+        <OmniKernelProvider workflowId="tamv-main">
+          <AppLayout>
+            <Routes>
+              {/* Core Routes */}
+              <Route path="/" element={<Index />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/metaverse" element={<Metaverse />} />
+              <Route path="/community" element={<Community />} />
+              <Route path="/docs" element={<Docs />} />
+              <Route path="/profile" element={<Profile />} />
 
-            {/* AI & Security */}
-            <Route path="/isabella" element={<Isabella />} />
-            <Route path="/anubis" element={<Anubis />} />
-            <Route path="/kaos" element={<Kaos />} />
+              {/* AI & Security */}
+              <Route path="/isabella" element={<Isabella />} />
+              <Route path="/anubis" element={<Anubis />} />
+              <Route path="/kaos" element={<Kaos />} />
 
-            {/* Ecosystem */}
-            <Route path="/ecosystem" element={<Ecosystem />} />
-            <Route path="/dream-spaces" element={<DreamSpaces />} />
-            <Route path="/university" element={<University />} />
-            <Route path="/bookpi" element={<BookPI />} />
-            <Route path="/3d-space" element={<ThreeDSpace />} />
+              {/* Ecosystem */}
+              <Route path="/ecosystem" element={<Ecosystem />} />
+              <Route path="/dream-spaces" element={<DreamSpaces />} />
+              <Route path="/university" element={<University />} />
+              <Route path="/bookpi" element={<BookPI />} />
+              <Route path="/3d-space" element={<ThreeDSpace />} />
 
-            {/* Auth & Onboarding */}
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/onboarding" element={<Onboarding />} />
+              {/* Auth & Onboarding */}
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/onboarding" element={<Onboarding />} />
 
-            {/* Economy & Governance */}
-            <Route path="/monetization" element={<Monetization />} />
-            <Route path="/gifts" element={<Gifts />} />
-            <Route path="/governance" element={<Governance />} />
-            <Route path="/economy" element={<Economy />} />
+              {/* Economy & Governance */}
+              <Route path="/monetization" element={<Monetization />} />
+              <Route path="/gifts" element={<Gifts />} />
+              <Route path="/governance" element={<Governance />} />
+              <Route path="/economy" element={<Economy />} />
 
-            {/* Admin & Crisis */}
-            <Route path="/crisis" element={<Crisis />} />
-            <Route path="/admin" element={<Admin />} />
+              {/* Admin & Crisis */}
+              <Route path="/crisis" element={<Crisis />} />
+              <Route path="/admin" element={<Admin />} />
 
-            {/* MD-X Operations */}
-            <Route path="/operations" element={<MDXOperations />} />
-            <Route path="/evolution" element={<Evolution />} />
-            <Route path="/onboarding/membership" element={<MembershipOnboarding />} />
+              {/* MD-X Operations & OMNI-KERNEL */}
+              <Route path="/operations" element={<MDXOperations />} />
+              <Route path="/evolution" element={<Evolution />} />
+              <Route path="/singularity" element={<Singularity />} />
+              <Route path="/onboarding/membership" element={<MembershipOnboarding />} />
 
-            {/* 404 */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AppLayout>
+              {/* 404 */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AppLayout>
+        </OmniKernelProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
