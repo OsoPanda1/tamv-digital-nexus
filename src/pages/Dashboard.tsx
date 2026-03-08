@@ -1,8 +1,8 @@
 // ============================================================================
-// TAMV MD-X4™ - Dashboard Page — LIVE DATA + Filters
+// TAMV MD-X4™ - Dashboard — LIVE DATA + Quick Actions (no extra backgrounds)
 // ============================================================================
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,12 +10,11 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
+import {
   Sparkles, TrendingUp, Users, Zap, Brain, Shield,
   BookOpen, ArrowRight, Activity, Layers, Crown,
   MessageCircle, FileText, AlertTriangle, Wallet, Filter
 } from "lucide-react";
-import { useBackgroundControl } from "@/components/UnifiedBackground";
 import { useEcosystemMetrics, useRecentActivity, useFederationHealth } from "@/hooks/useEcosystemMetrics";
 
 const quickActions = [
@@ -36,15 +35,10 @@ const EVENT_TYPES = [
 ];
 
 const Dashboard = () => {
-  const { setBackground } = useBackgroundControl();
   const { data: metrics, isLoading: metricsLoading } = useEcosystemMetrics();
   const { data: activity, isLoading: activityLoading } = useRecentActivity(20);
   const { data: federations, isLoading: fedLoading } = useFederationHealth();
   const [typeFilter, setTypeFilter] = useState("all");
-
-  useEffect(() => {
-    setBackground('quantum', 0.25);
-  }, [setBackground]);
 
   const filteredActivity = useMemo(() => {
     if (!activity) return [];
@@ -73,10 +67,10 @@ const Dashboard = () => {
           {/* Header */}
           <div className="mb-10">
             <h1 className="text-4xl md:text-5xl font-bold mb-3">
-              <span className="text-gradient-quantum">Centro de Control TAMV</span>
+              <span className="text-gradient-quantum">Centro de Control</span>
             </h1>
-            <p className="text-muted-foreground">
-              Métricas en vivo del ecosistema civilizatorio · Datos reales de Lovable Cloud
+            <p className="text-muted-foreground text-sm">
+              Métricas en vivo · Datos reales de Lovable Cloud
             </p>
           </div>
 
@@ -103,7 +97,7 @@ const Dashboard = () => {
 
           {/* Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Activity Feed — LIVE with Filters */}
+            {/* Activity Feed */}
             <Card className="lg:col-span-2 p-6 border-border/50 bg-card/60 backdrop-blur-sm">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-bold flex items-center gap-2">
@@ -128,7 +122,7 @@ const Dashboard = () => {
                   </Badge>
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 {activityLoading ? (
                   Array.from({ length: 5 }).map((_, i) => (
@@ -183,7 +177,7 @@ const Dashboard = () => {
             </Card>
           </div>
 
-          {/* Federation Status — LIVE */}
+          {/* Federation Status */}
           <Card className="mt-6 p-6 border-border/50 bg-card/60 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold flex items-center gap-2">
