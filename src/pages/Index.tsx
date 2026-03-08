@@ -43,7 +43,7 @@ const UNIFIED_FEATURES = [
     icon: <Globe className="w-6 h-6" />,
     title: "Ecosistema Federado",
     description: `${FEDERATION_COUNT} federaciones interconectadas. Arquitectura antifrágil con soberanía digital total.`,
-    gradient: "from-cyan-500/20 to-blue-500/20",
+    gradient: "from-primary/20 to-secondary/20",
   },
   {
     icon: <Brain className="w-6 h-6" />,
