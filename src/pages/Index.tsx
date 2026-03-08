@@ -184,7 +184,7 @@ const Index = () => {
                 <Sparkles className="w-3 h-3 mr-2" />
                 Ecosistema Completo
               </Badge>
-              <h2 className="text-headline text-white mb-4">
+              <h2 className="text-headline text-foreground mb-4">
                 Todo en una sola <span className="text-gradient-quantum">Plataforma</span>
               </h2>
               <p className="text-body-large text-white/60 max-w-2xl mx-auto">
