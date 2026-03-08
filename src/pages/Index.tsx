@@ -49,7 +49,7 @@ const UNIFIED_FEATURES = [
     icon: <Brain className="w-6 h-6" />,
     title: "Isabella AI",
     description: "Inteligencia artificial emocional avanzada. La IA más humana del mundo digital.",
-    gradient: "from-purple-500/20 to-pink-500/20",
+    gradient: "from-secondary/20 to-accent/20",
   },
   {
     icon: <Layers className="w-6 h-6" />,
