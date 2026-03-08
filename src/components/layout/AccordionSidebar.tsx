@@ -48,6 +48,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { icon: Home, label: 'Feed Global', path: '/' },
       { icon: Users, label: 'Comunidad', path: '/community' },
+      { icon: Video, label: 'Reels', path: '/reels', badge: 'NEW' },
       { icon: Video, label: 'Streaming', path: '/metaverse', badge: 'LIVE' },
       { icon: User, label: 'Mi Perfil', path: '/profile' },
     ],
