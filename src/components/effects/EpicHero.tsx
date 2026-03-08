@@ -102,11 +102,11 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
           transition={{ duration: 0.6 }}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-crystal mb-8"
         >
-          <Sparkles className="w-4 h-4 text-[hsl(var(--aqua))]" />
+          <Sparkles className="w-4 h-4 text-[hsl(var(--silver-metallic))]" />
           <span className="text-sm text-foreground/80">
             {FEDERATION_COUNT} Federaciones · Ecosistema OMNI-KERNEL
           </span>
-          <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-[hsl(var(--aqua))] to-[hsl(var(--accent))] text-xs font-bold text-primary-foreground">
+          <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(var(--secondary))] text-xs font-bold text-primary-foreground">
             MD-X4
           </span>
         </motion.div>
