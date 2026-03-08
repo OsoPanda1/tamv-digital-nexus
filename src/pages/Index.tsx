@@ -79,7 +79,7 @@ const UNIFIED_FEATURES = [
 
 const UNIFIED_STATS = [
   { value: "30+", label: "Formas Monetización", icon: <Wallet />, color: "aqua" as const },
-  { value: "7", label: "Capas Federadas", icon: <Layers />, color: "purple" as const },
+  { value: "48", label: "Federaciones", icon: <Layers />, color: "aqua" as const },
   { value: "∞", label: "DreamSpaces", icon: <Sparkles />, color: "gold" as const },
   { value: "100%", label: "Soberanía Digital", icon: <Shield />, color: "aqua" as const },
 ];
