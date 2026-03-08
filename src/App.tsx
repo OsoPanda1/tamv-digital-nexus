@@ -69,6 +69,7 @@ const App = () => (
       <BrowserRouter>
         <OmniKernelProvider workflowId="tamv-main">
           <AppLayout>
+            <ErrorBoundary>
             <Routes>
               {/* Core Routes */}
               <Route path="/" element={<Index />} />
