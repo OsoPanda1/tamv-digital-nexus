@@ -428,7 +428,10 @@ export function useIsabellaTTS() {
 
       if (abortRef.current) return;
 
-      await service.playAudio(result.audioBuffer);
+      // Only play if we got actual audio data
+      if (result.audioBuffer.byteLength > 0) {
+        await service.playAudio(result.audioBuffer);
+      }
     } catch (err) {
       if (!abortRef.current) {
         const message = err instanceof Error ? err.message : 'Error desconocido';

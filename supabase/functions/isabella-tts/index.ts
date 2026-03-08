@@ -122,11 +122,17 @@ serve(async (req) => {
       }
       
       if (response.status === 429) {
+        console.warn('[ISABELLA-TTS] Rate limited, returning text-only fallback');
         return new Response(
-          JSON.stringify({ error: 'Rate limit exceeded. Please try again later.' }),
+          JSON.stringify({ 
+            success: true,
+            audio: null,
+            fallback: true,
+            message: 'TTS rate limited - text-only mode',
+          }),
           { 
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            status: 429,
+            status: 200,
           }
         );
       }
