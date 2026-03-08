@@ -114,6 +114,7 @@ const App = () => (
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            </ErrorBoundary>
           </AppLayout>
         </OmniKernelProvider>
       </BrowserRouter>
