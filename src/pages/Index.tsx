@@ -227,10 +227,10 @@ const Index = () => {
               className="glass-crystal rounded-3xl p-8 md:p-12"
             >
               <div className="text-center mb-12">
-                <h2 className="text-headline text-white mb-4">
+                <h2 className="text-headline text-foreground mb-4">
                   Métricas <span className="text-gradient-quantum">Civilizatorias</span>
                 </h2>
-                <p className="text-body-large text-white/60">
+                <p className="text-body-large text-muted-foreground">
                   El poder de la unificación en números
                 </p>
               </div>
