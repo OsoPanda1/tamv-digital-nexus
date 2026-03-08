@@ -125,15 +125,20 @@ export const CircleGiftGallery = () => {
 
       if (error) throw error;
 
-      const formattedGifts = (data || []).map(gift => ({
-        ...gift,
-        visual_preview: typeof gift.visual_preview === 'string' 
-          ? JSON.parse(gift.visual_preview)
-          : gift.visual_preview || { color: '#00D9FF', geometry: 'sphere', scale: 1 },
-        combo_effects: gift.combo_effects && typeof gift.combo_effects === 'string'
-          ? JSON.parse(gift.combo_effects)
-          : gift.combo_effects
-      }));
+      const formattedGifts: CircleGift[] = (data || []).map(gift => {
+        const price = gift.price;
+        const tier: GiftTier = price >= 500 ? 'ultra' : price >= 200 ? 'legendary' : price >= 50 ? 'epic' : 'light';
+        return {
+          ...gift,
+          tier,
+          visual_preview: typeof gift.visual_preview === 'string' 
+            ? JSON.parse(gift.visual_preview)
+            : gift.visual_preview || { color: '#00D9FF', geometry: 'sphere', scale: 1 },
+          combo_effects: gift.combo_effects && typeof gift.combo_effects === 'string'
+            ? JSON.parse(gift.combo_effects)
+            : gift.combo_effects
+        };
+      });
 
       setGifts(formattedGifts);
     } catch (error) {
