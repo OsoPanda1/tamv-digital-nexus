@@ -1,19 +1,19 @@
 // ============================================================================
-// TAMV MD-X4™ - Dashboard Page — LIVE DATA from Supabase
-// Central control panel with real ecosystem metrics
+// TAMV MD-X4™ - Dashboard Page — LIVE DATA + Filters
 // ============================================================================
 
-import { useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   Sparkles, TrendingUp, Users, Zap, Brain, Shield,
   BookOpen, ArrowRight, Activity, Layers, Crown,
-  MessageCircle, FileText, AlertTriangle, Wallet
+  MessageCircle, FileText, AlertTriangle, Wallet, Filter
 } from "lucide-react";
 import { useBackgroundControl } from "@/components/UnifiedBackground";
 import { useEcosystemMetrics, useRecentActivity, useFederationHealth } from "@/hooks/useEcosystemMetrics";
@@ -27,15 +27,30 @@ const quickActions = [
   { label: "Singularity Ops", icon: Zap, path: "/singularity", color: "from-amber-500 to-orange-600" },
 ];
 
+const EVENT_TYPES = [
+  { value: "all", label: "Todos" },
+  { value: "post", label: "Posts" },
+  { value: "msr", label: "MSR" },
+  { value: "isabella", label: "Isabella" },
+  { value: "crisis", label: "Crisis" },
+];
+
 const Dashboard = () => {
   const { setBackground } = useBackgroundControl();
   const { data: metrics, isLoading: metricsLoading } = useEcosystemMetrics();
-  const { data: activity, isLoading: activityLoading } = useRecentActivity(8);
+  const { data: activity, isLoading: activityLoading } = useRecentActivity(20);
   const { data: federations, isLoading: fedLoading } = useFederationHealth();
+  const [typeFilter, setTypeFilter] = useState("all");
 
   useEffect(() => {
     setBackground('quantum', 0.25);
   }, [setBackground]);
+
+  const filteredActivity = useMemo(() => {
+    if (!activity) return [];
+    if (typeFilter === "all") return activity.slice(0, 10);
+    return activity.filter(a => a.type === typeFilter).slice(0, 10);
+  }, [activity, typeFilter]);
 
   const statCards = [
     { label: "Usuarios", value: metrics?.users ?? 0, icon: Users, color: "text-cyan-400" },
@@ -56,36 +71,31 @@ const Dashboard = () => {
       <div className="container mx-auto px-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <div className="mb-10">
+            <h1 className="text-4xl md:text-5xl font-bold mb-3">
               <span className="text-gradient-quantum">Centro de Control TAMV</span>
             </h1>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-muted-foreground">
               Métricas en vivo del ecosistema civilizatorio · Datos reales de Lovable Cloud
             </p>
           </div>
 
           {/* Live Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
             {statCards.map((stat, index) => {
               const Icon = stat.icon;
               return (
-                <Card
-                  key={index}
-                  className="p-4 md:p-6 border-border/50 hover:border-primary/40 transition-all duration-300 bg-card/60 backdrop-blur-sm"
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <Icon className={`w-5 h-5 ${stat.color}`} />
-                    <Badge variant="outline" className="text-[10px] border-primary/30 text-primary">
-                      LIVE
-                    </Badge>
+                <Card key={index} className="p-4 border-border/50 hover:border-primary/40 transition-all bg-card/60 backdrop-blur-sm">
+                  <div className="flex items-center justify-between mb-2">
+                    <Icon className={`w-4 h-4 ${stat.color}`} />
+                    <Badge variant="outline" className="text-[9px] border-primary/30 text-primary">LIVE</Badge>
                   </div>
                   {metricsLoading ? (
-                    <Skeleton className="h-8 w-20 mb-1" />
+                    <Skeleton className="h-7 w-16 mb-1" />
                   ) : (
-                    <p className="text-2xl md:text-3xl font-bold mb-1">{stat.value.toLocaleString()}</p>
+                    <p className="text-2xl font-bold mb-0.5">{stat.value.toLocaleString()}</p>
                   )}
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
+                  <p className="text-xs text-muted-foreground">{stat.label}</p>
                 </Card>
               );
             })}
@@ -93,51 +103,57 @@ const Dashboard = () => {
 
           {/* Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Activity Feed — LIVE */}
+            {/* Activity Feed — LIVE with Filters */}
             <Card className="lg:col-span-2 p-6 border-border/50 bg-card/60 backdrop-blur-sm">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold flex items-center gap-2">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold flex items-center gap-2">
                   <Activity className="w-5 h-5 text-primary" />
                   Actividad Reciente
                 </h2>
-                <Badge variant="outline" className="border-emerald-500/30 text-emerald-400">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 mr-1.5 animate-pulse inline-block" />
-                  En vivo
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Select value={typeFilter} onValueChange={setTypeFilter}>
+                    <SelectTrigger className="w-[120px] h-8 text-xs">
+                      <Filter className="w-3 h-3 mr-1" />
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {EVENT_TYPES.map(t => (
+                        <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 text-[10px]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1 animate-pulse inline-block" />
+                    LIVE
+                  </Badge>
+                </div>
               </div>
               
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {activityLoading ? (
                   Array.from({ length: 5 }).map((_, i) => (
-                    <Skeleton key={i} className="h-14 w-full rounded-lg" />
+                    <Skeleton key={i} className="h-12 w-full rounded-lg" />
                   ))
-                ) : (activity ?? []).length === 0 ? (
+                ) : filteredActivity.length === 0 ? (
                   <p className="text-sm text-muted-foreground text-center py-8">
-                    No hay actividad reciente. ¡Sé el primero en interactuar!
+                    {typeFilter !== 'all' ? `Sin actividad de tipo "${typeFilter}".` : 'No hay actividad reciente.'}
                   </p>
                 ) : (
-                  (activity ?? []).map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex items-center justify-between p-3 rounded-lg border border-border/30 hover:border-primary/30 transition-colors bg-background/30"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div 
-                          className="w-2 h-2 rounded-full shrink-0"
+                  filteredActivity.map((item) => (
+                    <div key={item.id} className="flex items-center justify-between p-2.5 rounded-lg border border-border/30 hover:border-primary/30 transition-colors bg-background/30">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-2 h-2 rounded-full shrink-0"
                           style={{
                             background: item.type === 'post' ? '#F472B6' :
                                        item.type === 'msr' ? '#22C55E' :
                                        item.type === 'isabella' ? '#00D9FF' : '#8B5CF6'
-                          }}
-                        />
+                          }} />
                         <div>
                           <p className="text-sm font-medium">{item.title}</p>
-                          {item.severity && (
-                            <Badge variant="outline" className="text-[10px] mt-1">{item.severity}</Badge>
-                          )}
+                          {item.severity && <Badge variant="outline" className="text-[9px] mt-0.5">{item.severity}</Badge>}
                         </div>
                       </div>
-                      <span className="text-xs text-muted-foreground whitespace-nowrap ml-4">
+                      <span className="text-[10px] text-muted-foreground whitespace-nowrap ml-3">
                         {new Date(item.time).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" })}
                       </span>
                     </div>
@@ -148,20 +164,17 @@ const Dashboard = () => {
 
             {/* Quick Actions */}
             <Card className="p-6 border-border/50 bg-card/60 backdrop-blur-sm">
-              <h2 className="text-xl font-bold mb-6">Acciones Rápidas</h2>
-              <div className="space-y-3">
+              <h2 className="text-lg font-bold mb-4">Acciones Rápidas</h2>
+              <div className="space-y-2">
                 {quickActions.map((action, index) => {
                   const Icon = action.icon;
                   return (
                     <Link key={index} to={action.path}>
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start gap-3 h-auto py-3 hover:bg-primary/10 transition-all duration-300"
-                      >
-                        <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${action.color} flex items-center justify-center`}>
-                          <Icon className="w-4 h-4 text-white" />
+                      <Button variant="ghost" className="w-full justify-start gap-3 h-auto py-2.5 hover:bg-primary/10 transition-all">
+                        <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${action.color} flex items-center justify-center`}>
+                          <Icon className="w-3.5 h-3.5 text-white" />
                         </div>
-                        <span className="font-medium">{action.label}</span>
+                        <span className="text-sm font-medium">{action.label}</span>
                       </Button>
                     </Link>
                   );
@@ -172,41 +185,39 @@ const Dashboard = () => {
 
           {/* Federation Status — LIVE */}
           <Card className="mt-6 p-6 border-border/50 bg-card/60 backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold flex items-center gap-2">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold flex items-center gap-2">
                 <Layers className="w-5 h-5 text-primary" />
                 7 Federaciones · Estado en Vivo
               </h2>
               <Link to="/evolution">
-                <Button variant="outline" size="sm" className="border-primary/30 text-primary hover:bg-primary/10">
-                  Ver Arquitectura
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                <Button variant="outline" size="sm" className="border-primary/30 text-primary hover:bg-primary/10 text-xs">
+                  Ver Arquitectura <ArrowRight className="w-3 h-3 ml-1" />
                 </Button>
               </Link>
             </div>
 
             {fedLoading ? (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {Array.from({ length: 7 }).map((_, i) => <Skeleton key={i} className="h-24 rounded-lg" />)}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {Array.from({ length: 7 }).map((_, i) => <Skeleton key={i} className="h-20 rounded-lg" />)}
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 mb-4">
                   {(federations ?? []).map((fed) => (
-                    <div key={fed.id} className="text-center p-3 rounded-lg border border-border/30 hover:border-primary/30 transition-colors">
-                      <div className={`w-3 h-3 rounded-full mx-auto mb-2 ${fed.health >= 80 ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-                      <p className="text-xs font-bold truncate">{fed.codename}</p>
-                      <p className="text-[10px] text-muted-foreground">{fed.records} registros</p>
+                    <div key={fed.id} className="text-center p-2.5 rounded-lg border border-border/30 hover:border-primary/30 transition-colors">
+                      <div className={`w-2.5 h-2.5 rounded-full mx-auto mb-1.5 ${fed.health >= 80 ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+                      <p className="text-[11px] font-bold truncate">{fed.codename}</p>
+                      <p className="text-[9px] text-muted-foreground">{fed.records} reg.</p>
                     </div>
                   ))}
                 </div>
-
                 <div>
-                  <div className="flex justify-between text-sm mb-2">
+                  <div className="flex justify-between text-xs mb-1.5">
                     <span className="text-muted-foreground">Ecosistema Operativo</span>
-                    <span className="text-primary">{activeFeds}/{totalFeds} federaciones activas</span>
+                    <span className="text-primary">{activeFeds}/{totalFeds} activas</span>
                   </div>
-                  <Progress value={(activeFeds / totalFeds) * 100} className="h-2" />
+                  <Progress value={(activeFeds / totalFeds) * 100} className="h-1.5" />
                 </div>
               </>
             )}
