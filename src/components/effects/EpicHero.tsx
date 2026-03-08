@@ -226,7 +226,7 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="w-32 h-1 mx-auto mt-16 rounded-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent"
+          className="w-32 h-1 mx-auto mt-16 rounded-full bg-gradient-to-r from-transparent via-[hsl(var(--primary))] to-transparent"
         />
       </div>
     </div>

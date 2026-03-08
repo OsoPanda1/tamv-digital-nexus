@@ -53,7 +53,7 @@ const CinematicParticles: React.FC = () => {
         if (p.x > canvas.width + 5) p.x = -5;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 217, 255, ${p.opacity})`;
+        ctx.fillStyle = `rgba(100, 140, 180, ${p.opacity})`;
         ctx.fill();
       }
       raf = requestAnimationFrame(draw);
