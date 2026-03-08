@@ -155,7 +155,7 @@ const Index = () => {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="glass-crystal p-4 rounded-xl text-center hover:border-cyan-400/30 transition-all group cursor-default"
+                  className="glass-crystal p-4 rounded-xl text-center hover:border-primary/30 transition-all group cursor-default"
                 >
                   <div className="w-10 h-10 mx-auto mb-3 rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                     <Star className="w-5 h-5 text-cyan-400" />
