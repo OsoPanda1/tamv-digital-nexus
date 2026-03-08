@@ -134,7 +134,7 @@ const Index = () => {
               transition={{ duration: 0.6 }}
               className="text-center mb-12"
             >
-              <Badge className="mb-4 px-4 py-1.5 text-sm bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border-cyan-500/30">
+              <Badge className="mb-4 px-4 py-1.5 text-sm bg-gradient-to-r from-primary/20 to-secondary/20 border-primary/30">
                 <Layers className="w-3 h-3 mr-2" />
                 Unificación Completa
               </Badge>
