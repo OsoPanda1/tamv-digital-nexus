@@ -158,9 +158,9 @@ const Index = () => {
                   className="glass-crystal p-4 rounded-xl text-center hover:border-primary/30 transition-all group cursor-default"
                 >
                   <div className="w-10 h-10 mx-auto mb-3 rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Star className="w-5 h-5 text-cyan-400" />
+                    <Star className="w-5 h-5 text-[hsl(var(--silver-metallic))]" />
                   </div>
-                  <p className="text-sm font-medium text-white truncate">{repo.name}</p>
+                  <p className="text-sm font-medium text-foreground truncate">{repo.name}</p>
                   <p className="text-xs text-white/40 mt-1">{repo.category}</p>
                 </motion.div>
               ))}
