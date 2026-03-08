@@ -368,6 +368,12 @@ export const CircleGiftGallery = () => {
 
                   <p className="text-silver-dark">{selectedGift.description}</p>
 
+                  {/* Tier info */}
+                  <div className="glass-panel border border-aqua/20 rounded-lg p-3">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Tier: {TIER_CONFIG[selectedGift.tier].label}</p>
+                    <p className="text-sm text-silver-dark">{TIER_CONFIG[selectedGift.tier].description}</p>
+                  </div>
+
                   {selectedGift.combo_effects && (
                     <div className="glass-panel border border-aqua/20 rounded-lg p-4">
                       <div className="flex items-center gap-2 mb-2">
