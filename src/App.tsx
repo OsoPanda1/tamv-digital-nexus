@@ -111,6 +111,8 @@ const App = () => (
               <Route path="/operations" element={<MDXOperations />} />
               <Route path="/evolution" element={<Evolution />} />
               <Route path="/singularity" element={<Singularity />} />
+              <Route path="/reels" element={<Reels />} />
+              <Route path="/health" element={<Health />} />
               <Route path="/onboarding/membership" element={<MembershipOnboarding />} />
 
               {/* 404 */}
