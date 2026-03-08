@@ -994,7 +994,7 @@
   }
   
   .hover-glow:hover {
-    box-shadow: 0 0 40px hsl(185 100% 60% / 0.4);
+    box-shadow: 0 0 40px hsl(210 45% 55% / 0.3);
   }
   
   /* Focus States */
