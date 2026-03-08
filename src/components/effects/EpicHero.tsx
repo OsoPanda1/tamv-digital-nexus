@@ -1,7 +1,7 @@
 // ============================================================================
-// TAMV MD-X4™ - EPIC HERO COMPONENT v8.0
+// TAMV MD-X4™ - EPIC HERO COMPONENT v9.0 — Zero Mediocrity
 // Autor visionario y propietario: Edwin Oswaldo Castillo Trejo
-// Ecosistema Civilizatorio Latinoamericano — Evolución OMNI-KERNEL
+// 48 Federaciones Civilizatorias · Evolución de las Redes Sociales
 // ============================================================================
 
 import { motion } from "framer-motion";
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { FEDERATION_COUNT } from "@/lib/federations";
 
 interface EpicHeroProps {
   onEnter?: () => void;
