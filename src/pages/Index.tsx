@@ -304,10 +304,10 @@ const Index = () => {
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                  className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-cyan-500 to-purple-500 p-[2px]"
+                  className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary to-secondary p-[2px]"
                 >
-                  <div className="w-full h-full rounded-full bg-[#050508] flex items-center justify-center">
-                    <Rocket className="w-8 h-8 text-cyan-400" />
+                  <div className="w-full h-full rounded-full bg-background flex items-center justify-center">
+                    <Rocket className="w-8 h-8 text-[hsl(var(--silver-light))]" />
                   </div>
                 </motion.div>
 
