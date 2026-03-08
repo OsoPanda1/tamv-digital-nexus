@@ -296,8 +296,8 @@ const Index = () => {
             >
               {/* Background decoration */}
               <div className="absolute inset-0 opacity-30">
-                <div className="absolute top-0 left-1/4 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl" />
-                <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl" />
+                <div className="absolute top-0 left-1/4 w-64 h-64 bg-primary/15 rounded-full blur-3xl" />
+                <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-secondary/15 rounded-full blur-3xl" />
               </div>
 
               <div className="relative z-10">
