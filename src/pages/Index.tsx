@@ -49,20 +49,17 @@ const UNIFIED_FEATURES = [
     icon: <Brain className="w-6 h-6" />,
     title: "Isabella AI",
     description: "Inteligencia artificial emocional avanzada. La IA más humana del mundo digital.",
-    gradient: "from-secondary/20 to-accent",
-  },
+    gradient: "from-secondary/20 to-accent  },
   {
     icon: <Layers className="w-6 h-6" />,
     title: "DreamSpaces XR",
     description: "Espacios virtuales infinitos en 3D/4D. Crea mundos imposibles con física cuántica.",
-    gradient: "from-ambeccent/20 to-secondary",
-  },
+    gradient: "from-ambecceccent/20 to-secondary
   {
     icon: <GraduationCap className="w-6 h-6" />,
     title: "Universidad TAMV",
     description: "Educación certificada en blockchain. Certificaciones BookPI reconocidas globalmente.",
-    gradient: "from-emerald-500/20 to-teal-500/20",
-  },
+    gradient: "from-emeraldprimary/20 to-accent },
   {
     icon: <Music className="w-6 h-6" />,
     title: "KAOS Audio",
