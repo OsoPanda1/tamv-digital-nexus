@@ -216,7 +216,7 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
               <p className="text-4xl md:text-5xl font-bold text-gradient-quantum mb-2">
                 {stat.value}
               </p>
-              <p className="text-sm text-white/60">{stat.label}</p>
+              <p className="text-sm text-muted-foreground">{stat.label}</p>
             </motion.div>
           ))}
         </motion.div>
