@@ -20,7 +20,7 @@ import {
   AlertTriangle, Settings, Lock, Radio, Layers, Heart, Infinity,
   Sparkles, ChevronLeft, ChevronRight, Zap, Crown, Store,
   GraduationCap, Wallet, Gamepad2, Video, Music, PawPrint,
-  Dna as DNA,
+  Dna as DNA, Stethoscope,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import logoImg from '@/assets/LOGOTAMV2.jpg';
