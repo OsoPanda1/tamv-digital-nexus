@@ -164,7 +164,7 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
             <Button
               size="lg"
               variant="outline"
-              className="glass-crystal px-8 py-6 text-lg font-semibold rounded-xl border-white/20 hover:border-cyan-400/50 hover:bg-white/5"
+              className="glass-crystal px-8 py-6 text-lg font-semibold rounded-xl border-white/20 hover:border-[hsl(var(--primary)/0.5)] hover:bg-white/5"
             >
               <Cpu className="w-5 h-5 mr-2" />
               Ver Evolución OMNI-KERNEL
