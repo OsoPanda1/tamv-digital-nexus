@@ -161,7 +161,7 @@ const Index = () => {
                     <Star className="w-5 h-5 text-[hsl(var(--silver-metallic))]" />
                   </div>
                   <p className="text-sm font-medium text-foreground truncate">{repo.name}</p>
-                  <p className="text-xs text-white/40 mt-1">{repo.category}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{repo.category}</p>
                 </motion.div>
               ))}
             </div>
