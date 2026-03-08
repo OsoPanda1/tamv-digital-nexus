@@ -180,7 +180,7 @@ const Index = () => {
               transition={{ duration: 0.6 }}
               className="text-center mb-16"
             >
-              <Badge className="mb-4 px-4 py-1.5 text-sm bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-500/30">
+              <Badge className="mb-4 px-4 py-1.5 text-sm bg-gradient-to-r from-secondary/20 to-accent/20 border-secondary/30">
                 <Sparkles className="w-3 h-3 mr-2" />
                 Ecosistema Completo
               </Badge>
