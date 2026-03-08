@@ -722,8 +722,8 @@
     position: relative;
     overflow: hidden;
     background: linear-gradient(135deg, 
-      hsl(185 100% 60%) 0%, 
-      hsl(217 100% 60%) 100%);
+      hsl(210 45% 50%) 0%, 
+      hsl(215 35% 40%) 100%);
     border: none;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -733,8 +733,8 @@
     position: absolute;
     inset: 0;
     background: linear-gradient(135deg, 
-      hsl(185 100% 70%) 0%, 
-      hsl(217 100% 70%) 100%);
+      hsl(210 45% 60%) 0%, 
+      hsl(215 35% 50%) 100%);
     opacity: 0;
     transition: opacity 0.4s ease;
   }
@@ -742,8 +742,8 @@
   .btn-premium:hover {
     transform: translateY(-2px);
     box-shadow: 
-      0 10px 40px hsl(185 100% 60% / 0.4),
-      0 0 60px hsl(217 100% 60% / 0.2);
+      0 10px 40px hsl(210 45% 55% / 0.3),
+      0 0 60px hsl(215 30% 50% / 0.15);
   }
   
   .btn-premium:hover::before {
