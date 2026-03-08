@@ -43,37 +43,37 @@ const UNIFIED_FEATURES = [
     icon: <Globe className="w-6 h-6" />,
     title: "Ecosistema Federado",
     description: `${FEDERATION_COUNT} federaciones interconectadas. Arquitectura antifrágil con soberanía digital total.`,
-    gradient: "from-cyan-500/20 to-blue-500/20",
+    gradient: "from-primary/20 to-secondary/20",
   },
   {
     icon: <Brain className="w-6 h-6" />,
     title: "Isabella AI",
     description: "Inteligencia artificial emocional avanzada. La IA más humana del mundo digital.",
-    gradient: "from-purple-500/20 to-pink-500/20",
+    gradient: "from-secondary/20 to-accent/20",
   },
   {
     icon: <Layers className="w-6 h-6" />,
     title: "DreamSpaces XR",
     description: "Espacios virtuales infinitos en 3D/4D. Crea mundos imposibles con física cuántica.",
-    gradient: "from-amber-500/20 to-orange-500/20",
+    gradient: "from-accent/20 to-secondary/20",
   },
   {
     icon: <GraduationCap className="w-6 h-6" />,
     title: "Universidad TAMV",
     description: "Educación certificada en blockchain. Certificaciones BookPI reconocidas globalmente.",
-    gradient: "from-emerald-500/20 to-teal-500/20",
+    gradient: "from-primary/20 to-accent/20",
   },
   {
     icon: <Music className="w-6 h-6" />,
     title: "KAOS Audio",
     description: "Frecuencias binaurales 432Hz. Audio inmersivo que transforma la consciencia.",
-    gradient: "from-rose-500/20 to-red-500/20",
+    gradient: "from-secondary/20 to-primary/20",
   },
   {
     icon: <ShoppingBag className="w-6 h-6" />,
     title: "Marketplace Global",
     description: "30+ formas de monetización ética. Economía federada con distribución justa.",
-    gradient: "from-green-500/20 to-emerald-500/20",
+    gradient: "from-accent/20 to-primary/20",
   },
 ];
 
@@ -147,14 +147,14 @@ const Index = () => {
               transition={{ duration: 0.6 }}
               className="text-center mb-12"
             >
-              <Badge className="mb-4 px-4 py-1.5 text-sm bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border-cyan-500/30">
+              <Badge className="mb-4 px-4 py-1.5 text-sm bg-gradient-to-r from-primary/20 to-secondary/20 border-primary/30">
                 <Layers className="w-3 h-3 mr-2" />
                 Unificación Completa
               </Badge>
-              <h2 className="text-headline text-white mb-4">
+              <h2 className="text-headline text-foreground mb-4">
                 Repositorios <span className="text-gradient-quantum">Unificados</span>
               </h2>
-              <p className="text-body-large text-white/60 max-w-2xl mx-auto">
+              <p className="text-body-large text-muted-foreground max-w-2xl mx-auto">
                 Todo el conocimiento y código del ecosistema TAMV ahora en una 
                 sola plataforma civilizatoria unificada.
               </p>
@@ -168,13 +168,13 @@ const Index = () => {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="glass-crystal p-4 rounded-xl text-center hover:border-cyan-400/30 transition-all group cursor-default"
+                  className="glass-crystal p-4 rounded-xl text-center hover:border-primary/30 transition-all group cursor-default"
                 >
                   <div className="w-10 h-10 mx-auto mb-3 rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Star className="w-5 h-5 text-cyan-400" />
+                    <Star className="w-5 h-5 text-[hsl(var(--silver-metallic))]" />
                   </div>
-                  <p className="text-sm font-medium text-white truncate">{repo.name}</p>
-                  <p className="text-xs text-white/40 mt-1">{repo.category}</p>
+                  <p className="text-sm font-medium text-foreground truncate">{repo.name}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{repo.category}</p>
                 </motion.div>
               ))}
             </div>
@@ -193,14 +193,14 @@ const Index = () => {
               transition={{ duration: 0.6 }}
               className="text-center mb-16"
             >
-              <Badge className="mb-4 px-4 py-1.5 text-sm bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-500/30">
+              <Badge className="mb-4 px-4 py-1.5 text-sm bg-gradient-to-r from-secondary/20 to-accent/20 border-secondary/30">
                 <Sparkles className="w-3 h-3 mr-2" />
                 Ecosistema Completo
               </Badge>
-              <h2 className="text-headline text-white mb-4">
+              <h2 className="text-headline text-foreground mb-4">
                 Todo en una sola <span className="text-gradient-quantum">Plataforma</span>
               </h2>
-              <p className="text-body-large text-white/60 max-w-2xl mx-auto">
+              <p className="text-body-large text-muted-foreground max-w-2xl mx-auto">
                 Red social, metaverso, universidad, marketplace, IA y más. 
                 Un solo ecosistema para crear, cobrar y crecer.
               </p>
@@ -240,10 +240,10 @@ const Index = () => {
               className="glass-crystal rounded-3xl p-8 md:p-12"
             >
               <div className="text-center mb-12">
-                <h2 className="text-headline text-white mb-4">
+                <h2 className="text-headline text-foreground mb-4">
                   Métricas <span className="text-gradient-quantum">Civilizatorias</span>
                 </h2>
-                <p className="text-body-large text-white/60">
+                <p className="text-body-large text-muted-foreground">
                   El poder de la unificación en números
                 </p>
               </div>
@@ -282,14 +282,14 @@ const Index = () => {
               transition={{ duration: 0.6 }}
               className="text-center mb-8"
             >
-              <Badge className="mb-4 px-4 py-1.5 text-sm bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border-cyan-500/30">
+              <Badge className="mb-4 px-4 py-1.5 text-sm bg-gradient-to-r from-primary/20 to-secondary/20 border-primary/30">
                 <Flame className="w-3 h-3 mr-2" />
                 Civilizatory Flow
               </Badge>
-              <h2 className="text-headline text-white mb-2">
+              <h2 className="text-headline text-foreground mb-2">
                 Feed <span className="text-gradient-quantum">Social Quantum</span>
               </h2>
-              <p className="text-sm text-white/40">{FEDERATION_COUNT} federaciones · Tiempo real · Soberanía 100%</p>
+              <p className="text-sm text-muted-foreground">{FEDERATION_COUNT} federaciones · Tiempo real · Soberanía 100%</p>
             </motion.div>
             <NextGenFeed />
           </div>
@@ -309,26 +309,26 @@ const Index = () => {
             >
               {/* Background decoration */}
               <div className="absolute inset-0 opacity-30">
-                <div className="absolute top-0 left-1/4 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl" />
-                <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl" />
+                <div className="absolute top-0 left-1/4 w-64 h-64 bg-primary/15 rounded-full blur-3xl" />
+                <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-secondary/15 rounded-full blur-3xl" />
               </div>
 
               <div className="relative z-10">
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                  className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-cyan-500 to-purple-500 p-[2px]"
+                  className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary to-secondary p-[2px]"
                 >
-                  <div className="w-full h-full rounded-full bg-[#050508] flex items-center justify-center">
-                    <Rocket className="w-8 h-8 text-cyan-400" />
+                  <div className="w-full h-full rounded-full bg-background flex items-center justify-center">
+                    <Rocket className="w-8 h-8 text-[hsl(var(--silver-light))]" />
                   </div>
                 </motion.div>
 
-                <h2 className="text-display text-white mb-6">
+                <h2 className="text-display text-foreground mb-6">
                   Únete a la <span className="text-gradient-quantum">Revolución</span>
                 </h2>
-                <p className="text-body-large text-white/60 max-w-2xl mx-auto mb-8">
-                  Visión y creación de <span className="text-cyan-400 font-semibold">Edwin Oswaldo Castillo Trejo</span>. 
+                <p className="text-body-large text-muted-foreground max-w-2xl mx-auto mb-8">
+                  Visión y creación de <span className="text-[hsl(var(--silver-light))] font-semibold">Edwin Oswaldo Castillo Trejo</span>. 
                   Desde Real del Monte, Hidalgo — un ecosistema civilizatorio para que los creadores 
                   de LATAM tengan más herramientas, más control y más soberanía digital.
                 </p>
@@ -359,7 +359,7 @@ const Index = () => {
                         <Button
                           size="lg"
                           variant="outline"
-                          className="glass-crystal px-8 py-6 text-lg rounded-xl border-white/20 hover:border-cyan-400/50"
+                          className="glass-crystal px-8 py-6 text-lg rounded-xl border-white/20 hover:border-primary/50"
                         >
                           <BookOpen className="w-5 h-5 mr-2" />
                           Explorar Documentación

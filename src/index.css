@@ -12,163 +12,161 @@
 @layer base {
   :root {
     /* ═══════════════════════════════════════════════════════════════════════
-       FOUNDATION - Ultra-Deep Space Black
+       TAMV OFFICIAL LOGO PALETTE — Steel & Silver on Deep Black
+       Extracted from LOGOTAMV2.jpg: metallic silver, steel blue, deep black
        ═══════════════════════════════════════════════════════════════════════ */
-    --background: 220 20% 2%;
-    --foreground: 0 0% 98%;
+    --background: 222 30% 3%;
+    --foreground: 210 10% 93%;
     
     /* ═══════════════════════════════════════════════════════════════════════
-       METALLIC SILVER SYSTEM - Hyper-Realistic Reflections
+       METALLIC SILVER — From logo text
        ═══════════════════════════════════════════════════════════════════════ */
-    --silver: 210 8% 92%;
-    --silver-light: 210 8% 96%;
-    --silver-dark: 210 8% 75%;
-    --silver-metallic: 210 12% 85%;
-    --silver-shine: 210 15% 98%;
+    --silver: 215 10% 72%;
+    --silver-light: 210 8% 88%;
+    --silver-dark: 215 10% 55%;
+    --silver-metallic: 215 12% 78%;
+    --silver-shine: 210 15% 95%;
     
     /* ═══════════════════════════════════════════════════════════════════════
-       AQUA LUMINESCENT - Bioluminescent Ocean Depths
+       STEEL BLUE — From logo glow/highlight
        ═══════════════════════════════════════════════════════════════════════ */
-    --aqua: 185 100% 60%;
-    --aqua-light: 185 100% 75%;
-    --aqua-dark: 185 100% 45%;
-    --aqua-glow: 185 100% 70%;
-    --aqua-pulse: 185 100% 65%;
+    --aqua: 210 45% 55%;
+    --aqua-light: 210 40% 70%;
+    --aqua-dark: 210 50% 40%;
+    --aqua-glow: 210 45% 62%;
+    --aqua-pulse: 210 45% 58%;
     
     /* ═══════════════════════════════════════════════════════════════════════
-       NAVY METALLIC IRIDESCENT - Deep Space Cosmic
+       NAVY DEEP — Logo background tones
        ═══════════════════════════════════════════════════════════════════════ */
-    --navy: 220 80% 30%;
-    --navy-metallic: 220 85% 45%;
-    --navy-deep: 225 90% 20%;
-    --navy-iridescent: 220 75% 55%;
-    --navy-cosmic: 230 85% 25%;
+    --navy: 220 40% 22%;
+    --navy-metallic: 215 35% 35%;
+    --navy-deep: 222 45% 12%;
+    --navy-iridescent: 215 30% 45%;
+    --navy-cosmic: 222 40% 16%;
     
     /* ═══════════════════════════════════════════════════════════════════════
-       QUANTUM ACCENTS - Plasma & Energy
+       ACCENTS — Restrained, logo-coherent
        ═══════════════════════════════════════════════════════════════════════ */
-    --quantum-purple: 271 100% 65%;
-    --quantum-pink: 330 100% 65%;
-    --quantum-gold: 45 100% 60%;
-    --quantum-cyan: 190 100% 60%;
-    --quantum-lime: 120 100% 55%;
+    --quantum-purple: 215 30% 50%;
+    --quantum-pink: 210 25% 55%;
+    --quantum-gold: 38 25% 55%;
+    --quantum-cyan: 210 45% 58%;
+    --quantum-lime: 170 20% 50%;
     
     /* ═══════════════════════════════════════════════════════════════════════
-       SEMANTIC TOKENS - Enhanced Contrast
+       SEMANTIC TOKENS — Logo-derived
        ═══════════════════════════════════════════════════════════════════════ */
-    --card: 220 18% 4%;
-    --card-foreground: 0 0% 98%;
+    --card: 222 28% 5%;
+    --card-foreground: 210 10% 93%;
     
-    --popover: 220 18% 5%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 222 28% 6%;
+    --popover-foreground: 210 10% 93%;
     
-    --primary: 185 100% 60%;
-    --primary-foreground: 220 20% 2%;
-    --primary-glow: 185 100% 70%;
+    --primary: 210 45% 55%;
+    --primary-foreground: 222 30% 3%;
+    --primary-glow: 210 45% 65%;
     
-    --secondary: 220 85% 50%;
-    --secondary-foreground: 0 0% 100%;
-    --secondary-glow: 220 80% 60%;
+    --secondary: 215 25% 40%;
+    --secondary-foreground: 210 10% 95%;
+    --secondary-glow: 215 30% 50%;
     
-    --accent: 271 100% 65%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 215 30% 50%;
+    --accent-foreground: 210 10% 95%;
+    --accent-glow: 215 35% 60%;
     
-    --muted: 220 15% 20%;
-    --muted-foreground: 220 15% 65%;
+    --muted: 222 20% 15%;
+    --muted-foreground: 215 12% 60%;
     
-    --destructive: 0 90% 60%;
+    --destructive: 0 65% 50%;
     --destructive-foreground: 0 0% 98%;
     
-    --border: 220 20% 12%;
-    --input: 220 20% 12%;
-    --ring: 185 100% 60%;
+    --border: 222 20% 14%;
+    --input: 222 20% 14%;
+    --ring: 210 45% 55%;
     
     --radius: 1rem;
     
     /* ═══════════════════════════════════════════════════════════════════════
-       GLASS MORPHISM - Ultra-Crystal Effects
+       GLASS MORPHISM — Dark steel
        ═══════════════════════════════════════════════════════════════════════ */
-    --glass-bg: 220 20% 4% / 0.35;
-    --glass-bg-heavy: 220 20% 3% / 0.65;
-    --glass-border: 220 30% 25% / 0.25;
-    --glass-border-light: 220 30% 35% / 0.15;
+    --glass-bg: 222 28% 5% / 0.45;
+    --glass-bg-heavy: 222 28% 4% / 0.7;
+    --glass-border: 215 20% 22% / 0.3;
+    --glass-border-light: 215 20% 30% / 0.15;
     
     /* ═══════════════════════════════════════════════════════════════════════
-       GRADIENTS - Multi-Dimensional Quantum Flows
+       GRADIENTS — Metallic silver + steel blue (NO rainbow)
        ═══════════════════════════════════════════════════════════════════════ */
     --gradient-quantum: linear-gradient(135deg, 
-      hsl(185 100% 60%) 0%, 
-      hsl(217 100% 60%) 25%,
-      hsl(271 100% 65%) 50%, 
-      hsl(330 100% 65%) 75%,
-      hsl(45 100% 60%) 100%);
+      hsl(215 12% 78%) 0%, 
+      hsl(210 45% 55%) 40%,
+      hsl(215 12% 68%) 70%, 
+      hsl(210 45% 62%) 100%);
     
     --gradient-crystal: linear-gradient(180deg, 
-      hsl(220 20% 3%) 0%, 
-      hsl(220 20% 6%) 50%,
-      hsl(220 20% 4%) 100%);
+      hsl(222 30% 4%) 0%, 
+      hsl(222 28% 7%) 50%,
+      hsl(222 30% 5%) 100%);
     
     --gradient-nebula: radial-gradient(ellipse at 30% 20%, 
-      hsl(185 100% 60% / 0.25) 0%, 
-      hsl(271 100% 65% / 0.15) 40%,
+      hsl(210 45% 55% / 0.15) 0%, 
+      hsl(215 30% 50% / 0.08) 40%,
       transparent 70%);
     
     --gradient-nebula-alt: radial-gradient(ellipse at 70% 80%, 
-      hsl(330 100% 65% / 0.2) 0%, 
-      hsl(217 100% 60% / 0.1) 50%,
+      hsl(215 25% 45% / 0.12) 0%, 
+      hsl(210 40% 50% / 0.06) 50%,
       transparent 70%);
     
     --gradient-holographic: linear-gradient(90deg, 
-      hsl(185 100% 60%), 
-      hsl(217 100% 60%), 
-      hsl(271 100% 65%), 
-      hsl(330 100% 65%),
-      hsl(45 100% 60%),
-      hsl(185 100% 60%));
+      hsl(215 12% 72%), 
+      hsl(210 45% 55%), 
+      hsl(215 12% 82%), 
+      hsl(210 45% 60%),
+      hsl(215 12% 72%));
     
     --gradient-shimmer: linear-gradient(105deg,
       transparent 0%,
-      hsl(0 0% 100% / 0.1) 45%,
-      hsl(0 0% 100% / 0.3) 50%,
-      hsl(0 0% 100% / 0.1) 55%,
+      hsl(0 0% 100% / 0.06) 45%,
+      hsl(0 0% 100% / 0.15) 50%,
+      hsl(0 0% 100% / 0.06) 55%,
       transparent 100%);
     
     --gradient-aurora: linear-gradient(180deg,
-      hsl(185 100% 60% / 0.3) 0%,
-      hsl(271 100% 65% / 0.2) 30%,
-      hsl(330 100% 65% / 0.15) 60%,
+      hsl(210 45% 55% / 0.2) 0%,
+      hsl(215 30% 45% / 0.12) 30%,
+      hsl(222 25% 35% / 0.08) 60%,
       transparent 100%);
     
     /* ═══════════════════════════════════════════════════════════════════════
-       SHADOWS - Dimensional Depth System
+       SHADOWS — Steel tones
        ═══════════════════════════════════════════════════════════════════════ */
-    --shadow-sm: 0 1px 2px hsl(220 50% 0% / 0.3);
-    --shadow-md: 0 4px 12px hsl(220 50% 0% / 0.4);
-    --shadow-lg: 0 8px 24px hsl(220 50% 0% / 0.5);
-    --shadow-xl: 0 16px 48px hsl(220 50% 0% / 0.6);
+    --shadow-sm: 0 1px 2px hsl(222 40% 0% / 0.3);
+    --shadow-md: 0 4px 12px hsl(222 40% 0% / 0.4);
+    --shadow-lg: 0 8px 24px hsl(222 40% 0% / 0.5);
+    --shadow-xl: 0 16px 48px hsl(222 40% 0% / 0.6);
     
     --shadow-quantum: 
-      0 0 40px hsl(185 100% 60% / 0.4), 
-      0 0 80px hsl(271 100% 65% / 0.25),
-      0 0 120px hsl(217 100% 60% / 0.15);
+      0 0 30px hsl(210 45% 55% / 0.25), 
+      0 0 60px hsl(215 30% 50% / 0.12);
     
     --shadow-crystal: 
-      0 4px 24px hsl(220 50% 0% / 0.4),
-      0 0 0 1px hsl(220 30% 25% / 0.2);
+      0 4px 24px hsl(222 40% 0% / 0.4),
+      0 0 0 1px hsl(215 20% 22% / 0.2);
     
     --shadow-glow: 
-      0 0 20px hsl(271 100% 65% / 0.5), 
-      0 0 40px hsl(185 100% 60% / 0.3),
-      0 0 60px hsl(217 100% 60% / 0.2);
+      0 0 20px hsl(210 45% 55% / 0.3), 
+      0 0 40px hsl(215 30% 50% / 0.15);
     
     --shadow-elegant: 
-      0 20px 60px -10px hsl(185 100% 60% / 0.35),
-      0 0 0 1px hsl(220 30% 30% / 0.2);
+      0 20px 60px -10px hsl(210 45% 55% / 0.2),
+      0 0 0 1px hsl(215 20% 25% / 0.2);
     
-    --shadow-inner-glow: inset 0 1px 1px hsl(0 0% 100% / 0.1);
+    --shadow-inner-glow: inset 0 1px 1px hsl(0 0% 100% / 0.06);
     
     /* ═══════════════════════════════════════════════════════════════════════
-       ANIMATIONS - Temporal Fluidity
+       ANIMATIONS
        ═══════════════════════════════════════════════════════════════════════ */
     --transition-instant: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -178,7 +176,7 @@
     --transition-quantum: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
     
     /* ═══════════════════════════════════════════════════════════════════════
-       SPACING - Golden Ratio Scale
+       SPACING — Golden Ratio Scale
        ═══════════════════════════════════════════════════════════════════════ */
     --space-xs: 0.25rem;
     --space-sm: 0.5rem;
@@ -492,10 +490,10 @@
   
   @keyframes quantum-pulse {
     0%, 100% {
-      box-shadow: 0 0 20px rgba(0, 217, 255, 0.3), 0 0 40px rgba(0, 217, 255, 0.1);
+      box-shadow: 0 0 20px hsl(210 45% 55% / 0.3), 0 0 40px hsl(210 45% 55% / 0.1);
     }
     50% {
-      box-shadow: 0 0 40px rgba(0, 217, 255, 0.5), 0 0 80px rgba(0, 217, 255, 0.2);
+      box-shadow: 0 0 40px hsl(210 45% 55% / 0.5), 0 0 80px hsl(210 45% 55% / 0.2);
     }
   }
   
@@ -593,11 +591,11 @@
     background: linear-gradient(135deg, 
       hsl(220 20% 8% / 0.5) 0%, 
       hsl(220 20% 6% / 0.7) 100%);
-    border-color: hsl(185 100% 60% / 0.4);
+    border-color: hsl(210 45% 55% / 0.4);
     box-shadow: 
-      0 12px 48px hsl(220 50% 0% / 0.5),
-      0 0 40px hsl(185 100% 60% / 0.2),
-      inset 0 1px 0 hsl(0 0% 100% / 0.15);
+      0 12px 48px hsl(222 40% 0% / 0.5),
+      0 0 40px hsl(210 45% 55% / 0.15),
+      inset 0 1px 0 hsl(0 0% 100% / 0.1);
   }
   
   /* Quantum Glow Effects */
@@ -724,8 +722,8 @@
     position: relative;
     overflow: hidden;
     background: linear-gradient(135deg, 
-      hsl(185 100% 60%) 0%, 
-      hsl(217 100% 60%) 100%);
+      hsl(210 45% 50%) 0%, 
+      hsl(215 35% 40%) 100%);
     border: none;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -735,8 +733,8 @@
     position: absolute;
     inset: 0;
     background: linear-gradient(135deg, 
-      hsl(185 100% 70%) 0%, 
-      hsl(217 100% 70%) 100%);
+      hsl(210 45% 60%) 0%, 
+      hsl(215 35% 50%) 100%);
     opacity: 0;
     transition: opacity 0.4s ease;
   }
@@ -744,8 +742,8 @@
   .btn-premium:hover {
     transform: translateY(-2px);
     box-shadow: 
-      0 10px 40px hsl(185 100% 60% / 0.4),
-      0 0 60px hsl(217 100% 60% / 0.2);
+      0 10px 40px hsl(210 45% 55% / 0.3),
+      0 0 60px hsl(215 30% 50% / 0.15);
   }
   
   .btn-premium:hover::before {
@@ -996,7 +994,7 @@
   }
   
   .hover-glow:hover {
-    box-shadow: 0 0 40px hsl(185 100% 60% / 0.4);
+    box-shadow: 0 0 40px hsl(210 45% 55% / 0.3);
   }
   
   /* Focus States */
@@ -1004,7 +1002,7 @@
     outline: none;
     box-shadow: 
       0 0 0 2px hsl(220 20% 4%),
-      0 0 0 4px hsl(185 100% 60%);
+      0 0 0 4px hsl(210 45% 55%);
   }
   
   /* Loading Shimmer */
