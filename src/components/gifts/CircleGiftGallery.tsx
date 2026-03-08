@@ -10,6 +10,8 @@ import { Gift, Sparkles, Shield, Zap, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
+type GiftTier = 'light' | 'epic' | 'legendary' | 'ultra';
+
 interface CircleGift {
   id: string;
   name: string;
@@ -17,6 +19,7 @@ interface CircleGift {
   price: number;
   currency: string;
   category: string;
+  tier: GiftTier;
   visual_preview: {
     color: string;
     geometry: 'sphere' | 'box' | 'torus' | 'octahedron';
@@ -29,6 +32,13 @@ interface CircleGift {
   };
   special_protocol?: string;
 }
+
+const TIER_CONFIG: Record<GiftTier, { label: string; color: string; emissive: number; particles: boolean; description: string }> = {
+  light: { label: 'Light', color: 'text-foreground/60', emissive: 0.1, particles: false, description: 'Partículas básicas y shaders sutiles' },
+  epic: { label: 'Epic', color: 'text-violet-400', emissive: 0.4, particles: true, description: 'Animaciones 3D avanzadas y efectos persistentes' },
+  legendary: { label: 'Legendary', color: 'text-amber-400', emissive: 0.7, particles: true, description: 'Integración temporal y audio espacial' },
+  ultra: { label: 'Ultra', color: 'text-destructive', emissive: 1.0, particles: true, description: 'Experiencia AR completa que transforma el entorno' },
+};
 
 interface Gift3DProps {
   gift: CircleGift;
