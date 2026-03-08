@@ -311,11 +311,11 @@ const Index = () => {
                   </div>
                 </motion.div>
 
-                <h2 className="text-display text-white mb-6">
+                <h2 className="text-display text-foreground mb-6">
                   Únete a la <span className="text-gradient-quantum">Revolución</span>
                 </h2>
-                <p className="text-body-large text-white/60 max-w-2xl mx-auto mb-8">
-                  Visión y creación de <span className="text-cyan-400 font-semibold">Edwin Oswaldo Castillo Trejo</span>. 
+                <p className="text-body-large text-muted-foreground max-w-2xl mx-auto mb-8">
+                  Visión y creación de <span className="text-[hsl(var(--silver-light))] font-semibold">Edwin Oswaldo Castillo Trejo</span>. 
                   Desde Real del Monte, Hidalgo — un ecosistema civilizatorio para que los creadores 
                   de LATAM tengan más herramientas, más control y más soberanía digital.
                 </p>
