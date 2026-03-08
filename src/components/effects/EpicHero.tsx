@@ -136,7 +136,7 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-body-large text-white/70 max-w-3xl mx-auto mb-10 leading-relaxed"
         >
-          Un solo ecosistema para <span className="text-cyan-400 font-semibold">crear, cobrar y crecer</span>.
+          Un solo ecosistema para <span className="text-[hsl(var(--silver-light))] font-semibold">crear, cobrar y crecer</span>.
           Menos explotación, más control sobre tu comunidad, tu contenido y tus ingresos.
           <br />
           <span className="text-white/50 text-sm mt-2 inline-block">
