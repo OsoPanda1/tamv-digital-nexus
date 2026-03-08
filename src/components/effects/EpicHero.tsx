@@ -185,14 +185,14 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-              className="flex items-center gap-3 px-5 py-3 rounded-2xl glass-crystal hover:border-cyan-400/30 transition-colors cursor-default"
+              className="flex items-center gap-3 px-5 py-3 rounded-2xl glass-crystal hover:border-[hsl(var(--primary)/0.3)] transition-colors cursor-default"
             >
-              <div className="p-2 rounded-xl bg-gradient-to-br from-cyan-500/20 to-purple-500/20 text-cyan-400">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-[hsl(var(--primary)/0.2)] to-[hsl(var(--secondary)/0.2)] text-[hsl(var(--silver-light))]">
                 {feature.icon}
               </div>
               <div className="text-left">
-                <p className="text-sm font-semibold text-white">{feature.label}</p>
-                <p className="text-xs text-white/50">{feature.desc}</p>
+                <p className="text-sm font-semibold text-foreground">{feature.label}</p>
+                <p className="text-xs text-muted-foreground">{feature.desc}</p>
               </div>
             </motion.div>
           ))}
