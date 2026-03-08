@@ -525,7 +525,7 @@ function CinematicIntroEngine({ onComplete, skipEnabled, autoStart }: CinematicI
       <div className="absolute top-0 left-0 w-full h-[2px] bg-border/30 z-50">
         <motion.div
           className="h-full bg-[hsl(var(--aqua))]"
-          style={{ width: useTransform(progress, [0, 1], ["0%", "100%"]) }}
+          style={{ width: progressWidth }}
         />
       </div>
 
