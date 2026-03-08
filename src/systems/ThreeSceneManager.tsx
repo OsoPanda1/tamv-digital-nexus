@@ -72,13 +72,7 @@ export const ThreeSceneManager = ({
         </Suspense>
       </Canvas>
 
-      {/* Loader mientras carga la escena */}
-      <div className="absolute top-4 right-4 z-10 glass-panel p-4 rounded-xl">
-        <div className="flex items-center gap-2 text-primary">
-          <Loader2 className="w-5 h-5 animate-spin" />
-          <span className="text-sm font-medium">Cargando Quantum Space...</span>
-        </div>
-      </div>
+      {/* Loader removed — scenes load via Suspense fallback inside Canvas */}
     </div>
   );
 };
