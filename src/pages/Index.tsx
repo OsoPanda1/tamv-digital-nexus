@@ -24,8 +24,8 @@ import {
 
 // Import enhanced components
 import CinematicIntro from "@/components/CinematicIntro";
+import { HeroSovereignty } from "@/components/effects/HeroSovereignty";
 import { EpicHero } from "@/components/effects/EpicHero";
-import { PremiumCard, StatCard, FeatureCard } from "@/components/effects/PremiumCard";
 import { EpicBackground } from "@/components/effects/EpicBackground";
 import { NextGenFeed } from "@/components/social/NextGenFeed";
 import { FEDERATION_COUNT } from "@/lib/federations";
