@@ -442,6 +442,7 @@ function CinematicIntroEngine({ onComplete, skipEnabled, autoStart }: CinematicI
   const [completed, setCompleted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const progress = useSpring(0, { stiffness: 40, damping: 20 });
+  const progressWidth = useTransform(progress, [0, 1], ["0%", "100%"]);
   const watchdogRef = useRef<number | null>(null);
 
   useEffect(() => {
