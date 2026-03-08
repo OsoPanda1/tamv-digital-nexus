@@ -141,7 +141,7 @@ const Index = () => {
               <h2 className="text-headline text-foreground mb-4">
                 Repositorios <span className="text-gradient-quantum">Unificados</span>
               </h2>
-              <p className="text-body-large text-white/60 max-w-2xl mx-auto">
+              <p className="text-body-large text-muted-foreground max-w-2xl mx-auto">
                 Todo el conocimiento y código del ecosistema TAMV ahora en una 
                 sola plataforma civilizatoria unificada.
               </p>
