@@ -273,10 +273,10 @@ const Index = () => {
                 <Flame className="w-3 h-3 mr-2" />
                 Civilizatory Flow
               </Badge>
-              <h2 className="text-headline text-white mb-2">
+              <h2 className="text-headline text-foreground mb-2">
                 Feed <span className="text-gradient-quantum">Social Quantum</span>
               </h2>
-              <p className="text-sm text-white/40">{FEDERATION_COUNT} federaciones · Tiempo real · Soberanía 100%</p>
+              <p className="text-sm text-muted-foreground">{FEDERATION_COUNT} federaciones · Tiempo real · Soberanía 100%</p>
             </motion.div>
             <NextGenFeed />
           </div>
