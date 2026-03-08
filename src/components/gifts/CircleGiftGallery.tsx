@@ -341,9 +341,20 @@ export const CircleGiftGallery = () => {
                       <h3 className="text-2xl font-bold text-aqua mb-2">
                         {selectedGift.name}
                       </h3>
-                      <Badge className="bg-navy-metallic text-silver">
-                        {selectedGift.category}
-                      </Badge>
+                      <div className="flex gap-2 mt-1">
+                        <Badge className="bg-navy-metallic text-silver">
+                          {selectedGift.category}
+                        </Badge>
+                        <Badge className={cn(
+                          "font-bold",
+                          selectedGift.tier === 'ultra' ? 'bg-destructive/20 text-destructive' :
+                          selectedGift.tier === 'legendary' ? 'bg-amber-500/20 text-amber-400' :
+                          selectedGift.tier === 'epic' ? 'bg-violet-500/20 text-violet-400' :
+                          'bg-muted text-muted-foreground'
+                        )}>
+                          {TIER_CONFIG[selectedGift.tier].label}
+                        </Badge>
+                      </div>
                     </div>
                     <div className="text-right">
                       <p className="text-3xl font-bold text-aqua">
