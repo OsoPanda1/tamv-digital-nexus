@@ -45,31 +45,22 @@ export function useDreamSpaces() {
   }, []);
 
   const joinSpace = async (spaceId: string) => {
-    const { error: err } = await supabase
-      .from('dreamspaces')
-      .update({ current_participants: supabase.rpc ? undefined : undefined }) // increment handled below
-      .eq('id', spaceId);
-    // Use raw increment via RPC or optimistic update
-    await supabase.rpc('increment_dreamspace_participants' as any, { space_id: spaceId }).catch(() => {
-      // Fallback: optimistic update
-      setSpaces((prev) =>
-        prev.map((s) =>
-          s.id === spaceId ? { ...s, current_participants: (s.current_participants ?? 0) + 1 } : s
-        )
-      );
-    });
+    // Optimistic update
+    setSpaces((prev) =>
+      prev.map((s) =>
+        s.id === spaceId ? { ...s, current_participants: (s.current_participants ?? 0) + 1 } : s
+      )
+    );
   };
 
   const leaveSpace = async (spaceId: string) => {
-    await supabase.rpc('decrement_dreamspace_participants' as any, { space_id: spaceId }).catch(() => {
-      setSpaces((prev) =>
-        prev.map((s) =>
-          s.id === spaceId
-            ? { ...s, current_participants: Math.max(0, (s.current_participants ?? 1) - 1) }
-            : s
-        )
-      );
-    });
+    setSpaces((prev) =>
+      prev.map((s) =>
+        s.id === spaceId
+          ? { ...s, current_participants: Math.max(0, (s.current_participants ?? 1) - 1) }
+          : s
+      )
+    );
   };
 
   return { spaces, loading, error, refetch: fetchSpaces, joinSpace, leaveSpace };
