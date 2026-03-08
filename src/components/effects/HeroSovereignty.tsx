@@ -1,10 +1,10 @@
 // ============================================================================
-// TAMV MD-X4™ — HERO SOVEREIGNTY v1.0
-// Industrial Luxury · Consola de Mando Civilizatoria
+// TAMV MD-X4™ — HERO SOVEREIGNTY v2.0
+// Consola de Mando Civilizatoria · Industrial Luxury · 48 Federaciones
 // ============================================================================
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { FEDERATIONS, LAYER_META, FEDERATION_COUNT, type Federation } from "@/lib/federations";
@@ -14,26 +14,28 @@ interface HeroSovereigntyProps {
   onEnter?: () => void;
 }
 
-// ─── Federation Constellation (Canvas 2D — performant) ───
-const FederationConstellation = () => {
+// ─── Federation Constellation (Canvas 2D — performant orbital layout) ───
+const FederationConstellation = ({ onFederationSelect }: { onFederationSelect?: (f: Federation | null) => void }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
   const animRef = useRef(0);
-  const [hoveredFed, setHoveredFed] = useState<Federation | null>(null);
-  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
   const nodesRef = useRef(
     FEDERATIONS.map((f, i) => {
-      const layer = ['L0', 'L1', 'L2', 'L3'].indexOf(f.layer);
-      const angle = (i % 12) * (Math.PI * 2 / 12) + layer * 0.15;
-      const radius = 100 + layer * 65;
+      const layerIdx = ['L0', 'L1', 'L2', 'L3'].indexOf(f.layer);
+      // Distribute nodes in elliptical orbits per layer
+      const nodesInLayer = 12;
+      const posInLayer = i % nodesInLayer;
+      const angle = (posInLayer / nodesInLayer) * Math.PI * 2 + layerIdx * 0.4;
+      const radiusX = 90 + layerIdx * 70;
+      const radiusY = 70 + layerIdx * 55;
       return {
         fed: f,
-        baseX: Math.cos(angle) * radius,
-        baseY: Math.sin(angle) * radius,
+        baseX: Math.cos(angle) * radiusX,
+        baseY: Math.sin(angle) * radiusY,
         x: 0, y: 0,
         pulse: Math.random() * Math.PI * 2,
-        size: f.status === 'active' ? 4 : 2.5,
+        size: f.status === 'active' ? 3.5 : 2,
       };
     })
   );
@@ -46,30 +48,33 @@ const FederationConstellation = () => {
     const mx = mouseRef.current.x;
     const my = mouseRef.current.y;
 
-    // Draw orbit rings
-    [100, 165, 230, 295].forEach((r, i) => {
+    // Draw elliptical orbit rings
+    [0, 1, 2, 3].forEach(i => {
+      const rx = 90 + i * 70;
+      const ry = 70 + i * 55;
       ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.strokeStyle = `hsla(220, 10%, 20%, ${0.15 - i * 0.02})`;
+      ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = `hsla(220, 10%, 18%, ${0.2 - i * 0.03})`;
       ctx.lineWidth = 0.5;
+      ctx.setLineDash([2, 6]);
       ctx.stroke();
+      ctx.setLineDash([]);
     });
 
     const nodes = nodesRef.current;
-    
-    // Draw connections
+
+    // Draw fiber optic connections (same layer, close nodes)
     nodes.forEach((a, i) => {
       nodes.forEach((b, j) => {
-        if (j <= i) return;
-        if (a.fed.layer !== b.fed.layer) return;
+        if (j <= i || a.fed.layer !== b.fed.layer) return;
         const dx = a.x - b.x;
         const dy = a.y - b.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 140) {
+        if (dist < 160) {
           ctx.beginPath();
           ctx.moveTo(cx + a.x, cy + a.y);
           ctx.lineTo(cx + b.x, cy + b.y);
-          ctx.strokeStyle = `hsla(220, 100%, 50%, ${(1 - dist / 140) * 0.12})`;
+          ctx.strokeStyle = `hsla(220, 100%, 50%, ${(1 - dist / 160) * 0.08})`;
           ctx.lineWidth = 0.5;
           ctx.stroke();
         }
@@ -78,13 +83,13 @@ const FederationConstellation = () => {
 
     // Draw nodes
     let closestNode: typeof nodes[0] | null = null;
-    let closestDist = 30;
+    let closestDist = 35;
 
     nodes.forEach(n => {
-      n.pulse += 0.015;
-      const breathe = 1 + Math.sin(n.pulse) * 0.15;
-      n.x = n.baseX + Math.sin(t * 0.3 + n.pulse) * 3;
-      n.y = n.baseY + Math.cos(t * 0.25 + n.pulse) * 3;
+      n.pulse += 0.012;
+      const breathe = 1 + Math.sin(n.pulse) * 0.12;
+      n.x = n.baseX + Math.sin(t * 0.2 + n.pulse) * 2.5;
+      n.y = n.baseY + Math.cos(t * 0.18 + n.pulse) * 2.5;
 
       const sx = cx + n.x;
       const sy = cy + n.y;
@@ -95,16 +100,16 @@ const FederationConstellation = () => {
         closestNode = n;
       }
 
-      const isHovered = dm < 20;
-      const r = n.size * breathe * (isHovered ? 2 : 1);
+      const isHovered = dm < 25;
+      const r = n.size * breathe * (isHovered ? 2.5 : 1);
 
-      // Glow
+      // Glow for active nodes
       if (n.fed.status === 'active') {
-        const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, r * 4);
-        grad.addColorStop(0, `hsla(220, 100%, 50%, ${isHovered ? 0.4 : 0.15})`);
+        const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, r * 5);
+        grad.addColorStop(0, `hsla(220, 100%, 50%, ${isHovered ? 0.5 : 0.12})`);
         grad.addColorStop(1, 'transparent');
         ctx.beginPath();
-        ctx.arc(sx, sy, r * 4, 0, Math.PI * 2);
+        ctx.arc(sx, sy, r * 5, 0, Math.PI * 2);
         ctx.fillStyle = grad;
         ctx.fill();
       }
@@ -112,35 +117,40 @@ const FederationConstellation = () => {
       // Core dot
       ctx.beginPath();
       ctx.arc(sx, sy, r, 0, Math.PI * 2);
-      ctx.fillStyle = n.fed.status === 'active' 
-        ? (isHovered ? 'hsl(220, 100%, 60%)' : 'hsl(220, 100%, 50%)')
-        : 'hsl(220, 10%, 30%)';
+      const layerColors: Record<string, string> = {
+        L0: isHovered ? 'hsl(220, 100%, 65%)' : 'hsl(220, 100%, 50%)',
+        L1: isHovered ? 'hsl(214, 32%, 95%)' : 'hsl(214, 25%, 78%)',
+        L2: isHovered ? 'hsl(51, 100%, 60%)' : 'hsl(51, 100%, 50%)',
+        L3: isHovered ? 'hsl(220, 60%, 65%)' : 'hsl(220, 60%, 50%)',
+      };
+      ctx.fillStyle = n.fed.status === 'active'
+        ? (layerColors[n.fed.layer] || 'hsl(220, 100%, 50%)')
+        : 'hsl(220, 10%, 25%)';
       ctx.fill();
 
-      // Hover expansion — burst lines
+      // Hover burst lines
       if (isHovered) {
-        for (let a = 0; a < 6; a++) {
-          const angle = (a / 6) * Math.PI * 2 + t;
-          const lx = Math.cos(angle) * 18;
-          const ly = Math.sin(angle) * 18;
+        for (let a = 0; a < 8; a++) {
+          const angle = (a / 8) * Math.PI * 2 + t * 0.5;
+          const lx = Math.cos(angle) * 22;
+          const ly = Math.sin(angle) * 22;
           ctx.beginPath();
-          ctx.moveTo(sx + lx * 0.4, sy + ly * 0.4);
+          ctx.moveTo(sx + lx * 0.35, sy + ly * 0.35);
           ctx.lineTo(sx + lx, sy + ly);
-          ctx.strokeStyle = 'hsla(220, 100%, 55%, 0.4)';
-          ctx.lineWidth = 0.8;
+          ctx.strokeStyle = 'hsla(220, 100%, 55%, 0.35)';
+          ctx.lineWidth = 0.6;
           ctx.stroke();
         }
       }
     });
 
-    // Tooltip
+    // Notify parent of hovered federation
     if (closestNode) {
-      setHoveredFed((closestNode as typeof nodes[0]).fed);
-      setTooltipPos({ x: cx + (closestNode as typeof nodes[0]).x, y: cy + (closestNode as typeof nodes[0]).y - 25 });
+      onFederationSelect?.((closestNode as typeof nodes[0]).fed);
     } else {
-      setHoveredFed(null);
+      onFederationSelect?.(null);
     }
-  }, []);
+  }, [onFederationSelect]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -151,8 +161,12 @@ const FederationConstellation = () => {
     const resize = () => {
       const rect = canvas.parentElement?.getBoundingClientRect();
       if (!rect) return;
-      canvas.width = rect.width;
-      canvas.height = rect.height;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      ctx.scale(dpr, dpr);
     };
     resize();
     window.addEventListener('resize', resize);
@@ -164,7 +178,13 @@ const FederationConstellation = () => {
     canvas.addEventListener('mousemove', handleMove);
 
     const loop = () => {
-      draw(ctx, canvas.width, canvas.height);
+      const rect = canvas.parentElement?.getBoundingClientRect();
+      if (rect) {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        ctx.scale(dpr, dpr);
+        draw(ctx, rect.width, rect.height);
+      }
       animRef.current = requestAnimationFrame(loop);
     };
     loop();
@@ -176,20 +196,60 @@ const FederationConstellation = () => {
     };
   }, [draw]);
 
+  return <canvas ref={canvasRef} className="w-full h-full" />;
+};
+
+// ─── Technical Tooltip Panel (Frosted Glass) ───
+const FederationPanel = ({ fed }: { fed: Federation }) => {
+  const statusLabels: Record<string, string> = {
+    active: 'OPERATIVO_SOBERANO',
+    building: 'EN_CONSTRUCCIÓN',
+    planned: 'PLANIFICADO',
+  };
+  const flowValue = fed.status === 'active' 
+    ? `${(Math.random() * 5000 + 200).toFixed(0)} Tx/m` 
+    : '—';
+
   return (
-    <div className="relative w-full h-full">
-      <canvas ref={canvasRef} className="w-full h-full" />
-      {hoveredFed && (
-        <div
-          className="absolute pointer-events-none z-50 px-3 py-1.5 bg-card/90 backdrop-blur-md border border-border/50 text-[11px] font-mono"
-          style={{ left: tooltipPos.x, top: tooltipPos.y, transform: 'translate(-50%, -100%)' }}
-        >
-          <span className="text-primary font-bold">{hoveredFed.icon}</span>{' '}
-          <span className="text-foreground">{hoveredFed.name}</span>
-          <span className="text-muted-foreground ml-2">{hoveredFed.layer}</span>
+    <motion.div
+      initial={{ opacity: 0, y: 8, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 8, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
+      className="absolute top-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
+    >
+      <div className="bg-card/90 backdrop-blur-2xl border border-border/50 px-5 py-4 min-w-[260px]"
+        style={{ boxShadow: '0 12px 40px hsla(0,0%,0%,0.7), 0 0 20px hsla(220,100%,50%,0.1)' }}
+      >
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-lg">{fed.icon}</span>
+          <span className="text-[11px] font-mono text-foreground font-bold uppercase" style={{ letterSpacing: '0.08em' }}>
+            {fed.name}
+          </span>
         </div>
-      )}
-    </div>
+        <div className="space-y-1.5 font-mono text-[9px]" style={{ letterSpacing: '0.05em' }}>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">&gt; DOMINIO:</span>
+            <span className="text-foreground">{fed.domain.toUpperCase()}_{fed.layer}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">&gt; STATUS:</span>
+            <span className={fed.status === 'active' ? 'text-primary' : 'text-accent'}>{statusLabels[fed.status]}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">&gt; FLUJO_VIVO:</span>
+            <span className="text-foreground">{flowValue}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">&gt; ISABELLA_CONFIDENCE:</span>
+            <span className="text-primary">{fed.status === 'active' ? '99.8%' : '—'}</span>
+          </div>
+        </div>
+        <div className="mt-3 pt-2 border-t border-border/20">
+          <p className="text-[8px] text-muted-foreground font-mono">{fed.description}</p>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 
@@ -197,16 +257,15 @@ const FederationConstellation = () => {
 export const HeroSovereignty = ({ onEnter }: HeroSovereigntyProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const { scrollYProgress } = useScroll({ target: containerRef });
-  const bgBlur = useTransform(scrollYProgress, [0, 1], [0, 8]);
+  const [hoveredFed, setHoveredFed] = useState<Federation | null>(null);
 
   return (
-    <section ref={containerRef} className="relative h-screen w-full overflow-hidden" style={{ background: '#050505' }}>
+    <section ref={containerRef} className="relative h-screen w-full overflow-hidden bg-background">
       {/* LAYER 1: Scanner Grid */}
       <div className="absolute inset-0 z-0 opacity-[0.04]" style={{
         backgroundImage: `
-          linear-gradient(hsl(220 100% 50% / 0.3) 1px, transparent 1px),
-          linear-gradient(90deg, hsl(220 100% 50% / 0.3) 1px, transparent 1px)
+          linear-gradient(hsl(var(--primary) / 0.3) 1px, transparent 1px),
+          linear-gradient(90deg, hsl(var(--primary) / 0.3) 1px, transparent 1px)
         `,
         backgroundSize: '60px 60px',
       }} />
@@ -214,18 +273,23 @@ export const HeroSovereignty = ({ onEnter }: HeroSovereigntyProps) => {
       {/* LAYER 1b: Scanning line */}
       <motion.div
         className="absolute left-0 right-0 h-px z-10"
-        style={{ background: 'linear-gradient(90deg, transparent, hsl(220 100% 50% / 0.3), transparent)' }}
+        style={{ background: `linear-gradient(90deg, transparent, hsl(var(--primary) / 0.3), transparent)` }}
         animate={{ top: ['0%', '100%'] }}
         transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
       />
 
       {/* LAYER 2: Federation Constellation */}
       <div className="absolute inset-0 z-20 opacity-70">
-        <FederationConstellation />
+        <FederationConstellation onFederationSelect={setHoveredFed} />
+      </div>
+
+      {/* LAYER 2b: Hovered Federation Technical Panel */}
+      <div className="absolute inset-0 z-30 flex items-start justify-center pt-[15vh] pointer-events-none">
+        {hoveredFed && <FederationPanel fed={hoveredFed} />}
       </div>
 
       {/* LAYER 3: Content Overlay */}
-      <div className="relative z-30 flex flex-col items-center justify-center h-full px-4">
+      <div className="relative z-40 flex flex-col items-center justify-center h-full px-4">
         {/* System status */}
         <motion.p
           initial={{ opacity: 0 }}
@@ -246,9 +310,9 @@ export const HeroSovereignty = ({ onEnter }: HeroSovereigntyProps) => {
         >
           <img
             src={logoTamv}
-            alt="TAMV"
+            alt="TAMV MD-X4 — Consola de Mando Civilizatoria"
             className="w-48 md:w-64 object-contain"
-            style={{ filter: 'drop-shadow(0 0 20px hsla(220, 100%, 50%, 0.3))' }}
+            style={{ filter: `drop-shadow(0 0 25px hsl(var(--primary) / 0.35))` }}
           />
         </motion.div>
 
@@ -296,9 +360,11 @@ export const HeroSovereignty = ({ onEnter }: HeroSovereigntyProps) => {
           >
             Entrar al Multiverso
           </Button>
-          <p className="text-[9px] text-primary/60 opacity-0 group-hover:opacity-100 mt-2 transition-opacity duration-300 text-center font-mono">
-            Sincronizando con el Kernel Isabella...
-          </p>
+          <motion.p 
+            className="text-[9px] text-primary/60 opacity-0 group-hover:opacity-100 mt-2 transition-opacity duration-300 text-center font-mono"
+          >
+            Sincronizando con el Kernel Isabella... <span className="text-primary">[OK]</span>
+          </motion.p>
         </motion.div>
       </div>
 
@@ -307,7 +373,7 @@ export const HeroSovereignty = ({ onEnter }: HeroSovereigntyProps) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.4, duration: 1 }}
-        className="absolute bottom-8 left-8 z-40 max-w-xs"
+        className="absolute bottom-8 left-8 z-50 max-w-xs"
       >
         <p className="text-foreground font-bold text-lg leading-tight font-display">
           "No somos una red social.
@@ -319,25 +385,38 @@ export const HeroSovereignty = ({ onEnter }: HeroSovereigntyProps) => {
         </p>
       </motion.div>
 
-      {/* Status indicators — top right */}
+      {/* Layer indicators — top right */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.6, duration: 0.8 }}
-        className="absolute top-6 right-6 z-40 flex flex-col gap-2 items-end"
+        className="absolute top-6 right-6 z-50 flex flex-col gap-2 items-end"
       >
         {Object.entries(LAYER_META).map(([key, meta]) => (
           <div key={key} className="flex items-center gap-2 font-mono text-[9px] uppercase" style={{ letterSpacing: '0.1em' }}>
             <span className="text-muted-foreground">{meta.name}</span>
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            <span className="w-2 h-2 bg-primary animate-pulse" />
             <span className="text-foreground font-bold">{key}</span>
           </div>
         ))}
       </motion.div>
 
-      {/* Vignette */}
+      {/* Network status — bottom right */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.8, duration: 0.8 }}
+        className="absolute bottom-8 right-8 z-50 font-mono text-[8px] text-muted-foreground uppercase text-right space-y-1"
+        style={{ letterSpacing: '0.1em' }}
+      >
+        <p>TAMV MD-X4™ · KERNEL v9.0</p>
+        <p>{FEDERATION_COUNT} FEDERACIONES · {FEDERATIONS.filter(f => f.status === 'active').length} ACTIVAS</p>
+        <p>TURISMO · COMERCIO · EDUCACIÓN · SEGURIDAD · CULTURA</p>
+      </motion.div>
+
+      {/* Radial Vignette */}
       <div className="absolute inset-0 z-[5] pointer-events-none" style={{
-        background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 100%)'
+        background: 'radial-gradient(ellipse at center, transparent 25%, hsl(var(--background)) 100%)'
       }} />
     </section>
   );

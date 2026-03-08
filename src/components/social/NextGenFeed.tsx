@@ -1,14 +1,14 @@
 // ============================================================================
-// TAMV MD-X4™ — NEXTGEN FEED v9.0 · INDUSTRIAL CONSOLE
-// No likes. Impact Level + Value Flow. Sharp rectangles. Glitch materialization.
+// TAMV MD-X4™ — NEXTGEN FEED v10.0 · SOVEREIGN CONSOLE 300x
+// Hexagonal stories · Impact + Sovereignty metrics · ADQUIRIR_FLUJO
 // ============================================================================
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageCircle, Share2, Bookmark, Play, Music, Verified,
-  Eye, Send, Image, Sparkles, Loader2, MoreHorizontal, Volume2,
-  Activity, TrendingUp
+  Send, Image, Sparkles, Loader2, MoreHorizontal, Volume2,
+  Activity, TrendingUp, Shield, Zap
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,31 +16,39 @@ import { useAuth } from "@/hooks/useAuth";
 import { useSocialFeed, type SocialPost } from "@/hooks/useSocialFeed";
 
 // ─── Impact Pulse Line ───
-const ImpactPulse = ({ value }: { value: number }) => {
+const ImpactPulse = ({ value, label }: { value: number; label: string }) => {
   const normalized = Math.min(value / 5000, 1);
   return (
     <div className="flex items-center gap-2">
-      <Activity className="w-3.5 h-3.5 text-primary" />
-      <div className="flex-1 h-[2px] bg-border/30 relative overflow-hidden">
+      <span className="text-[8px] font-mono uppercase text-muted-foreground w-14 flex-shrink-0" style={{ letterSpacing: '0.05em' }}>{label}</span>
+      <div className="flex-1 h-[2px] bg-border/20 relative overflow-hidden">
         <motion.div
           className="absolute inset-y-0 left-0"
-          style={{ 
-            width: `${normalized * 100}%`,
-            background: 'linear-gradient(90deg, hsl(220 100% 50%), hsl(214 32% 91%))'
-          }}
+          style={{ background: `linear-gradient(90deg, hsl(var(--primary)), hsl(var(--silver)))` }}
           initial={{ width: 0 }}
           animate={{ width: `${normalized * 100}%` }}
           transition={{ duration: 1.2, ease: 'easeOut' }}
         />
       </div>
-      <span className="text-[10px] font-mono text-primary">{formatK(value)}</span>
+      <span className="text-[9px] font-mono text-primary w-8 text-right">{formatK(value)}</span>
     </div>
   );
 };
 
-// ─── Console Card (Sharp, Industrial) ───
+// ─── Sovereignty Score Badge ───
+const SovereigntyBadge = ({ score }: { score: number }) => (
+  <div className="flex items-center gap-1">
+    <Shield className="w-3 h-3 text-accent" />
+    <span className="text-[9px] font-mono text-accent uppercase" style={{ letterSpacing: '0.05em' }}>
+      Soberanía {score}%
+    </span>
+  </div>
+);
+
+// ─── Console Card (Sharp, Industrial, 4:5) ───
 const ConsoleCard = ({ post, index }: { post: SocialPost; index: number }) => {
   const [saved, setSaved] = useState(false);
+  const sovereigntyScore = Math.min(99, 60 + Math.floor((post.likes_count + post.shares_count) / 100));
 
   return (
     <motion.article
@@ -61,12 +69,12 @@ const ConsoleCard = ({ post, index }: { post: SocialPost; index: number }) => {
           {/* Scanner overlay on hover */}
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
             style={{
-              background: `repeating-linear-gradient(0deg, transparent, transparent 3px, hsla(220, 100%, 50%, 0.03) 3px, hsla(220, 100%, 50%, 0.03) 4px)`,
+              background: `repeating-linear-gradient(0deg, transparent, transparent 3px, hsl(var(--primary) / 0.03) 3px, hsl(var(--primary) / 0.03) 4px)`,
             }}
           />
           {/* Gradient from bottom */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
-          
+          <div className="absolute inset-0" style={{ background: `linear-gradient(to top, hsl(var(--background)) 0%, hsl(var(--background) / 0.5) 35%, transparent 70%)` }} />
+
           {/* Video play */}
           {post.media_type === 'video' && (
             <div className="absolute inset-0 flex items-center justify-center">
@@ -78,10 +86,10 @@ const ConsoleCard = ({ post, index }: { post: SocialPost; index: number }) => {
             </div>
           )}
 
-          {/* Top status */}
+          {/* Top status badges */}
           <div className="absolute top-3 right-3 flex gap-2">
             {post.media_type === 'video' && (
-              <Badge className="bg-destructive/80 border-none text-[9px] uppercase tracking-widest rounded-none font-mono">
+              <Badge className="bg-destructive/80 border-none text-[8px] uppercase tracking-widest rounded-none font-mono">
                 <Volume2 className="w-3 h-3 mr-1" /> LIVE
               </Badge>
             )}
@@ -97,7 +105,7 @@ const ConsoleCard = ({ post, index }: { post: SocialPost; index: number }) => {
                   className="w-full h-full object-cover" alt=""
                 />
               </div>
-              <div>
+              <div className="flex-1">
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs font-semibold text-foreground font-mono uppercase" style={{ letterSpacing: '0.05em' }}>
                     {post.author_name || 'Ciudadano'}
@@ -106,6 +114,7 @@ const ConsoleCard = ({ post, index }: { post: SocialPost; index: number }) => {
                 </div>
                 <span className="text-[9px] text-muted-foreground font-mono">{timeAgo(post.created_at)}</span>
               </div>
+              <SovereigntyBadge score={sovereigntyScore} />
             </div>
 
             <p className="text-sm text-foreground/80 line-clamp-2 mb-3">{post.content}</p>
@@ -119,33 +128,47 @@ const ConsoleCard = ({ post, index }: { post: SocialPost; index: number }) => {
               </div>
             )}
 
-            {/* Impact metrics — NOT likes */}
-            <div className="space-y-2">
-              <ImpactPulse value={post.likes_count + post.comments_count + post.shares_count} />
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1 text-muted-foreground">
-                    <TrendingUp className="w-3.5 h-3.5" />
-                    <span className="text-[9px] font-mono uppercase">Impacto {formatK(post.likes_count)}</span>
-                  </div>
-                  <button className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors">
-                    <MessageCircle className="w-3.5 h-3.5" />
-                    <span className="text-[9px] font-mono">{formatK(post.comments_count)}</span>
-                  </button>
-                  <button className="text-muted-foreground hover:text-primary transition-colors">
-                    <Share2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+            {/* Metrics bar — Impact + Sovereignty */}
+            <div className="space-y-1.5 mb-3">
+              <ImpactPulse value={post.likes_count + post.comments_count + post.shares_count} label="Impacto" />
+              <ImpactPulse value={post.likes_count * 2} label="Flujo" />
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <button className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors">
+                  <TrendingUp className="w-3.5 h-3.5" />
+                  <span className="text-[9px] font-mono uppercase">{formatK(post.likes_count)}</span>
+                </button>
+                <button className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors">
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span className="text-[9px] font-mono">{formatK(post.comments_count)}</span>
+                </button>
+                <button className="text-muted-foreground hover:text-primary transition-colors">
+                  <Share2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+              <div className="flex items-center gap-2">
                 <button onClick={() => setSaved(!saved)} className="text-muted-foreground hover:text-primary transition-colors">
                   <Bookmark className={`w-3.5 h-3.5 ${saved ? 'fill-primary text-primary' : ''}`} />
                 </button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 px-3 text-[8px] font-mono uppercase border border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground rounded-none"
+                  style={{ letterSpacing: '0.08em' }}
+                >
+                  <Zap className="w-3 h-3 mr-1" />
+                  VINCULAR
+                </Button>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Text-only */}
+      {/* Text-only post */}
       {!post.media_url && (
         <div className="p-5">
           <div className="flex items-center gap-2.5 mb-4">
@@ -176,22 +199,33 @@ const ConsoleCard = ({ post, index }: { post: SocialPost; index: number }) => {
               ))}
             </div>
           )}
-          <div className="pt-3 border-t border-border/20 space-y-2">
-            <ImpactPulse value={post.likes_count + post.comments_count} />
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1 text-muted-foreground">
-                  <TrendingUp className="w-3.5 h-3.5" />
-                  <span className="text-[9px] font-mono uppercase">Impacto {formatK(post.likes_count)}</span>
-                </div>
-                <button className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors">
-                  <MessageCircle className="w-3.5 h-3.5" />
-                  <span className="text-[9px] font-mono">{formatK(post.comments_count)}</span>
-                </button>
-              </div>
+          <div className="pt-3 border-t border-border/20 space-y-1.5 mb-3">
+            <ImpactPulse value={post.likes_count + post.comments_count} label="Impacto" />
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <button className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors">
+                <TrendingUp className="w-3.5 h-3.5" />
+                <span className="text-[9px] font-mono uppercase">{formatK(post.likes_count)}</span>
+              </button>
+              <button className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors">
+                <MessageCircle className="w-3.5 h-3.5" />
+                <span className="text-[9px] font-mono">{formatK(post.comments_count)}</span>
+              </button>
+            </div>
+            <div className="flex items-center gap-2">
               <button onClick={() => setSaved(!saved)} className="text-muted-foreground hover:text-primary transition-colors">
                 <Bookmark className={`w-3.5 h-3.5 ${saved ? 'fill-primary text-primary' : ''}`} />
               </button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 px-3 text-[8px] font-mono uppercase border border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground rounded-none"
+                style={{ letterSpacing: '0.08em' }}
+              >
+                <Zap className="w-3 h-3 mr-1" />
+                VINCULAR
+              </Button>
             </div>
           </div>
         </div>
@@ -259,7 +293,7 @@ const ConsoleComposer = ({ onPost }: { onPost: (content: string) => Promise<void
   );
 };
 
-// ─── Stories Bar (Industrial) ───
+// ─── Hexagonal Stories Bar ───
 const StoriesBar = () => {
   const stories = Array.from({ length: 8 }, (_, i) => ({
     id: i,
@@ -269,20 +303,27 @@ const StoriesBar = () => {
   }));
 
   return (
-    <div className="flex gap-3 overflow-x-auto pb-2 mb-6 scrollbar-none">
+    <div className="flex gap-3 overflow-x-auto pb-3 mb-6 scrollbar-none">
       <div className="flex flex-col items-center gap-1.5 flex-shrink-0">
-        <div className="w-14 h-14 border border-dashed border-border/40 flex items-center justify-center bg-card/30 backdrop-blur cursor-pointer hover:border-primary/50 transition-colors">
+        <div className="w-14 h-14 border border-dashed border-border/40 flex items-center justify-center bg-card/30 backdrop-blur cursor-pointer hover:border-primary/50 transition-colors"
+          style={{ clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)' }}
+        >
           <span className="text-lg text-muted-foreground">+</span>
         </div>
-        <span className="text-[9px] text-muted-foreground font-mono">NUEVO</span>
+        <span className="text-[9px] text-muted-foreground font-mono uppercase">NUEVO</span>
       </div>
       {stories.map(s => (
-        <div key={s.id} className="flex flex-col items-center gap-1.5 flex-shrink-0 cursor-pointer group">
-          <div className={`w-14 h-14 p-[1px] ${s.live ? 'border border-primary' : 'border border-border/30'}`}>
-            <img src={s.img} alt={s.name} className="w-full h-full object-cover bg-card group-hover:opacity-80 transition-opacity" />
+        <div key={s.id} className="flex flex-col items-center gap-1.5 flex-shrink-0 cursor-pointer group relative">
+          <div
+            className={`w-14 h-14 p-[1px] overflow-hidden ${s.live ? 'bg-primary/20' : 'bg-border/20'}`}
+            style={{ clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)' }}
+          >
+            <img src={s.img} alt={s.name} className="w-full h-full object-cover group-hover:opacity-80 transition-opacity" />
           </div>
           <span className="text-[9px] text-muted-foreground font-mono truncate max-w-[3.5rem] uppercase">{s.name}</span>
-          {s.live && <span className="text-[8px] text-destructive font-bold uppercase font-mono -mt-1">LIVE</span>}
+          {s.live && (
+            <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-destructive rounded-full animate-pulse" />
+          )}
         </div>
       ))}
     </div>
@@ -359,7 +400,7 @@ function timeAgo(dateStr: string): string {
 // ─── Mock posts ───
 const MOCK_VISUAL_POSTS: SocialPost[] = [
   {
-    id: 'mock-1', author_id: 'edwin', content: '🚀 TAMV MD-X4™ marca el inicio de una nueva era. 48 federaciones operando en consola soberana.', 
+    id: 'mock-1', author_id: 'edwin', content: '🚀 TAMV MD-X4™ marca el inicio de una nueva era. 48 federaciones operando en consola soberana.',
     media_url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=800&fit=crop', media_type: 'photo',
     likes_count: 2847, comments_count: 342, shares_count: 891, tags: ['TAMV', 'SovereignTech'], created_at: new Date(Date.now() - 900000).toISOString(), visibility: 'public',
     author_name: 'Edwin O. Castillo', author_avatar: 'https://api.dicebear.com/9.x/glass/svg?seed=edwin',
@@ -383,10 +424,10 @@ const MOCK_VISUAL_POSTS: SocialPost[] = [
     author_name: 'KAOS Music', author_avatar: 'https://api.dicebear.com/9.x/glass/svg?seed=kaos',
   },
   {
-    id: 'mock-5', author_id: 'utamv', content: 'Certificación: «Arquitectura Quantum Federada». 47 inscritos en 2h. Hash inmutable en BookPI™.',
-    media_url: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&h=800&fit=crop', media_type: 'photo',
-    likes_count: 1678, comments_count: 289, shares_count: 445, tags: ['UTAMV', 'Certificación'], created_at: new Date(Date.now() - 14400000).toISOString(), visibility: 'public',
-    author_name: 'UTAMV Academy', author_avatar: 'https://api.dicebear.com/9.x/glass/svg?seed=utamv',
+    id: 'mock-5', author_id: 'utamv', content: 'Nueva certificación BookPI: «Soberanía Digital Nivel 3» — ya disponible en UTAMV.',
+    media_url: null, media_type: null,
+    likes_count: 1892, comments_count: 567, shares_count: 234, tags: ['UTAMV', 'BookPI', 'Certificación'], created_at: new Date(Date.now() - 14400000).toISOString(), visibility: 'public',
+    author_name: 'UTAMV', author_avatar: 'https://api.dicebear.com/9.x/glass/svg?seed=utamv',
   },
 ];
 
