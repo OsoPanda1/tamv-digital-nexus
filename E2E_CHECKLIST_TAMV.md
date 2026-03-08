@@ -52,14 +52,15 @@ Este checklist consolida todos los pendientes para llevar TAMV MD-X4 a producci�
 ### Dashboard y Ecosystem 100% operativos
 - [x] useEcosystemMetrics muestra datos reales con fallback.
 - [x] Dashboard con métricas LIVE, actividad reciente y estado de federaciones.
-- [ ] Filtros por federación, rango de fechas y tipo de evento en Dashboard.
+- [x] Filtros por tipo de evento en Dashboard (post, msr, isabella, crisis).
+- [ ] Filtros por federación y rango de fechas en Dashboard.
 - [ ] En /ecosystem, expandir vistas por federación (click → detalle con métricas, actividad, salud).
 
 ### Economy y Governance
 - [x] /economy con saldo real, historial, lotería y Fondo Fénix.
 - [x] /governance con propuestas, votación, roles y ID-NVIDA.
 - [ ] Coherencia total: saldo, historial, MSR y lotería usan mismos endpoints wallet-service y tamv-unified-api.
-- [ ] Flujo completo: listar propuestas → ver detalle → votar → ver resultados → estado (abierta/cerrada/archivada).
+- [x] Flujo completo: listar propuestas → crear → votar → ver resultados → estado (voting/approved/rejected).
 
 ---
 
@@ -86,8 +87,8 @@ Este checklist consolida todos los pendientes para llevar TAMV MD-X4 a producci�
 - [x] Escalamiento de crisis con líneas de ayuda.
 - [x] useIsabellaChatQuantum con streaming SSE, validación de calidad y cancelación.
 - [x] Error handling robusto: red errors, reintentos, abort controller.
+- [x] UI muestra reglas éticas AVIXA y mensajes de bloqueo cuando se activan.
 - [ ] Probar escenarios: consulta normal, crisis, intentos de abuso end-to-end.
-- [ ] Exponer en la UI reglas claras de uso y mensajes cuando se active un bloqueo ético.
 
 ---
 
@@ -96,9 +97,9 @@ Este checklist consolida todos los pendientes para llevar TAMV MD-X4 a producci�
 ### Panel Singularity operativo
 - [x] Página /singularity con DevOpsPanel y SystemHealthMonitor.
 - [x] Página /evolution con arquitectura de federaciones.
+- [x] Logs resumidos de eventos críticos MSR en tiempo real (auto-refresh 15s).
 - [ ] Validar que lee datos reales (o mocks controlados) de las 6 capas.
 - [ ] Acciones seguras: reinicio lógico de servicios, clear de colas, reindex de embeddings.
-- [ ] Logs resumidos de eventos críticos en tiempo real.
 
 ---
 
