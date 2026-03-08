@@ -5,6 +5,7 @@
 
 export * from './msr';
 export * from './constitutionEngine';
+export * from './sovereign-identity';
 
 export { useTAMVStore } from '@/stores/tamvStore';
 export { useSocialStore } from '@/stores/socialStore';
