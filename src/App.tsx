@@ -15,6 +15,7 @@ import { OmniKernelProvider } from "@/lib/omni-kernel";
 
 // Layout System
 import { AppLayout } from "@/components/layout/AppLayout";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // Pages
 import Index from "./pages/Index";
