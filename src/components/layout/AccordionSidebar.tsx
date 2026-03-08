@@ -106,6 +106,14 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
+    id: 'health',
+    title: 'Salud',
+    icon: Stethoscope,
+    items: [
+      { icon: Stethoscope, label: 'Telemedicina', path: '/health', badge: 'NEW', color: '#10B981' },
+    ],
+  },
+  {
     id: 'omnikernel',
     title: 'OMNI-KERNEL',
     icon: Zap,
