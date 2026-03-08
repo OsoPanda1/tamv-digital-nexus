@@ -44,7 +44,7 @@ const EVOLUTION_PILLARS = [
 ];
 
 const STATS = [
-  { value: "7", label: "Federaciones Core" },
+  { value: String(FEDERATION_COUNT), label: "Federaciones Activas" },
   { value: "L0–L3", label: "Capas Antifrágiles" },
   { value: "∞", label: "DreamSpaces XR" },
   { value: "100%", label: "Soberanía Digital" },
