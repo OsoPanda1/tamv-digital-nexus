@@ -79,8 +79,8 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
               top: `${20 + (i % 3) * 20}%`,
               background: `radial-gradient(circle, ${
                 i % 2 === 0
-                  ? "rgba(0, 217, 255, 0.08)"
-                  : "rgba(157, 78, 221, 0.08)"
+                  ? "hsla(210, 45%, 55%, 0.06)"
+                  : "hsla(215, 30%, 50%, 0.05)"
               } 0%, transparent 70%)`,
               filter: "blur(60px)",
             }}
