@@ -55,6 +55,7 @@ export default function DreamSpaces() {
         <DreamSpaceViewer
           environment={resolveEnv(activeSpace.theme)}
           spaceName={activeSpace.name}
+          spaceId={activeSpace.id}
           onExit={() => setActiveSpace(null)}
         />
       </div>
