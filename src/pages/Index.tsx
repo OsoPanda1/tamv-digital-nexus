@@ -102,6 +102,22 @@ const TRENDING_HASHTAGS = [
   { tag: "#KAOSAudio", posts: "489K" },
 ];
 
+
+const QUICK_ACCESS_LINKS = [
+  { label: "Metaverso", icon: <Globe />, path: "/metaverse", iconClass: "bg-cyan-500/20 text-cyan-300" },
+  { label: "Isabella AI", icon: <Brain />, path: "/isabella", iconClass: "bg-purple-500/20 text-purple-300" },
+  { label: "Universidad", icon: <GraduationCap />, path: "/university", iconClass: "bg-amber-500/20 text-amber-300" },
+  { label: "DreamSpaces", icon: <Sparkles />, path: "/dream-spaces", iconClass: "bg-pink-500/20 text-pink-300" },
+  { label: "Marketplace", icon: <ShoppingBag />, path: "/monetization", iconClass: "bg-emerald-500/20 text-emerald-300" },
+  { label: "Gobernanza", icon: <Crown />, path: "/governance", iconClass: "bg-yellow-500/20 text-yellow-300" },
+];
+
+const NEXUS_COMMAND_DECK = [
+  { title: "Estado Federado", metric: "177 repos sincronizados", status: "Operativo" },
+  { title: "Resiliencia IA", metric: "99.93% continuidad", status: "Estable" },
+  { title: "XR Rendering", metric: "Latencia < 24ms", status: "Optimizado" },
+];
+
 // ============================================================================
 // MAIN COMPONENT
 // ============================================================================
@@ -335,20 +351,13 @@ const Index = () => {
                   </div>
 
                   <div className="space-y-3">
-                    {[
-                      { label: "Metaverso", icon: <Globe />, path: "/metaverse", color: "cyan" },
-                      { label: "Isabella AI", icon: <Brain />, path: "/isabella", color: "purple" },
-                      { label: "Universidad", icon: <GraduationCap />, path: "/university", color: "amber" },
-                      { label: "DreamSpaces", icon: <Sparkles />, path: "/dream-spaces", color: "pink" },
-                      { label: "Marketplace", icon: <ShoppingBag />, path: "/monetization", color: "green" },
-                      { label: "Gobernanza", icon: <Crown />, path: "/governance", color: "gold" },
-                    ].map((link, index) => (
+                    {QUICK_ACCESS_LINKS.map((link) => (
                       <Link key={link.path} to={link.path}>
                         <motion.div
                           whileHover={{ x: 5 }}
                           className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] transition-all group"
                         >
-                          <div className={`p-2 rounded-lg bg-${link.color}-500/20 text-${link.color}-400`}>
+                          <div className={`p-2 rounded-lg ${link.iconClass}`}>
                             {link.icon}
                           </div>
                           <span className="text-white group-hover:text-cyan-400 transition-colors flex-1">
@@ -362,6 +371,34 @@ const Index = () => {
                 </PremiumCard>
               </motion.div>
             </div>
+          </div>
+        </section>
+
+
+        {/* ═══════════════════════════════════════════════════════════════════
+           NEXUS COMMAND DECK
+           ═══════════════════════════════════════════════════════════════════ */}
+        <section className="py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            >
+              {NEXUS_COMMAND_DECK.map((item) => (
+                <div
+                  key={item.title}
+                  className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-[#0b1020]/80 via-[#101728]/70 to-[#071018]/90 p-6"
+                >
+                  <div className="absolute -top-10 -right-10 h-28 w-28 rounded-full bg-cyan-500/20 blur-2xl" />
+                  <p className="text-xs tracking-[0.2em] uppercase text-white/50 mb-3">{item.status}</p>
+                  <h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
+                  <p className="text-cyan-300 font-medium">{item.metric}</p>
+                </div>
+              ))}
+            </motion.div>
           </div>
         </section>
 

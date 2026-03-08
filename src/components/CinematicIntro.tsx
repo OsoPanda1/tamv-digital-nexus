@@ -5,7 +5,7 @@
 // ============================================================================
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { motion, AnimatePresence, useSpring, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useSpring } from "framer-motion";
 import introAudio from "@/assets/intro.mp3";
 import logoImg from "@/assets/LOGOTAMV2.jpg";
 
@@ -391,10 +391,10 @@ function CinematicIntroEngine({ onComplete, skipEnabled, autoStart }: CinematicI
         {scene === 4 && <SceneIgnitionCall key="s4" onAction={() => setCompleted(true)} />}
       </AnimatePresence>
 
-      <div className="absolute top-0 left-0 w-full h-1 bg-white/5">
+      <div className="absolute top-0 left-0 w-full h-1 bg-white/5 overflow-hidden">
         <motion.div
-          className="h-full bg-white/40"
-          style={{ width: useTransform(progress, [0, 1], ["0%", "100%"]) }}
+          className="h-full bg-white/40 origin-left"
+          style={{ scaleX: progress }}
         />
       </div>
 

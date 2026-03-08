@@ -362,7 +362,6 @@ const noDao = {
     }
 
     const shouldReport = (value) => /\bDAOs?\b/i.test(value);
-    const shouldReport = (value) => /\bDAOs?\b/.test(value);
 
     return {
       Identifier(node) {
