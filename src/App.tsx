@@ -15,6 +15,7 @@ import { OmniKernelProvider } from "@/lib/omni-kernel";
 
 // Layout System
 import { AppLayout } from "@/components/layout/AppLayout";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // Pages
 import Index from "./pages/Index";
@@ -68,6 +69,7 @@ const App = () => (
       <BrowserRouter>
         <OmniKernelProvider workflowId="tamv-main">
           <AppLayout>
+            <ErrorBoundary>
             <Routes>
               {/* Core Routes */}
               <Route path="/" element={<Index />} />
@@ -112,6 +114,7 @@ const App = () => (
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            </ErrorBoundary>
           </AppLayout>
         </OmniKernelProvider>
       </BrowserRouter>
