@@ -24,6 +24,7 @@ import {
 
 // Import enhanced components
 import CinematicIntro from "@/components/CinematicIntro";
+import { HeroSovereignty } from "@/components/effects/HeroSovereignty";
 import { EpicHero } from "@/components/effects/EpicHero";
 import { PremiumCard, StatCard, FeatureCard } from "@/components/effects/PremiumCard";
 import { EpicBackground } from "@/components/effects/EpicBackground";
@@ -133,7 +134,7 @@ const Index = () => {
         {/* ═══════════════════════════════════════════════════════════════════
            HERO SECTION - Epic Entrance
            ═══════════════════════════════════════════════════════════════════ */}
-        <EpicHero onEnter={() => navigate("/dashboard")} />
+        <HeroSovereignty onEnter={() => navigate("/dashboard")} />
 
         {/* ═══════════════════════════════════════════════════════════════════
            UNIFIED REPOS SECTION
