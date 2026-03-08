@@ -1,11 +1,9 @@
 // src/hooks/useIsabellaChatQuantum.ts
+// Hardened: retry logic, network error handling, stream cancellation, timeout
 
 import { useState, useCallback, useRef } from "react";
 import { toast } from "sonner";
 
-/**
- * Interfaz de mensaje enriquecido
- */
 interface Message {
   role: "user" | "assistant";
   content: string;
@@ -15,32 +13,46 @@ interface Message {
   meta?: Record<string, any>;
 }
 
-/**
- * Hook avanzado Isabella AI Quantum
- */
+const MAX_RETRIES = 2;
+const STREAM_TIMEOUT_MS = 30_000;
+
 export function useIsabellaChatQuantum() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [emotion, setEmotion] = useState<Message["emotion"]>("neutral");
+  const [ethicsStatus, setEthicsStatus] = useState<string | null>(null);
   const voiceRef = useRef<HTMLAudioElement | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
 
-  // ENVÍA MENSAJE Y RECIBE STREAMING MULTIMODAL
-  const sendMessage = useCallback(
-    async (userMessage: string) => {
-      if (!userMessage.trim()) return;
-      setIsLoading(true);
-      controllerRef.current?.abort();
+  const cancelStream = useCallback(() => {
+    controllerRef.current?.abort();
+    controllerRef.current = null;
+  }, []);
 
-      const newUserMessage: Message = {
-        role: "user",
-        content: userMessage,
-        timestamp: Date.now(),
-      };
-      setMessages(prev => [...prev, newUserMessage]);
+  const sendMessage = useCallback(
+    async (userMessage: string, retryCount = 0) => {
+      if (!userMessage.trim()) return;
+      
+      // Cancel any in-flight request
+      cancelStream();
+
+      if (retryCount === 0) {
+        setIsLoading(true);
+        setEthicsStatus(null);
+        const newUserMessage: Message = {
+          role: "user",
+          content: userMessage,
+          timestamp: Date.now(),
+        };
+        setMessages(prev => [...prev, newUserMessage]);
+      }
 
       try {
         controllerRef.current = new AbortController();
+        
+        // Timeout wrapper
+        const timeoutId = setTimeout(() => controllerRef.current?.abort(), STREAM_TIMEOUT_MS);
+
         const response = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/isabella-chat-enhanced`,
           {
@@ -50,147 +62,117 @@ export function useIsabellaChatQuantum() {
               Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
             },
             body: JSON.stringify({
-              messages: [...messages, newUserMessage],
+              messages: [...messages, { role: "user", content: userMessage }],
               context: { mood: emotion, timestamp: Date.now() }
             }),
             signal: controllerRef.current.signal,
           }
         );
 
+        clearTimeout(timeoutId);
+
         if (!response.ok) {
-          if (response.status === 429) 
-            return toast.error("Límite alcanzado. Espera un momento.");
-          if (response.status === 402) 
-            return toast.error("Créditos agotados.");
-          const errorText = await response.text();
-          toast.error(`Isabella AI no responde: ${errorText}`);
+          if (response.status === 429) {
+            toast.error("Límite alcanzado. Espera un momento.");
+            return;
+          }
+          if (response.status >= 500 && retryCount < MAX_RETRIES) {
+            console.warn(`[Isabella] Retry ${retryCount + 1}/${MAX_RETRIES}`);
+            await new Promise(r => setTimeout(r, 1000 * (retryCount + 1)));
+            return sendMessage(userMessage, retryCount + 1);
+          }
+          const errorText = await response.text().catch(() => 'Error desconocido');
+          toast.error(`Isabella AI no responde (${response.status})`);
           return;
         }
 
-        const voiceUrl = response.headers.get("x-isabella-voice-url");
+        // Read ethics status from headers
+        const ethicsHeader = response.headers.get("x-isabella-ethics");
         const emotionServer = response.headers.get("x-isabella-emotion") as Message["emotion"];
+        if (ethicsHeader) setEthicsStatus(ethicsHeader);
+        if (emotionServer) setEmotion(emotionServer);
+
+        const voiceUrl = response.headers.get("x-isabella-voice-url");
         if (voiceUrl && voiceRef.current) {
           voiceRef.current.src = voiceUrl;
           voiceRef.current.play().catch(() => {});
         }
-        if (emotionServer) setEmotion(emotionServer);
 
         const reader = response.body?.getReader();
-        if (!reader) {
-          throw new Error("No se pudo obtener el lector del stream");
-        }
+        if (!reader) throw new Error("No se pudo obtener el stream");
 
         const decoder = new TextDecoder();
         let assistantMessage = "";
         let buffer = "";
-        const words: string[] = [];
 
-        // Crear mensaje asistente inicial
+        // Create initial assistant message
         setMessages(prev => [
           ...prev,
-          { role: "assistant", content: "", timestamp: Date.now(), meta: { wordIndex: 0, totalWords: 0 } }
+          { role: "assistant", content: "", timestamp: Date.now() }
         ]);
-
-        console.log('[Isabella Frontend] Iniciando lectura de stream...');
 
         while (true) {
           const { done, value } = await reader.read();
-          if (done) {
-            console.log('[Isabella Frontend] Stream completado');
-            break;
-          }
+          if (done) break;
 
-          // Decodificar chunk y agregarlo al buffer
           buffer += decoder.decode(value, { stream: true });
-          
-          // Procesar líneas completas del buffer
           const lines = buffer.split("\n");
-          
-          // Guardar la última línea incompleta en el buffer
           buffer = lines.pop() || "";
 
           for (const line of lines) {
             const trimmedLine = line.trim();
-            if (!trimmedLine || trimmedLine.startsWith(":")) {
-              // Ignorar líneas vacías o comentarios SSE
-              continue;
-            }
+            if (!trimmedLine || trimmedLine.startsWith(":")) continue;
 
             if (trimmedLine.startsWith("data: ")) {
               const data = trimmedLine.slice(6).trim();
-              
-              if (data === "[DONE]") {
-                console.log('[Isabella Frontend] Recibido [DONE]');
-                break;
-              }
+              if (data === "[DONE]") break;
 
               try {
                 const parsed = JSON.parse(data);
                 const content = parsed.choices?.[0]?.delta?.content;
-                
                 if (content && typeof content === 'string') {
-                  // Validar que el contenido no esté vacío o sea solo espacios
-                  if (content.trim()) {
-                    assistantMessage += content;
-                    
-                    // Actualizar mensaje en tiempo real
-                    setMessages(prev => {
-                      const updated = [...prev];
-                      if (updated.length > 0) {
-                        updated[updated.length - 1].content = assistantMessage;
-                      }
-                      return updated;
-                    });
-                  }
-                } else {
-                  console.log('[Isabella Frontend] Chunk sin contenido válido');
+                  assistantMessage += content;
+                  setMessages(prev => {
+                    const updated = [...prev];
+                    if (updated.length > 0) {
+                      updated[updated.length - 1] = {
+                        ...updated[updated.length - 1],
+                        content: assistantMessage,
+                      };
+                    }
+                    return updated;
+                  });
                 }
-              } catch (parseError) {
-                console.error('[Isabella Frontend] Error parseando JSON:', {
-                  error: parseError,
-                  data: data.substring(0, 100) // Primeros 100 chars para debug
-                });
-                // No hacer nada, continuar con el siguiente chunk
+              } catch {
+                // Skip malformed chunks silently
               }
             }
           }
         }
 
-        // Validaciones científicas de calidad de respuesta
-        const validations = {
-          notEmpty: assistantMessage.trim().length > 0,
-          minimumLength: assistantMessage.trim().length >= 20, // Al menos 20 caracteres
-          hasVowels: /[aeiouáéíóúAEIOUÁÉÍÓÚ]/.test(assistantMessage), // Contiene vocales
-          noExcessiveSpaces: !assistantMessage.includes('   '), // No espacios excesivos
-          hasProperPunctuation: /[.!?]/.test(assistantMessage), // Tiene puntuación
-          notOnlySymbols: /[a-záéíóúñA-ZÁÉÍÓÚÑ]/.test(assistantMessage), // Tiene letras
-          coherentWords: assistantMessage.split(' ').filter(w => w.length > 2).length >= 3 // Al menos 3 palabras de más de 2 letras
-        };
-
-        // Verificar todas las validaciones
-        const failedValidations = Object.entries(validations)
-          .filter(([_, passed]) => !passed)
-          .map(([name, _]) => name);
-
-        if (failedValidations.length > 0) {
-          console.error('[Isabella Frontend] Validaciones fallidas:', failedValidations);
-          throw new Error(`Isabella generó una respuesta inválida. Validaciones fallidas: ${failedValidations.join(', ')}`);
+        // Validate response quality
+        if (!assistantMessage.trim() || assistantMessage.trim().length < 10) {
+          if (retryCount < MAX_RETRIES) {
+            // Remove empty assistant message and retry
+            setMessages(prev => prev.filter((m, i) => !(i === prev.length - 1 && m.role === 'assistant' && !m.content.trim())));
+            console.warn(`[Isabella] Empty response, retrying ${retryCount + 1}/${MAX_RETRIES}`);
+            await new Promise(r => setTimeout(r, 1000));
+            return sendMessage(userMessage, retryCount + 1);
+          }
+          throw new Error("Isabella generó una respuesta vacía después de reintentos");
         }
 
-        console.log('[Isabella Frontend] ✓ Mensaje validado exitosamente:', {
-          length: assistantMessage.length,
-          words: assistantMessage.split(' ').length,
-          sentences: assistantMessage.split(/[.!?]/).filter(s => s.trim()).length,
-          preview: assistantMessage.substring(0, 150) + (assistantMessage.length > 150 ? '...' : '')
-        });
       } catch (error: any) {
-        console.error('[Isabella Frontend] Error completo:', error);
+        if (error?.name === 'AbortError') {
+          // Stream was cancelled by user or timeout
+          toast.info("Solicitud cancelada");
+        } else if (error?.message?.includes('Failed to fetch') || error?.message?.includes('NetworkError')) {
+          toast.error("Error de red. Verifica tu conexión.");
+        } else {
+          toast.error(error?.message || 'Error al comunicarse con Isabella');
+        }
         
-        // Mensaje de error más descriptivo
-        const errorMessage = error?.message || 'Error desconocido al comunicarse con Isabella';
-        toast.error(`Isabella AI: ${errorMessage}`);
-        
-        // Remover el mensaje asistente vacío si existe
+        // Remove empty assistant message
         setMessages(prev => {
           const lastMsg = prev[prev.length - 1];
           if (lastMsg?.role === "assistant" && !lastMsg.content.trim()) {
@@ -202,22 +184,24 @@ export function useIsabellaChatQuantum() {
         setIsLoading(false);
       }
     },
-    [messages, emotion]
+    [messages, emotion, cancelStream]
   );
 
-  // LIMPIAR CHAT Y DETENER STREAM
   const clearChat = useCallback(() => {
+    cancelStream();
     setMessages([]);
     setEmotion("neutral");
-    controllerRef.current?.abort();
-  }, []);
+    setEthicsStatus(null);
+  }, [cancelStream]);
 
   return {
     messages,
     isLoading,
     emotion,
+    ethicsStatus,
     sendMessage,
     clearChat,
+    cancelStream,
     voiceRef,
   };
 }
