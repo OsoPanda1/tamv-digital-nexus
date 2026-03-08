@@ -187,7 +187,7 @@ const Index = () => {
               <h2 className="text-headline text-foreground mb-4">
                 Todo en una sola <span className="text-gradient-quantum">Plataforma</span>
               </h2>
-              <p className="text-body-large text-white/60 max-w-2xl mx-auto">
+              <p className="text-body-large text-muted-foreground max-w-2xl mx-auto">
                 Red social, metaverso, universidad, marketplace, IA y más. 
                 Un solo ecosistema para crear, cobrar y crecer.
               </p>
