@@ -10,6 +10,8 @@ import { Gift, Sparkles, Shield, Zap, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
+type GiftTier = 'light' | 'epic' | 'legendary' | 'ultra';
+
 interface CircleGift {
   id: string;
   name: string;
@@ -17,6 +19,7 @@ interface CircleGift {
   price: number;
   currency: string;
   category: string;
+  tier: GiftTier;
   visual_preview: {
     color: string;
     geometry: 'sphere' | 'box' | 'torus' | 'octahedron';
@@ -29,6 +32,13 @@ interface CircleGift {
   };
   special_protocol?: string;
 }
+
+const TIER_CONFIG: Record<GiftTier, { label: string; color: string; emissive: number; particles: boolean; description: string }> = {
+  light: { label: 'Light', color: 'text-foreground/60', emissive: 0.1, particles: false, description: 'Partículas básicas y shaders sutiles' },
+  epic: { label: 'Epic', color: 'text-violet-400', emissive: 0.4, particles: true, description: 'Animaciones 3D avanzadas y efectos persistentes' },
+  legendary: { label: 'Legendary', color: 'text-amber-400', emissive: 0.7, particles: true, description: 'Integración temporal y audio espacial' },
+  ultra: { label: 'Ultra', color: 'text-destructive', emissive: 1.0, particles: true, description: 'Experiencia AR completa que transforma el entorno' },
+};
 
 interface Gift3DProps {
   gift: CircleGift;
@@ -115,15 +125,20 @@ export const CircleGiftGallery = () => {
 
       if (error) throw error;
 
-      const formattedGifts = (data || []).map(gift => ({
-        ...gift,
-        visual_preview: typeof gift.visual_preview === 'string' 
-          ? JSON.parse(gift.visual_preview)
-          : gift.visual_preview || { color: '#00D9FF', geometry: 'sphere', scale: 1 },
-        combo_effects: gift.combo_effects && typeof gift.combo_effects === 'string'
-          ? JSON.parse(gift.combo_effects)
-          : gift.combo_effects
-      }));
+      const formattedGifts: CircleGift[] = (data || []).map(gift => {
+        const price = gift.price;
+        const tier: GiftTier = price >= 500 ? 'ultra' : price >= 200 ? 'legendary' : price >= 50 ? 'epic' : 'light';
+        return {
+          ...gift,
+          tier,
+          visual_preview: typeof gift.visual_preview === 'string' 
+            ? JSON.parse(gift.visual_preview)
+            : gift.visual_preview || { color: '#00D9FF', geometry: 'sphere', scale: 1 },
+          combo_effects: gift.combo_effects && typeof gift.combo_effects === 'string'
+            ? JSON.parse(gift.combo_effects)
+            : gift.combo_effects
+        };
+      });
 
       setGifts(formattedGifts);
     } catch (error) {
@@ -326,9 +341,20 @@ export const CircleGiftGallery = () => {
                       <h3 className="text-2xl font-bold text-aqua mb-2">
                         {selectedGift.name}
                       </h3>
-                      <Badge className="bg-navy-metallic text-silver">
-                        {selectedGift.category}
-                      </Badge>
+                      <div className="flex gap-2 mt-1">
+                        <Badge className="bg-navy-metallic text-silver">
+                          {selectedGift.category}
+                        </Badge>
+                        <Badge className={cn(
+                          "font-bold",
+                          selectedGift.tier === 'ultra' ? 'bg-destructive/20 text-destructive' :
+                          selectedGift.tier === 'legendary' ? 'bg-amber-500/20 text-amber-400' :
+                          selectedGift.tier === 'epic' ? 'bg-violet-500/20 text-violet-400' :
+                          'bg-muted text-muted-foreground'
+                        )}>
+                          {TIER_CONFIG[selectedGift.tier].label}
+                        </Badge>
+                      </div>
                     </div>
                     <div className="text-right">
                       <p className="text-3xl font-bold text-aqua">
@@ -341,6 +367,12 @@ export const CircleGiftGallery = () => {
                   </div>
 
                   <p className="text-silver-dark">{selectedGift.description}</p>
+
+                  {/* Tier info */}
+                  <div className="glass-panel border border-aqua/20 rounded-lg p-3">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Tier: {TIER_CONFIG[selectedGift.tier].label}</p>
+                    <p className="text-sm text-silver-dark">{TIER_CONFIG[selectedGift.tier].description}</p>
+                  </div>
 
                   {selectedGift.combo_effects && (
                     <div className="glass-panel border border-aqua/20 rounded-lg p-4">

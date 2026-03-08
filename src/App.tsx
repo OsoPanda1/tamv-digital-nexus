@@ -45,6 +45,8 @@ import MDXOperations from "./pages/MDXOperations";
 import MembershipOnboarding from "./pages/MembershipOnboarding";
 import Evolution from "./pages/Evolution";
 import Singularity from "./pages/Singularity";
+import Reels from "./pages/Reels";
+import Health from "./pages/Health";
 
 // Configure React Query
 const queryClient = new QueryClient({
@@ -109,6 +111,8 @@ const App = () => (
               <Route path="/operations" element={<MDXOperations />} />
               <Route path="/evolution" element={<Evolution />} />
               <Route path="/singularity" element={<Singularity />} />
+              <Route path="/reels" element={<Reels />} />
+              <Route path="/health" element={<Health />} />
               <Route path="/onboarding/membership" element={<MembershipOnboarding />} />
 
               {/* 404 */}

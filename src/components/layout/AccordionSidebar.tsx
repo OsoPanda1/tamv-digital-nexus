@@ -20,7 +20,7 @@ import {
   AlertTriangle, Settings, Lock, Radio, Layers, Heart, Infinity,
   Sparkles, ChevronLeft, ChevronRight, Zap, Crown, Store,
   GraduationCap, Wallet, Gamepad2, Video, Music, PawPrint,
-  Dna as DNA,
+  Dna as DNA, Stethoscope,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import logoImg from '@/assets/LOGOTAMV2.jpg';
@@ -48,6 +48,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { icon: Home, label: 'Feed Global', path: '/' },
       { icon: Users, label: 'Comunidad', path: '/community' },
+      { icon: Video, label: 'Reels', path: '/reels', badge: 'NEW' },
       { icon: Video, label: 'Streaming', path: '/metaverse', badge: 'LIVE' },
       { icon: User, label: 'Mi Perfil', path: '/profile' },
     ],
@@ -102,6 +103,14 @@ const NAV_GROUPS: NavGroup[] = [
       { icon: DNA, label: 'ID-NVIDA', path: '/profile' },
       { icon: AlertTriangle, label: 'Panel Crisis', path: '/crisis' },
       { icon: Settings, label: 'Admin', path: '/admin', badge: 'Admin' },
+    ],
+  },
+  {
+    id: 'health',
+    title: 'Salud',
+    icon: Stethoscope,
+    items: [
+      { icon: Stethoscope, label: 'Telemedicina', path: '/health', badge: 'NEW', color: '#10B981' },
     ],
   },
   {
