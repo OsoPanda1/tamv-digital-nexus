@@ -49,24 +49,20 @@ const UNIFIED_FEATURES = [
     icon: <Brain className="w-6 h-6" />,
     title: "Isabella AI",
     description: "Inteligencia artificial emocional avanzada. La IA más humana del mundo digital.",
-    gradient: "from-secondary/20 to-accent,
-  {
+    gradient: "from-secondary/20 to-accent {
     icon: <Layers className="w-6 h-6" />,
     title: "DreamSpaces XR",
     description: "Espacios virtuales infinitos en 3D/4D. Crea mundos imposibles con física cuántica.",
-    gradient: "from-ambeccecceccent/20 to-secondary  icon: <GraduationCap className="w-6 h-6" />,
+    gradient: "from-ambecceccecceccent/20 to-secondary <GraduationCap className="w-6 h-6" />,
     title: "Universidad TAMV",
     description: "Educación certificada en blockchain. Certificaciones BookPI reconocidas globalmente.",
-    gradient: "from-emeraldprimaryprimary/20 to-accentcon: <Music className="w-6 h-6" />,
+    gradient: "from-emeraldprimaryprimaryprimary/20 to-accentlassName="w-6 h-6" />,
     title: "KAOS Audio",
     description: "Frecuencias binaurales 432Hz. Audio inmersivo que transforma la consciencia.",
-    gradient: "from-rose-500/20 tsecondary/20 to-primary{
-    icon: <ShoppingBag className="w-6 h-6" />,
+    gradient: "from-rose-500/20 tsecondary/20 secondary/20 to-primary<ShoppingBag className="w-6 h-6" />,
     title: "Marketplace Global",
     description: "30+ formas de monetización ética. Economía federada con distribución justa.",
-    gradient: "from-green-500/20 to-emerald-500/20",
-  },
-];
+    gradient: "from-green-500/20accent/20 to-primary;
 
 const UNIFIED_STATS = [
   { value: "30+", label: "Formas Monetización", icon: <Wallet />, color: "aqua" as const },
