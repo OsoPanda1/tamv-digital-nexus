@@ -45,6 +45,8 @@ import MDXOperations from "./pages/MDXOperations";
 import MembershipOnboarding from "./pages/MembershipOnboarding";
 import Evolution from "./pages/Evolution";
 import Singularity from "./pages/Singularity";
+import Reels from "./pages/Reels";
+import Health from "./pages/Health";
 
 // Configure React Query
 const queryClient = new QueryClient({
