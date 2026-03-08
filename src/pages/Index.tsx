@@ -133,7 +133,7 @@ const Index = () => {
         {/* ═══════════════════════════════════════════════════════════════════
            HERO SECTION - Epic Entrance
            ═══════════════════════════════════════════════════════════════════ */}
-        <EpicHero onEnter={() => navigate("/dashboard")} />
+        <HeroSovereignty onEnter={() => navigate("/dashboard")} />
 
         {/* ═══════════════════════════════════════════════════════════════════
            UNIFIED REPOS SECTION
