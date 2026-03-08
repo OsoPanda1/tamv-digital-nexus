@@ -27,6 +27,8 @@ import CinematicIntro from "@/components/CinematicIntro";
 import { EpicHero } from "@/components/effects/EpicHero";
 import { PremiumCard, StatCard, FeatureCard } from "@/components/effects/PremiumCard";
 import { EpicBackground } from "@/components/effects/EpicBackground";
+import { NextGenFeed } from "@/components/social/NextGenFeed";
+import { FEDERATION_COUNT } from "@/lib/federations";
 
 // Import hooks
 import { useBackgroundControl } from "@/components/UnifiedBackground";
@@ -40,7 +42,7 @@ const UNIFIED_FEATURES = [
   {
     icon: <Globe className="w-6 h-6" />,
     title: "Ecosistema Federado",
-    description: "7 capas civilizatorias interconectadas. Arquitectura antifrágil con soberanía digital total.",
+    description: `${FEDERATION_COUNT} federaciones interconectadas. Arquitectura antifrágil con soberanía digital total.`,
     gradient: "from-cyan-500/20 to-blue-500/20",
   },
   {
@@ -77,7 +79,7 @@ const UNIFIED_FEATURES = [
 
 const UNIFIED_STATS = [
   { value: "30+", label: "Formas Monetización", icon: <Wallet />, color: "aqua" as const },
-  { value: "7", label: "Capas Federadas", icon: <Layers />, color: "purple" as const },
+  { value: "48", label: "Federaciones", icon: <Layers />, color: "aqua" as const },
   { value: "∞", label: "DreamSpaces", icon: <Sparkles />, color: "gold" as const },
   { value: "100%", label: "Soberanía Digital", icon: <Shield />, color: "aqua" as const },
 ];
@@ -269,99 +271,27 @@ const Index = () => {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════════════
-           TRENDING SECTION
+           NEXT-GEN SOCIAL FEED — 300x Superior
            ═══════════════════════════════════════════════════════════════════ */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <section className="py-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Trending Hashtags */}
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="lg:col-span-2"
-              >
-                <PremiumCard className="p-8 h-full">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-3 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/20">
-                      <TrendingUp className="w-6 h-6 text-pink-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white">Tendencias Globales</h3>
-                      <p className="text-sm text-white/50">Lo más viral en TAMV</p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {TRENDING_HASHTAGS.map((item, index) => (
-                      <motion.div
-                        key={item.tag}
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.3, delay: index * 0.05 }}
-                        className="flex items-center justify-between p-4 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] transition-colors cursor-pointer group"
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="text-lg font-bold text-white/30">0{index + 1}</span>
-                          <span className="text-white group-hover:text-cyan-400 transition-colors">
-                            {item.tag}
-                          </span>
-                        </div>
-                        <span className="text-sm text-white/40">{item.posts} posts</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </PremiumCard>
-              </motion.div>
-
-              {/* Quick Access */}
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <PremiumCard className="p-8 h-full">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-3 rounded-xl bg-gradient-to-br from-amber-500/20 to-yellow-500/20">
-                      <Zap className="w-6 h-6 text-amber-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white">Acceso Rápido</h3>
-                      <p className="text-sm text-white/50">Navega el ecosistema</p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    {[
-                      { label: "Metaverso", icon: <Globe />, path: "/metaverse", color: "cyan" },
-                      { label: "Isabella AI", icon: <Brain />, path: "/isabella", color: "purple" },
-                      { label: "Universidad", icon: <GraduationCap />, path: "/university", color: "amber" },
-                      { label: "DreamSpaces", icon: <Sparkles />, path: "/dream-spaces", color: "pink" },
-                      { label: "Marketplace", icon: <ShoppingBag />, path: "/monetization", color: "green" },
-                      { label: "Gobernanza", icon: <Crown />, path: "/governance", color: "gold" },
-                    ].map((link, index) => (
-                      <Link key={link.path} to={link.path}>
-                        <motion.div
-                          whileHover={{ x: 5 }}
-                          className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] transition-all group"
-                        >
-                          <div className={`p-2 rounded-lg bg-${link.color}-500/20 text-${link.color}-400`}>
-                            {link.icon}
-                          </div>
-                          <span className="text-white group-hover:text-cyan-400 transition-colors flex-1">
-                            {link.label}
-                          </span>
-                          <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-cyan-400 transition-colors" />
-                        </motion.div>
-                      </Link>
-                    ))}
-                  </div>
-                </PremiumCard>
-              </motion.div>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-8"
+            >
+              <Badge className="mb-4 px-4 py-1.5 text-sm bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border-cyan-500/30">
+                <Flame className="w-3 h-3 mr-2" />
+                Civilizatory Flow
+              </Badge>
+              <h2 className="text-headline text-white mb-2">
+                Feed <span className="text-gradient-quantum">Social Quantum</span>
+              </h2>
+              <p className="text-sm text-white/40">{FEDERATION_COUNT} federaciones · Tiempo real · Soberanía 100%</p>
+            </motion.div>
+            <NextGenFeed />
           </div>
         </section>
 

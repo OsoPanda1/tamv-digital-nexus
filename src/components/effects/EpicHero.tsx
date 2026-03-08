@@ -1,7 +1,7 @@
 // ============================================================================
-// TAMV MD-X4™ - EPIC HERO COMPONENT v8.0
+// TAMV MD-X4™ - EPIC HERO COMPONENT v9.0 — Zero Mediocrity
 // Autor visionario y propietario: Edwin Oswaldo Castillo Trejo
-// Ecosistema Civilizatorio Latinoamericano — Evolución OMNI-KERNEL
+// 48 Federaciones Civilizatorias · Evolución de las Redes Sociales
 // ============================================================================
 
 import { motion } from "framer-motion";
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { FEDERATION_COUNT } from "@/lib/federations";
 
 interface EpicHeroProps {
   onEnter?: () => void;
@@ -43,7 +44,7 @@ const EVOLUTION_PILLARS = [
 ];
 
 const STATS = [
-  { value: "7", label: "Federaciones Core" },
+  { value: String(FEDERATION_COUNT), label: "Federaciones Activas" },
   { value: "L0–L3", label: "Capas Antifrágiles" },
   { value: "∞", label: "DreamSpaces XR" },
   { value: "100%", label: "Soberanía Digital" },
@@ -101,11 +102,11 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
           transition={{ duration: 0.6 }}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-crystal mb-8"
         >
-          <Sparkles className="w-4 h-4 text-cyan-400" />
-          <span className="text-sm text-white/80">
-            Ecosistema Civilizatorio OMNI-KERNEL
+          <Sparkles className="w-4 h-4 text-[hsl(var(--aqua))]" />
+          <span className="text-sm text-foreground/80">
+            {FEDERATION_COUNT} Federaciones · Ecosistema OMNI-KERNEL
           </span>
-          <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 text-xs font-bold text-white">
+          <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-[hsl(var(--aqua))] to-[hsl(var(--accent))] text-xs font-bold text-primary-foreground">
             MD-X4
           </span>
         </motion.div>
