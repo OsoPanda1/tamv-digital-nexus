@@ -272,6 +272,29 @@ const Index = () => {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════════════
+           MANIFESTO TRANSITION — Scroll-pause message
+           ═══════════════════════════════════════════════════════════════════ */}
+        <section className="py-24 px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, amount: 0.8 }}
+            transition={{ duration: 1.2 }}
+            className="max-w-2xl mx-auto text-center"
+          >
+            <p className="text-xl md:text-2xl font-display font-bold text-foreground leading-tight mb-4">
+              "Si tu historia cabe en un cuadrito genérico,
+              <br />
+              <span className="text-primary">no es TAMV.</span>"
+            </p>
+            <div className="w-16 h-px bg-primary/30 mx-auto mb-4" />
+            <p className="text-[10px] font-mono text-muted-foreground uppercase" style={{ letterSpacing: '0.3em' }}>
+              {FEDERATION_COUNT} federaciones, un solo pulso: turismo, comercio, educación, seguridad y cultura sincronizados en tiempo real.
+            </p>
+          </motion.div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════════════
            NEXT-GEN SOCIAL FEED — 300x Superior
            ═══════════════════════════════════════════════════════════════════ */}
         <section className="py-16 px-4 sm:px-6 lg:px-8">
