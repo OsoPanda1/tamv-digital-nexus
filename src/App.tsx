@@ -47,6 +47,7 @@ import Evolution from "./pages/Evolution";
 import Singularity from "./pages/Singularity";
 import Reels from "./pages/Reels";
 import Health from "./pages/Health";
+import RepoUnification from "./pages/RepoUnification";
 
 // Configure React Query
 const queryClient = new QueryClient({
@@ -114,6 +115,7 @@ const App = () => (
               <Route path="/reels" element={<Reels />} />
               <Route path="/health" element={<Health />} />
               <Route path="/onboarding/membership" element={<MembershipOnboarding />} />
+              <Route path="/repo-unification" element={<RepoUnification />} />
 
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
