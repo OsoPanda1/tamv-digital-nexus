@@ -47,6 +47,7 @@ import Evolution from "./pages/Evolution";
 import Singularity from "./pages/Singularity";
 import Reels from "./pages/Reels";
 import Health from "./pages/Health";
+import RepoUnification from "./pages/RepoUnification";
 
 // Configure React Query
 const queryClient = new QueryClient({
