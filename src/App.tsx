@@ -115,6 +115,7 @@ const App = () => (
               <Route path="/reels" element={<Reels />} />
               <Route path="/health" element={<Health />} />
               <Route path="/onboarding/membership" element={<MembershipOnboarding />} />
+              <Route path="/repo-unification" element={<RepoUnification />} />
 
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
