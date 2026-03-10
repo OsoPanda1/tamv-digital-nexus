@@ -1,7 +1,7 @@
 // ============================================================================
 // TAMV MD-X4™ — HOME: Social Feed First (Instagram/TikTok-style)
-// Visual-first: 85% media, 15% text
-// Updated: 2026-03-10 - Full JSX structure verified
+// Visual-first: 85% media, 15% text  
+// Build: v2.0.1 - JSX validated & cache cleared
 // ============================================================================
 
 import { useState } from "react";
