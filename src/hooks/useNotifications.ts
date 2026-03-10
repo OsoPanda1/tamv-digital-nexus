@@ -155,7 +155,8 @@ export function useNotifications(): UseNotificationsReturn {
 
       const { error: insertError } = await supabase.from('notifications').insert({
         user_id: user.id,
-        type: config.category, // Fixed: use 'type' instead of 'category'
+        type: config.category,
+        category: config.category,
         priority: config.priority,
         title,
         message,
