@@ -213,3 +213,23 @@ Para considerar estado 100% operativo:
 
 - Generado a partir de revisión de estructura de repositorio, documentación canon y ejecución de checks locales (`typecheck`, `test`, `lint:tamv`).
 - No se modificó lógica productiva; este entregable se mantiene dentro de operación documental permitida (`docs/**`).
+
+
+---
+
+## 10) Resolución de comentarios de revisión (post-PR)
+
+### Comentario A — Confirmar registro en índice documental
+- **Resuelto:** el entregable quedó listado en `docs/TAMV_DOCUMENTATION_INDEX.md` dentro de “Repo unification y auditoría”.
+- **Evidencia:** entrada explícita con nombre de archivo y resumen del alcance.
+
+### Comentario B — Trazabilidad de validaciones ejecutadas
+- **Resuelto:** se preserva el estado de PASS/FAIL para `typecheck`, `test` y `lint:tamv`, incluyendo conteo agregado de hallazgos de lint para priorización OLA A.
+- **Evidencia operacional (snapshot de auditoría):**
+  - `npm run typecheck` → PASS
+  - `npm run test` → PASS
+  - `npm run lint:tamv` → FAIL (`81 problemas: 15 errores, 66 warnings`)
+
+### Comentario C — Claridad de ejecución sin romper canon
+- **Resuelto:** se ratifica que el trabajo fue documental, sin intervención de lógica productiva, bajo `MODE=DOCUMENTAL_ONLY` y canon vigente (`SOUL.md` + Master Canon).
+- **Siguiente acción sugerida:** iniciar OLA A con PR técnico separado, trazable y aprobado por humano.

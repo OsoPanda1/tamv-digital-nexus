@@ -113,7 +113,7 @@
 - `docs/repo-unification/REPO_TO_DOMAIN_MATRIX.md` ✅
 - `docs/repo-unification/AUDITORIA_GENERAL_2026-02-24.md` ✅
 - `docs/repo-unification/REPO_REGISTRY_177.csv` ✅
-- `docs/repo-unification/MEGA_ANALISIS_EVOLUCION_MDX4_2026-03-10.md` ✅ **NUEVO** — diagnóstico integral L0–L7, errores críticos detectados y plan de migración por olas
+- `docs/repo-unification/MEGA_ANALISIS_EVOLUCION_MDX4_2026-03-10.md` ✅ **ACTUALIZADO** — diagnóstico integral L0–L7, errores críticos detectados, plan de migración por olas y resolución de comentarios post-PR
 
 ## Código fuente — contratos y módulos
 
