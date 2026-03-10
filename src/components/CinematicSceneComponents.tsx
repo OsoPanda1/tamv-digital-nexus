@@ -290,7 +290,7 @@ export function ShockwaveRings({ phase }: { phase: string }) {
         : 0;
       const s = active ? (1.5 + i * 1.8) * pulse : 0;
       ref.current.scale.set(s, s, s);
-      // @ts-expect-error
+      // @ts-expect-error -- r3f material typing is broader than runtime mesh material with opacity
       ref.current.material.opacity = active ? 0.18 - i * 0.04 : 0;
     });
   });
@@ -516,7 +516,7 @@ export function ParticleTrails({ phase }: { phase: string }) {
       }
     }
     trailRef.current.geometry.attributes.position.needsUpdate = true;
-    // @ts-expect-error
+    // @ts-expect-error -- points material exposes opacity at runtime although TS union omits it
     trailRef.current.material.opacity = visible ? 0.6 : 0;
   });
 

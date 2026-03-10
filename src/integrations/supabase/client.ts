@@ -35,7 +35,7 @@ if (isConfigured) {
   // This allows the app to render even without Supabase configured
   console.warn('⚠️ Supabase not configured. Using fallback mode.');
   
-  // @ts-ignore - Create minimal mock for development
+  // @ts-expect-error -- development fallback only needs partial Supabase surface for non-authenticated rendering
   supabase = {
     from: () => ({
       select: () => ({ data: [], error: null }),

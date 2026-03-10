@@ -6,7 +6,7 @@
 // ============================================================================
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { motion, AnimatePresence, useSpring, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useSpring } from "framer-motion";
 import introAudio from "@/assets/intro.mp3";
 import logoImg from "@/assets/LOGOTAMV2.jpg";
 import heroCity from "@/assets/gallery/hero-city.jpg";
@@ -726,6 +726,10 @@ function CinematicIntroEngine({ onComplete, skipEnabled, autoStart }: CinematicI
         {scene === 7 && <SceneCTA key="s7" onAction={() => setCompleted(true)} />}
       </AnimatePresence>
 
+      <div className="absolute top-0 left-0 w-full h-1 bg-white/5 overflow-hidden">
+        <motion.div
+          className="h-full bg-white/40 origin-left"
+          style={{ scaleX: progress }}
       {/* Progress bar */}
       <div className="absolute top-0 left-0 w-full h-[2px] bg-border/10 z-50">
         <motion.div

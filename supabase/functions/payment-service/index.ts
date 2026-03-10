@@ -132,7 +132,7 @@ const handler = createHandler(SERVICE_NAME, PIPELINE, async (ctx) => {
       ts: Date.now(),
     }));
 
-    let result: any = {
+    const result: any = {
       payment_id: paymentId,
       amount,
       currency,
