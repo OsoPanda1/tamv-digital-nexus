@@ -1,12 +1,12 @@
-"""Visualizador base de metarrealidad TAMV.
+"""Visualizador metarreal TAMV.
 
-Módulo plug-and-play para generar una escena 3D con capas conceptuales del TAMV:
-- SYSTEM_CORE (espiral central)
-- WORLD_LAYERS (esferas/mundos flotantes)
-- USER_TRAILS (trayectorias)
-- EVENTS / GOVERNANCE_OVERLAYS (eventos críticos)
+Módulo funcional para explorar una representación 3D de capas TAMV:
+- SYSTEM_CORE
+- WORLD_LAYERS
+- USER_TRAILS
+- EVENTS / GOVERNANCE_OVERLAYS
 
-Uso:
+Ejemplo:
     python tools/tamv_metareality_viewer.py --save-frame tamv_metareality_frame0.png --no-show
 """
 
@@ -28,9 +28,12 @@ class ViewerConfig:
     trail_points: int = 50
     event_count: int = 6
     frames: int = 360
+    elevation_deg: float = 20.0
+    azimuth_speed: float = 0.6
 
 
 def create_metareality_figure(config: ViewerConfig) -> tuple[plt.Figure, plt.Axes]:
+    """Construye la figura base 3D con elementos metarreales."""
     rng = np.random.default_rng(config.seed)
 
     fig = plt.figure(figsize=(10, 10))
@@ -38,11 +41,11 @@ def create_metareality_figure(config: ViewerConfig) -> tuple[plt.Figure, plt.Axe
 
     fig.patch.set_facecolor("black")
     ax.set_facecolor("black")
-
     ax.set_xlim(-30, 30)
     ax.set_ylim(-30, 30)
     ax.set_zlim(-30, 30)
 
+    # SYSTEM_CORE
     theta = np.linspace(0, 20 * np.pi, 2000)
     z = np.linspace(-25, 25, 2000)
     r = 0.3 * theta
@@ -50,6 +53,7 @@ def create_metareality_figure(config: ViewerConfig) -> tuple[plt.Figure, plt.Axe
     y = r * np.sin(theta)
     ax.plot(x, y, z, color="cyan", linewidth=0.7)
 
+    # WORLD_LAYERS
     for _ in range(config.world_count):
         center = rng.uniform(-20, 20, 3)
         radius = rng.uniform(2, 5)
@@ -60,20 +64,20 @@ def create_metareality_figure(config: ViewerConfig) -> tuple[plt.Figure, plt.Axe
         xs = radius * np.outer(np.cos(u), np.sin(v)) + center[0]
         ys = radius * np.outer(np.sin(u), np.sin(v)) + center[1]
         zs = radius * np.outer(np.ones(np.size(u)), np.cos(v)) + center[2]
-
         ax.plot_surface(xs, ys, zs, alpha=0.08, color="blue")
 
+    # USER_TRAILS
     for _ in range(config.trail_count):
         pts = rng.uniform(-25, 25, (config.trail_points, 3))
         ax.plot(pts[:, 0], pts[:, 1], pts[:, 2], color="orange", alpha=0.4)
 
+    # EVENTS + GOVERNANCE_OVERLAYS
     events = rng.uniform(-20, 20, (config.event_count, 3))
     ax.scatter(events[:, 0], events[:, 1], events[:, 2], color="red", s=60)
 
     ax.set_xticks([])
     ax.set_yticks([])
     ax.set_zticks([])
-
     ax.set_title("TAMV Metareality Viewer", color="white", pad=20)
 
     return fig, ax
@@ -85,11 +89,11 @@ def animate_metareality(
     save_gif_path: str | None = None,
     show: bool = True,
 ) -> FuncAnimation:
-    """Genera una animación giratoria de la metarrealidad TAMV."""
+    """Genera la animación giratoria y opcionalmente exporta artefactos."""
     fig, ax = create_metareality_figure(config)
 
     def update(frame: int) -> None:
-        ax.view_init(20, frame * 0.6)
+        ax.view_init(config.elevation_deg, frame * config.azimuth_speed)
 
     animation = FuncAnimation(fig, update, frames=config.frames)
 
@@ -115,6 +119,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--trail-points", type=int, default=50)
     parser.add_argument("--event-count", type=int, default=6)
     parser.add_argument("--frames", type=int, default=360)
+    parser.add_argument("--elevation-deg", type=float, default=20.0)
+    parser.add_argument("--azimuth-speed", type=float, default=0.6)
     parser.add_argument("--save-frame", dest="save_frame", default=None)
     parser.add_argument("--save-gif", dest="save_gif", default=None)
     parser.add_argument("--no-show", action="store_true")
@@ -130,6 +136,8 @@ def main() -> None:
         trail_points=args.trail_points,
         event_count=args.event_count,
         frames=args.frames,
+        elevation_deg=args.elevation_deg,
+        azimuth_speed=args.azimuth_speed,
     )
 
     animate_metareality(
