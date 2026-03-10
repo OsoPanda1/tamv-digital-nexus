@@ -217,14 +217,22 @@ async function fetchAllRepos(): Promise<RepoData[]> {
   let page = 1;
   const perPage = 100;
 
+  // Use GITHUB_API_TOKEN secret for authenticated requests (5000 req/hr vs 60)
+  const githubToken = Deno.env.get('GITHUB_API_TOKEN');
+  const headers: Record<string, string> = {
+    'Accept': 'application/vnd.github.v3+json',
+    'User-Agent': 'TAMV-Repo-Scanner/2.0',
+  };
+  if (githubToken) {
+    headers['Authorization'] = `token ${githubToken}`;
+    console.log('[TAMV Scanner] Using authenticated GitHub API requests');
+  } else {
+    console.warn('[TAMV Scanner] No GITHUB_API_TOKEN found, using unauthenticated (60 req/hr limit)');
+  }
+
   while (true) {
     const url = `https://api.github.com/users/${TARGET_USERNAME}/repos?page=${page}&per_page=${perPage}&type=all&sort=updated`;
-    const response = await fetch(url, {
-      headers: {
-        'Accept': 'application/vnd.github.v3+json',
-        'User-Agent': 'TAMV-Repo-Scanner/2.0',
-      },
-    });
+    const response = await fetch(url, { headers });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -239,6 +247,7 @@ async function fetchAllRepos(): Promise<RepoData[]> {
 
     // Safety: GitHub API rate limit check
     const remaining = response.headers.get('X-RateLimit-Remaining');
+    console.log(`[TAMV Scanner] Page ${page - 1}: ${repos.length} repos, rate limit remaining: ${remaining}`);
     if (remaining && parseInt(remaining) < 5) {
       console.warn('GitHub API rate limit approaching, stopping pagination');
       break;
