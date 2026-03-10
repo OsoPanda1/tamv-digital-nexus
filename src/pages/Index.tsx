@@ -1,35 +1,24 @@
 // ============================================================================
-// TAMV MD-X4™ v7.0 UNIFIED - INDEX PAGE
-// Unified from all OsoPanda1 repos with 100x Visual Quality
-// Ecosistema Civilizatorio Latinoamericano
+// TAMV MD-X4™ — HOME: Social Feed First (Instagram/TikTok-style)
+// Visual-first: 85% media, 15% text
 // ============================================================================
 
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Home, Compass, Users, MessageCircle, Video, Radio, Music, Gamepad2,
-  ShoppingBag, Globe, Sparkles, Heart, Share2, Send, Play, Pause,
-  TrendingUp, Zap, Layers, Search, Bell, Settings, Plus, Camera,
-  Mic, Image, Smile, Gift, MapPin, Hash, AtSign, Eye, Flame,
-  ChevronRight, ChevronLeft, Wifi, WifiOff, Volume2, VolumeX,
-  Maximize2, Minimize2, MoreHorizontal, Bookmark, Flag, UserPlus,
-  LogIn, Star, Crown, Diamond, Wallet, Activity, Headphones,
-  Wifi as LiveIcon, Ghost, Sparkle, Rocket, Waves, Brain,
-  ShoppingCart, Store, GraduationCap, PiggyBank, CreditCard, Gem, Palette,
-  Shield, BookOpen
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  Flame, TrendingUp, Users, Video, Radio, Search,
+  Hash, Crown, Zap, Globe, Star, Sparkles,
 } from "lucide-react";
 
-// Import enhanced components
+// Social components
+import { NextGenFeed } from "@/components/social/NextGenFeed";
+import { TrendingSidebar } from "@/components/social/TrendingSidebar";
+import { StoriesCarousel } from "@/components/social/StoriesCarousel";
 import CinematicIntro from "@/components/CinematicIntro";
-import { EpicHero } from "@/components/effects/EpicHero";
-import { PremiumCard, StatCard, FeatureCard } from "@/components/effects/PremiumCard";
-import { EpicBackground } from "@/components/effects/EpicBackground";
-
-// Import hooks
-import { useBackgroundControl } from "@/components/UnifiedBackground";
 import { useAuth } from "@/hooks/useAuth";
 
 // ============================================================================
@@ -120,124 +109,28 @@ const NEXUS_COMMAND_DECK = [
 
 // ============================================================================
 // MAIN COMPONENT
+// MAIN
 // ============================================================================
 
 const Index = () => {
   const [showIntro, setShowIntro] = useState(true);
-  const [activeSection, setActiveSection] = useState("home");
-  const { setBackground } = useBackgroundControl();
   const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    setBackground("particles", 0.5);
-  }, [setBackground]);
 
   if (showIntro) {
     return <CinematicIntro onComplete={() => setShowIntro(false)} />;
   }
 
   return (
-    <div className="relative min-h-screen">
-      {/* Epic Background */}
-      <EpicBackground />
-      
-      {/* Main Content */}
-      <div className="relative z-10">
-        {/* ═══════════════════════════════════════════════════════════════════
-           HERO SECTION - Epic Entrance
-           ═══════════════════════════════════════════════════════════════════ */}
-        <EpicHero onEnter={() => navigate("/dashboard")} />
-
-        {/* ═══════════════════════════════════════════════════════════════════
-           UNIFIED REPOS SECTION
-           ═══════════════════════════════════════════════════════════════════ */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
-              <Badge className="mb-4 px-4 py-1.5 text-sm bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border-cyan-500/30">
-                <Layers className="w-3 h-3 mr-2" />
-                Unificación Completa
-              </Badge>
-              <h2 className="text-headline text-white mb-4">
-                Repositorios <span className="text-gradient-quantum">Unificados</span>
-              </h2>
-              <p className="text-body-large text-white/60 max-w-2xl mx-auto">
-                Todo el conocimiento y código del ecosistema TAMV ahora en una 
-                sola plataforma civilizatoria unificada.
-              </p>
-            </motion.div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {REPOS_UNIFIED.map((repo, index) => (
-                <motion.div
-                  key={repo.name}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="glass-crystal p-4 rounded-xl text-center hover:border-cyan-400/30 transition-all group cursor-default"
-                >
-                  <div className="w-10 h-10 mx-auto mb-3 rounded-lg bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <Star className="w-5 h-5 text-cyan-400" />
-                  </div>
-                  <p className="text-sm font-medium text-white truncate">{repo.name}</p>
-                  <p className="text-xs text-white/40 mt-1">{repo.category}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════════════════════
-           FEATURES SECTION
-           ═══════════════════════════════════════════════════════════════════ */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-16"
-            >
-              <Badge className="mb-4 px-4 py-1.5 text-sm bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-500/30">
-                <Sparkles className="w-3 h-3 mr-2" />
-                Ecosistema Completo
-              </Badge>
-              <h2 className="text-headline text-white mb-4">
-                Todo en una sola <span className="text-gradient-quantum">Plataforma</span>
-              </h2>
-              <p className="text-body-large text-white/60 max-w-2xl mx-auto">
-                Red social, metaverso, universidad, marketplace, IA y más. 
-                Un solo ecosistema para crear, cobrar y crecer.
-              </p>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {UNIFIED_FEATURES.map((feature, index) => (
-                <motion.div
-                  key={feature.title}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <FeatureCard
-                    title={feature.title}
-                    description={feature.description}
-                    icon={feature.icon}
-                    gradient={feature.gradient}
-                  />
-                </motion.div>
-              ))}
-            </div>
+    <div className="min-h-screen py-4">
+      {/* Top bar: Search + Quick actions */}
+      <div className="max-w-7xl mx-auto px-4 mb-4">
+        <div className="flex items-center gap-3">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              placeholder="Buscar en TAMV..."
+              className="w-full bg-card/40 border border-border/20 rounded-xl pl-10 pr-4 py-2 text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/40 backdrop-blur-sm"
+            />
           </div>
         </section>
 
@@ -483,41 +376,101 @@ const Index = () => {
                 </p>
               </div>
             </motion.div>
+          <div className="flex items-center gap-2">
+            {!isAuthenticated && (
+              <Link to="/auth">
+                <Button size="sm" className="rounded-xl bg-primary text-primary-foreground text-xs gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  Unirse
+                </Button>
+              </Link>
+            )}
           </div>
-        </section>
+        </div>
+      </div>
 
-        {/* ═══════════════════════════════════════════════════════════════════
-           FOOTER
-           ═══════════════════════════════════════════════════════════════════ */}
-        <footer className="py-12 px-4 sm:px-6 lg:px-8 border-t border-white/10">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl overflow-hidden border border-cyan-500/30">
-                  <img src="/src/assets/LOGOTAMV2.jpg" alt="TAMV" className="w-full h-full object-cover" />
-                </div>
-                <div>
-                  <p className="font-bold text-white">TAMV MD-X4™</p>
-                  <p className="text-xs text-white/40">v7.0 Unified</p>
-                </div>
-              </div>
+      {/* Main layout: Feed + Trending Sidebar */}
+      <div className="max-w-7xl mx-auto px-4 flex gap-6">
+        {/* Feed Column */}
+        <div className="flex-1 max-w-2xl mx-auto xl:mx-0">
+          {/* Stories */}
+          <StoriesCarousel />
 
-              <div className="flex items-center gap-6 text-sm text-white/60">
-                <Link to="/docs" className="hover:text-cyan-400 transition-colors">Documentación</Link>
-                <Link to="/governance" className="hover:text-cyan-400 transition-colors">Gobernanza</Link>
-                <Link to="/economy" className="hover:text-cyan-400 transition-colors">Economía</Link>
-                <Link to="/profile" className="hover:text-cyan-400 transition-colors">Perfil</Link>
-              </div>
+          {/* Feed tabs */}
+          <Tabs defaultValue="foryou" className="w-full mb-4">
+            <TabsList className="bg-card/30 border border-border/20 rounded-xl p-1 h-auto flex w-full">
+              <TabsTrigger value="foryou" className="flex-1 gap-1.5 text-xs rounded-lg data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                <Flame className="w-3.5 h-3.5" /> Para ti
+              </TabsTrigger>
+              <TabsTrigger value="following" className="flex-1 gap-1.5 text-xs rounded-lg data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                <Users className="w-3.5 h-3.5" /> Siguiendo
+              </TabsTrigger>
+              <TabsTrigger value="live" className="flex-1 gap-1.5 text-xs rounded-lg data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                <Radio className="w-3.5 h-3.5" /> En Vivo
+              </TabsTrigger>
+              <TabsTrigger value="trending" className="flex-1 gap-1.5 text-xs rounded-lg data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                <TrendingUp className="w-3.5 h-3.5" /> Tendencia
+              </TabsTrigger>
+            </TabsList>
 
-              <p className="text-sm text-white/40">
-                © 2026 TAMV MD-X4™ · Edwin Oswaldo Castillo Trejo · Todos los derechos reservados
-              </p>
-            </div>
-          </div>
-        </footer>
+            <TabsContent value="foryou" className="mt-4">
+              <NextGenFeed />
+            </TabsContent>
+
+            <TabsContent value="following" className="mt-4">
+              <NextGenFeed />
+            </TabsContent>
+
+            <TabsContent value="live" className="mt-4">
+              <LiveGrid />
+            </TabsContent>
+
+            <TabsContent value="trending" className="mt-4">
+              <NextGenFeed />
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* Right sidebar — Trending (desktop only) */}
+        <TrendingSidebar />
       </div>
     </div>
   );
 };
+
+// ─── Live Grid ───
+const LIVE_CHANNELS = [
+  { name: "Quantum Night Live", viewers: "2.3K", img: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&h=225&fit=crop", host: "TAMV Official" },
+  { name: "Coding Session", viewers: "891", img: "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=400&h=225&fit=crop", host: "Carlos M." },
+  { name: "Art Workshop XR", viewers: "456", img: "https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=400&h=225&fit=crop", host: "María R." },
+  { name: "Music Jam Binaural", viewers: "1.2K", img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&h=225&fit=crop", host: "KAOS Audio" },
+  { name: "DreamSpace Build", viewers: "678", img: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=225&fit=crop", host: "Luna S." },
+  { name: "UTAMV Clase Abierta", viewers: "1.5K", img: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&h=225&fit=crop", host: "UTAMV" },
+];
+
+const LiveGrid = () => (
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    {LIVE_CHANNELS.map((ch) => (
+      <motion.div
+        key={ch.name}
+        whileHover={{ scale: 1.02 }}
+        className="relative rounded-xl overflow-hidden cursor-pointer group"
+      >
+        <img src={ch.img} alt="" className="w-full aspect-video object-cover" loading="lazy" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
+        <Badge className="absolute top-2.5 left-2.5 bg-destructive/90 text-destructive-foreground gap-1 text-[9px] animate-pulse rounded-sm">
+          <Radio className="w-3 h-3" /> LIVE
+        </Badge>
+        <div className="absolute top-2.5 right-2.5 text-[10px] bg-background/60 backdrop-blur px-2 py-0.5 rounded-sm flex items-center gap-1 font-mono">
+          <Users className="w-3 h-3" />{ch.viewers}
+        </div>
+        <div className="absolute bottom-2.5 left-2.5 right-2.5">
+          <p className="font-bold text-sm">{ch.name}</p>
+          <p className="text-[10px] text-muted-foreground">{ch.host}</p>
+        </div>
+      </motion.div>
+    ))}
+  </div>
+);
 
 export default Index;

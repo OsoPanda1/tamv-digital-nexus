@@ -1,7 +1,7 @@
 // ============================================================================
-// TAMV MD-X4™ - EPIC HERO COMPONENT v8.0
+// TAMV MD-X4™ - EPIC HERO COMPONENT v9.0 — Zero Mediocrity
 // Autor visionario y propietario: Edwin Oswaldo Castillo Trejo
-// Ecosistema Civilizatorio Latinoamericano — Evolución OMNI-KERNEL
+// 48 Federaciones Civilizatorias · Evolución de las Redes Sociales
 // ============================================================================
 
 import { motion } from "framer-motion";
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { FEDERATION_COUNT } from "@/lib/federations";
 
 interface EpicHeroProps {
   onEnter?: () => void;
@@ -43,7 +44,7 @@ const EVOLUTION_PILLARS = [
 ];
 
 const STATS = [
-  { value: "7", label: "Federaciones Core" },
+  { value: String(FEDERATION_COUNT), label: "Federaciones Activas" },
   { value: "L0–L3", label: "Capas Antifrágiles" },
   { value: "∞", label: "DreamSpaces XR" },
   { value: "100%", label: "Soberanía Digital" },
@@ -78,8 +79,8 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
               top: `${20 + (i % 3) * 20}%`,
               background: `radial-gradient(circle, ${
                 i % 2 === 0
-                  ? "rgba(0, 217, 255, 0.08)"
-                  : "rgba(157, 78, 221, 0.08)"
+                  ? "hsla(210, 45%, 55%, 0.06)"
+                  : "hsla(215, 30%, 50%, 0.05)"
               } 0%, transparent 70%)`,
               filter: "blur(60px)",
             }}
@@ -101,11 +102,11 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
           transition={{ duration: 0.6 }}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-crystal mb-8"
         >
-          <Sparkles className="w-4 h-4 text-cyan-400" />
-          <span className="text-sm text-white/80">
-            Ecosistema Civilizatorio OMNI-KERNEL
+          <Sparkles className="w-4 h-4 text-[hsl(var(--silver-metallic))]" />
+          <span className="text-sm text-foreground/80">
+            {FEDERATION_COUNT} Federaciones · Ecosistema OMNI-KERNEL
           </span>
-          <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 text-xs font-bold text-white">
+          <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(var(--secondary))] text-xs font-bold text-primary-foreground">
             MD-X4
           </span>
         </motion.div>
@@ -135,7 +136,7 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-body-large text-white/70 max-w-3xl mx-auto mb-10 leading-relaxed"
         >
-          Un solo ecosistema para <span className="text-cyan-400 font-semibold">crear, cobrar y crecer</span>.
+          Un solo ecosistema para <span className="text-[hsl(var(--silver-light))] font-semibold">crear, cobrar y crecer</span>.
           Menos explotación, más control sobre tu comunidad, tu contenido y tus ingresos.
           <br />
           <span className="text-white/50 text-sm mt-2 inline-block">
@@ -163,7 +164,7 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
             <Button
               size="lg"
               variant="outline"
-              className="glass-crystal px-8 py-6 text-lg font-semibold rounded-xl border-white/20 hover:border-cyan-400/50 hover:bg-white/5"
+              className="glass-crystal px-8 py-6 text-lg font-semibold rounded-xl border-white/20 hover:border-[hsl(var(--primary)/0.5)] hover:bg-white/5"
             >
               <Cpu className="w-5 h-5 mr-2" />
               Ver Evolución OMNI-KERNEL
@@ -184,14 +185,14 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-              className="flex items-center gap-3 px-5 py-3 rounded-2xl glass-crystal hover:border-cyan-400/30 transition-colors cursor-default"
+              className="flex items-center gap-3 px-5 py-3 rounded-2xl glass-crystal hover:border-[hsl(var(--primary)/0.3)] transition-colors cursor-default"
             >
-              <div className="p-2 rounded-xl bg-gradient-to-br from-cyan-500/20 to-purple-500/20 text-cyan-400">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-[hsl(var(--primary)/0.2)] to-[hsl(var(--secondary)/0.2)] text-[hsl(var(--silver-light))]">
                 {feature.icon}
               </div>
               <div className="text-left">
-                <p className="text-sm font-semibold text-white">{feature.label}</p>
-                <p className="text-xs text-white/50">{feature.desc}</p>
+                <p className="text-sm font-semibold text-foreground">{feature.label}</p>
+                <p className="text-xs text-muted-foreground">{feature.desc}</p>
               </div>
             </motion.div>
           ))}
@@ -215,7 +216,7 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
               <p className="text-4xl md:text-5xl font-bold text-gradient-quantum mb-2">
                 {stat.value}
               </p>
-              <p className="text-sm text-white/60">{stat.label}</p>
+              <p className="text-sm text-muted-foreground">{stat.label}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -225,7 +226,7 @@ export const EpicHero = ({ onEnter }: EpicHeroProps) => {
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="w-32 h-1 mx-auto mt-16 rounded-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent"
+          className="w-32 h-1 mx-auto mt-16 rounded-full bg-gradient-to-r from-transparent via-[hsl(var(--primary))] to-transparent"
         />
       </div>
     </div>

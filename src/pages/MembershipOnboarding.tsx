@@ -269,8 +269,8 @@ const MembershipOnboarding = () => {
                 <span className="text-2xl font-bold text-green-400">{wallet.balance_tcep}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Balance TAU</span>
-                <span className="text-2xl font-bold text-cyan-400">{wallet.balance_tau}</span>
+                <span className="text-muted-foreground">Balance Bloqueado</span>
+                <span className="text-2xl font-bold text-cyan-400">{wallet.balance_locked}</span>
               </div>
               <Button onClick={handleNext} className="w-full mt-4">
                 Continuar <ChevronRight className="ml-2" />

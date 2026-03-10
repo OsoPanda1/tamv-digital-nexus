@@ -15,6 +15,7 @@ import { OmniKernelProvider } from "@/lib/omni-kernel";
 
 // Layout System
 import { AppLayout } from "@/components/layout/AppLayout";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // Pages
 import Index from "./pages/Index";
@@ -44,6 +45,9 @@ import MDXOperations from "./pages/MDXOperations";
 import MembershipOnboarding from "./pages/MembershipOnboarding";
 import Evolution from "./pages/Evolution";
 import Singularity from "./pages/Singularity";
+import Reels from "./pages/Reels";
+import Health from "./pages/Health";
+import RepoUnification from "./pages/RepoUnification";
 
 // Configure React Query
 const queryClient = new QueryClient({
@@ -68,6 +72,7 @@ const App = () => (
       <BrowserRouter>
         <OmniKernelProvider workflowId="tamv-main">
           <AppLayout>
+            <ErrorBoundary>
             <Routes>
               {/* Core Routes */}
               <Route path="/" element={<Index />} />
@@ -107,11 +112,15 @@ const App = () => (
               <Route path="/operations" element={<MDXOperations />} />
               <Route path="/evolution" element={<Evolution />} />
               <Route path="/singularity" element={<Singularity />} />
+              <Route path="/reels" element={<Reels />} />
+              <Route path="/health" element={<Health />} />
               <Route path="/onboarding/membership" element={<MembershipOnboarding />} />
+              <Route path="/repo-unification" element={<RepoUnification />} />
 
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            </ErrorBoundary>
           </AppLayout>
         </OmniKernelProvider>
       </BrowserRouter>

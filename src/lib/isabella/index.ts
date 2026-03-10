@@ -127,6 +127,14 @@ export async function getSystemStatus(): Promise<SystemStatus> {
   };
 }
 
+// Orchestrator (ported from digital-civilization-core)
+export {
+  IsabellaOrchestrator, CreatorIdentity, createOrchestrator,
+} from './orchestrator';
+export type {
+  IsabellaAgent, AgentTask, SecurityDecision, CreatorSessionContext,
+} from './orchestrator';
+
 export const ISABELLA_VERSION = '3.0.0-MD-X4';
 export const ISABELLA_BUILD = '2026.01.15';
 export const DOCUMENT_MASTER_VERSION = '1.0-FUNDACIONAL-2026';

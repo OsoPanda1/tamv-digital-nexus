@@ -1,319 +1,331 @@
 // ============================================================================
-// TAMV Wallet Service - Edge Function
-// Handles wallet operations, transactions, and balance management
+// TAMV Wallet Service v2.1 — HARDENED with validation, rate limiting, audit
+// Uses real database tables, MSR audit trail, proper auth
 // ============================================================================
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
-// ============================================================================
-// CONSTANTS
-// ============================================================================
+// ── Rate Limiting (in-memory, per-user) ──
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT_MAX = 30; // requests per window
+const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
 
-const TRANSACTION_LIMITS = {
-  min_amount: 0.00000001,
-  max_single_transaction: 1000000,
-  daily_limit: 5000000,
-};
-
-const REWARD_RATES = {
-  daily_login: 1,
-  referral: 50,
-  content_creation: 5,
-  course_completion: 20,
-  dream_space_visit: 0.5,
-};
-
-// ============================================================================
-// HELPER FUNCTIONS
-// ============================================================================
-
-async function getOrCreateWallet(supabase: any, userId: string) {
-  const { data: wallet, error } = await supabase
-    .from("wallets")
-    .select("*")
-    .eq("user_id", userId)
-    .single();
-
-  if (error && error.code === "PGRST116") {
-    // Wallet doesn't exist, create it
-    const { data: newWallet, error: createError } = await supabase
-      .from("wallets")
-      .insert({ user_id: userId })
-      .select()
-      .single();
-
-    if (createError) throw createError;
-    return newWallet;
+function checkRateLimit(userId: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(userId);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(userId, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return true;
   }
-
-  if (error) throw error;
-  return wallet;
-}
-
-function validateTransaction(amount: number, type: string) {
-  if (amount < TRANSACTION_LIMITS.min_amount) {
-    throw new Error(`Monto mínimo: ${TRANSACTION_LIMITS.min_amount}`);
-  }
-  if (amount > TRANSACTION_LIMITS.max_single_transaction) {
-    throw new Error(`Monto máximo por transacción: ${TRANSACTION_LIMITS.max_single_transaction}`);
-  }
+  if (entry.count >= RATE_LIMIT_MAX) return false;
+  entry.count++;
   return true;
 }
 
-// ============================================================================
-// MAIN HANDLER
-// ============================================================================
+// ── Validation helpers ──
+function isValidUUID(str: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str);
+}
+
+function isValidAmount(val: unknown): val is number {
+  return typeof val === 'number' && Number.isFinite(val) && val > 0 && val <= 1_000_000;
+}
+
+function sanitizeString(str: unknown, maxLen = 500): string {
+  if (typeof str !== 'string') return '';
+  return str.trim().slice(0, maxLen).replace(/[<>]/g, '');
+}
+
+function generateHash(data: string): string {
+  const encoder = new TextEncoder();
+  const bytes = encoder.encode(data);
+  let hash = 0;
+  for (let i = 0; i < bytes.length; i++) {
+    hash = ((hash << 5) - hash) + bytes[i];
+    hash |= 0;
+  }
+  return Math.abs(hash).toString(16).padStart(16, '0');
+}
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  // Only POST allowed
+  if (req.method !== 'POST') {
+    return jsonError('Method not allowed', 405);
+  }
+
+  const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+  const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+
+  // Auth — extract user from JWT
+  const authHeader = req.headers.get('Authorization');
+  if (!authHeader?.startsWith('Bearer ')) {
+    return jsonError('No authorization header', 401);
+  }
+
+  const supabase = createClient(supabaseUrl, serviceKey);
+  const token = authHeader.replace('Bearer ', '');
+  
+  let user: any;
+  try {
+    const { data, error } = await supabase.auth.getUser(token);
+    if (error || !data?.user) return jsonError('Invalid authentication', 401);
+    user = data.user;
+  } catch {
+    return jsonError('Authentication failed', 401);
+  }
+
+  // Rate limit check
+  if (!checkRateLimit(user.id)) {
+    return jsonError('Rate limit exceeded. Try again in 60 seconds.', 429);
   }
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      throw new Error("No authorization header");
+    const body = await req.json().catch(() => null);
+    if (!body || typeof body !== 'object') {
+      return jsonError('Invalid JSON body', 400);
     }
 
-    const token = authHeader.replace("Bearer ", "");
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-
-    if (authError || !user) {
-      throw new Error("Invalid authentication");
+    const { action } = body;
+    if (typeof action !== 'string' || action.length > 50) {
+      return jsonError('Invalid action', 400);
     }
-
-    const body = await req.json();
-    const { action, amount, currency, description, toUserId, metadata } = body;
-
-    let result;
 
     switch (action) {
-      case "get_balance": {
-        const wallet = await getOrCreateWallet(supabase, user.id);
-        result = {
-          balance_tcep: wallet.balance_tcep,
-          balance_tau: wallet.balance_tau,
-          locked_balance: wallet.locked_balance,
-          lifetime_earned: wallet.lifetime_earned,
-          lifetime_spent: wallet.lifetime_spent,
-        };
-        break;
+      // ── GET BALANCE ──
+      case 'get_balance': {
+        const { data: wallet, error } = await supabase
+          .from('tcep_wallets')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+
+        if (error && error.code === 'PGRST116') {
+          // No wallet yet — create one
+          const { data: newWallet, error: createErr } = await supabase
+            .from('tcep_wallets')
+            .insert({ user_id: user.id })
+            .select()
+            .single();
+          if (createErr) return jsonError(createErr.message, 500);
+          return jsonOk({
+            balance_tcep: Number(newWallet.balance_credits),
+            balance_locked: Number(newWallet.balance_locked),
+            lifetime_earned: Number(newWallet.lifetime_earned),
+            lifetime_spent: Number(newWallet.lifetime_spent),
+            membership_tier: newWallet.membership_tier,
+            commission_rate: Number(newWallet.commission_rate),
+          });
+        }
+        if (error) return jsonError(error.message, 500);
+
+        return jsonOk({
+          balance_tcep: Number(wallet.balance_credits),
+          balance_locked: Number(wallet.balance_locked),
+          lifetime_earned: Number(wallet.lifetime_earned),
+          lifetime_spent: Number(wallet.lifetime_spent),
+          membership_tier: wallet.membership_tier,
+          commission_rate: Number(wallet.commission_rate),
+        });
       }
 
-      case "transfer": {
-        if (!toUserId || !amount || !currency) {
-          throw new Error("Faltan parámetros requeridos");
+      // ── TRANSFER ──
+      case 'transfer': {
+        const { toUserId, amount, description } = body;
+
+        // Strict validation
+        if (!toUserId || !isValidUUID(toUserId)) {
+          return jsonError('Invalid recipient ID', 400);
+        }
+        if (!isValidAmount(amount)) {
+          return jsonError('Invalid amount: must be a positive number up to 1,000,000', 400);
+        }
+        if (toUserId === user.id) {
+          return jsonError('Cannot transfer to yourself', 400);
         }
 
-        validateTransaction(amount, "transfer");
+        const safeDesc = sanitizeString(description, 200);
 
-        const fromWallet = await getOrCreateWallet(supabase, user.id);
-        const toWallet = await getOrCreateWallet(supabase, toUserId);
+        // Get sender wallet
+        const { data: fromWallet } = await supabase
+          .from('tcep_wallets')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
 
-        // Check balance
-        const balanceKey = currency === "TAU" ? "balance_tau" : "balance_tcep";
-        if (fromWallet[balanceKey] < amount) {
-          throw new Error("Saldo insuficiente");
+        if (!fromWallet || Number(fromWallet.balance_credits) < amount) {
+          return jsonError('Saldo insuficiente', 400);
         }
 
-        // Execute transfer
-        await supabase.from("wallets").update({
-          [balanceKey]: fromWallet[balanceKey] - amount,
-          lifetime_spent: fromWallet.lifetime_spent + amount,
-        }).eq("id", fromWallet.id);
+        // Get or create receiver wallet
+        let { data: toWallet } = await supabase
+          .from('tcep_wallets')
+          .select('*')
+          .eq('user_id', toUserId)
+          .single();
 
-        await supabase.from("wallets").update({
-          [balanceKey]: toWallet[balanceKey] + amount,
-          lifetime_earned: toWallet.lifetime_earned + amount,
-        }).eq("id", toWallet.id);
+        if (!toWallet) {
+          const { data: newW } = await supabase
+            .from('tcep_wallets')
+            .insert({ user_id: toUserId })
+            .select()
+            .single();
+          toWallet = newW;
+        }
+        if (!toWallet) return jsonError('Receptor no encontrado', 404);
+
+        const hash = generateHash(JSON.stringify({ from: user.id, to: toUserId, amount, ts: Date.now() }));
+
+        // Debit sender
+        const { error: debitErr } = await supabase.from('tcep_wallets').update({
+          balance_credits: Number(fromWallet.balance_credits) - amount,
+          lifetime_spent: Number(fromWallet.lifetime_spent) + amount,
+        }).eq('user_id', user.id);
+
+        if (debitErr) return jsonError('Transfer failed: debit error', 500);
+
+        // Credit receiver
+        const { error: creditErr } = await supabase.from('tcep_wallets').update({
+          balance_credits: Number(toWallet.balance_credits) + amount,
+          lifetime_earned: Number(toWallet.lifetime_earned) + amount,
+        }).eq('user_id', toUserId);
+
+        if (creditErr) {
+          // Rollback debit
+          await supabase.from('tcep_wallets').update({
+            balance_credits: Number(fromWallet.balance_credits),
+            lifetime_spent: Number(fromWallet.lifetime_spent),
+          }).eq('user_id', user.id);
+          return jsonError('Transfer failed: credit error, rollback applied', 500);
+        }
 
         // Record transaction
-        await supabase.from("transactions").insert({
-          wallet_id: fromWallet.id,
-          type: "transfer",
-          amount: -amount,
-          currency,
-          status: "completed",
-          description: description || "Transferencia",
-          reference_id: toUserId,
-          metadata: { to_user: toUserId, ...metadata },
-        });
-
-        await supabase.from("transactions").insert({
-          wallet_id: toWallet.id,
-          type: "transfer",
-          amount: amount,
-          currency,
-          status: "completed",
-          description: description || "Recepción",
-          reference_id: user.id,
-          metadata: { from_user: user.id, ...metadata },
-        });
-
-        result = {
-          message: "Transferencia exitosa",
+        await supabase.from('tcep_transactions').insert({
+          from_user_id: user.id,
+          to_user_id: toUserId,
           amount,
-          currency,
-          to_user: toUserId,
-        };
-        break;
+          tx_type: 'transfer',
+          description: safeDesc || 'Transferencia TCEP',
+          evidence_hash: hash,
+        });
+
+        // MSR audit
+        await supabase.from('msr_events').insert({
+          actor_id: user.id,
+          action: 'TCEP_TRANSFER',
+          domain: 'ECONOMY',
+          payload: { amount, to: toUserId },
+          evidence_hash: hash,
+        });
+
+        return jsonOk({ message: 'Transferencia exitosa', amount, to: toUserId, evidence_hash: hash });
       }
 
-      case "reward": {
-        if (!amount || !currency) {
-          throw new Error("Faltan parámetros requeridos");
-        }
-
-        // Only admins can give rewards
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("role")
-          .eq("id", user.id)
+      // ── DAILY LOGIN REWARD ──
+      case 'daily_login': {
+        const { data: wallet } = await supabase
+          .from('tcep_wallets')
+          .select('*')
+          .eq('user_id', user.id)
           .single();
 
-        if (!profile || !["admin", "moderator"].includes(profile.role)) {
-          throw new Error("No autorizado para dar recompensas");
-        }
+        if (!wallet) return jsonError('Wallet no encontrado', 404);
 
-        const wallet = await getOrCreateWallet(supabase, user.id);
-
-        await supabase.from("wallets").update({
-          [currency === "TAU" ? "balance_tau" : "balance_tcep"]:
-            wallet[currency === "TAU" ? "balance_tau" : "balance_tcep"] + amount,
-          lifetime_earned: wallet.lifetime_earned + amount,
-        }).eq("id", wallet.id);
-
-        // Record reward transaction
-        await supabase.from("transactions").insert({
-          wallet_id: wallet.id,
-          type: "reward",
-          amount,
-          currency,
-          status: "completed",
-          description: description || "Recompensa",
-          metadata,
-        });
-
-        result = {
-          message: "Recompensa aplicada",
-          amount,
-          currency,
-        };
-        break;
-      }
-
-      case "daily_login": {
-        const wallet = await getOrCreateWallet(supabase, user.id);
-        
         // Check if already claimed today
-        const today = new Date().toISOString().split("T")[0];
-        const { data: recentTransaction } = await supabase
-          .from("transactions")
-          .select("created_at")
-          .eq("wallet_id", wallet.id)
-          .eq("type", "reward")
-          .eq("description", "Daily login bonus")
-          .gte("created_at", today)
-          .single();
+        const today = new Date().toISOString().split('T')[0];
+        const { data: alreadyClaimed } = await supabase
+          .from('tcep_transactions')
+          .select('id')
+          .eq('from_user_id', user.id)
+          .eq('tx_type', 'daily_reward')
+          .gte('created_at', today)
+          .limit(1);
 
-        if (recentTransaction) {
-          throw new Error("Ya has reclamación tu recompensa diaria");
+        if (alreadyClaimed && alreadyClaimed.length > 0) {
+          return jsonError('Ya reclamaste tu recompensa diaria hoy', 400);
         }
 
-        const rewardAmount = REWARD_RATES.daily_login;
+        const rewardAmount = 1;
+        const hash = generateHash(JSON.stringify({ user: user.id, type: 'daily', ts: Date.now() }));
 
-        await supabase.from("wallets").update({
-          balance_tcep: wallet.balance_tcep + rewardAmount,
-          lifetime_earned: wallet.lifetime_earned + rewardAmount,
-        }).eq("id", wallet.id);
+        await supabase.from('tcep_wallets').update({
+          balance_credits: Number(wallet.balance_credits) + rewardAmount,
+          lifetime_earned: Number(wallet.lifetime_earned) + rewardAmount,
+        }).eq('user_id', user.id);
 
-        await supabase.from("transactions").insert({
-          wallet_id: wallet.id,
-          type: "reward",
+        await supabase.from('tcep_transactions').insert({
+          from_user_id: user.id,
+          to_user_id: user.id,
           amount: rewardAmount,
-          currency: "TCEP",
-          status: "completed",
-          description: "Daily login bonus",
+          tx_type: 'daily_reward',
+          description: 'Recompensa diaria de login',
+          evidence_hash: hash,
         });
 
-        result = {
-          message: "Recompensa diaria reclamada",
-          amount: rewardAmount,
-          currency: "TCEP",
-        };
-        break;
+        await supabase.from('msr_events').insert({
+          actor_id: user.id,
+          action: 'DAILY_REWARD_CLAIMED',
+          domain: 'ECONOMY',
+          payload: { amount: rewardAmount },
+          evidence_hash: hash,
+        });
+
+        return jsonOk({ message: 'Recompensa diaria reclamada', amount: rewardAmount, currency: 'TCEP' });
       }
 
-      case "get_history": {
-        const wallet = await getOrCreateWallet(supabase, user.id);
-        
-        const { data: transactions, error: txError } = await supabase
-          .from("transactions")
-          .select("*")
-          .eq("wallet_id", wallet.id)
-          .order("created_at", { ascending: false })
-          .limit(50);
+      // ── GET HISTORY ──
+      case 'get_history': {
+        const limit = Math.min(Math.max(Number(body.limit) || 50, 1), 200);
+        const offset = Math.max(Number(body.offset) || 0, 0);
 
-        if (txError) throw txError;
+        const { data: transactions } = await supabase
+          .from('tcep_transactions')
+          .select('*')
+          .or(`from_user_id.eq.${user.id},to_user_id.eq.${user.id}`)
+          .order('created_at', { ascending: false })
+          .range(offset, offset + limit - 1);
 
-        result = { transactions };
-        break;
+        return jsonOk({ transactions: transactions || [], limit, offset });
       }
 
-      case "stake": {
-        if (!amount || amount <= 0) {
-          throw new Error("Monto de staking inválido");
-        }
-
-        const wallet = await getOrCreateWallet(supabase, user.id);
-        const balanceKey = "balance_tcep";
-
-        if (wallet[balanceKey] < amount) {
-          throw new Error("Saldo insuficiente para staking");
-        }
-
-        const newStakingAmount = wallet.staking_amount + amount;
-
-        await supabase.from("wallets").update({
-          [balanceKey]: wallet[balanceKey] - amount,
-          staking_amount: newStakingAmount,
-          staking_started_at: wallet.staking_started_at || new Date().toISOString(),
-        }).eq("id", wallet.id);
-
-        result = {
-          message: "Staking exitoso",
-          staked_amount: newStakingAmount,
-        };
-        break;
+      // ── HEALTH CHECK ──
+      case 'health': {
+        return jsonOk({
+          service: 'wallet-service',
+          version: '2.1.0',
+          status: 'healthy',
+          timestamp: new Date().toISOString(),
+        });
       }
 
       default:
-        throw new Error("Acción no válida");
+        return jsonError('Acción no válida: ' + sanitizeString(action, 50), 400);
     }
-
-    return new Response(JSON.stringify(result), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 200,
-    });
   } catch (error) {
-    console.error("Wallet Service Error:", error);
-    return new Response(
-      JSON.stringify({ error: (error as Error).message || "Error de wallet" }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400,
-      }
-    );
+    console.error('[Wallet Service]', error);
+    return jsonError('Internal server error', 500);
   }
 });
+
+function jsonOk(data: any, status = 200) {
+  return new Response(JSON.stringify({ success: true, data }), {
+    status,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
+function jsonError(message: string, status: number) {
+  return new Response(JSON.stringify({ success: false, error: message }), {
+    status,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}

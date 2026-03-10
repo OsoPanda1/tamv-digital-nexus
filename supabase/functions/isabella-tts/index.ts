@@ -106,21 +106,33 @@ serve(async (req) => {
       console.error('[ISABELLA-TTS] ElevenLabs error:', response.status, errorText);
       
       if (response.status === 401) {
+        console.warn('[ISABELLA-TTS] ElevenLabs auth failed, returning text-only fallback');
         return new Response(
-          JSON.stringify({ error: 'Invalid ElevenLabs API key' }),
+          JSON.stringify({ 
+            success: true,
+            audio: null,
+            fallback: true,
+            message: 'TTS temporarily unavailable - text-only mode',
+          }),
           { 
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            status: 401,
+            status: 200,
           }
         );
       }
       
       if (response.status === 429) {
+        console.warn('[ISABELLA-TTS] Rate limited, returning text-only fallback');
         return new Response(
-          JSON.stringify({ error: 'Rate limit exceeded. Please try again later.' }),
+          JSON.stringify({ 
+            success: true,
+            audio: null,
+            fallback: true,
+            message: 'TTS rate limited - text-only mode',
+          }),
           { 
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            status: 429,
+            status: 200,
           }
         );
       }

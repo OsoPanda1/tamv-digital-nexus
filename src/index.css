@@ -3,172 +3,176 @@
 @tailwind utilities;
 
 /* ============================================================================
-   TAMV MD-X4™ ULTRA-PREMIUM CIVILIZATORY DESIGN SYSTEM v7.0
-   100x Visual Quality Enhancement - Quantum Reality Grade
+   TAMV MD-X4™ SOVEREIGN CONSOLE DESIGN SYSTEM v9.0
+   Industrial Luxury · Ballistic Glass · Carbon Authority
    ============================================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
     /* ═══════════════════════════════════════════════════════════════════════
-       FOUNDATION - Ultra-Deep Space Black
+       SOVEREIGN PALETTE — Negro Absoluto / Plata Platino / Azul Plasma / Oro Governance
        ═══════════════════════════════════════════════════════════════════════ */
-    --background: 220 20% 2%;
-    --foreground: 0 0% 98%;
+    --background: 0 0% 2%;
+    --foreground: 214 32% 91%;
     
     /* ═══════════════════════════════════════════════════════════════════════
-       METALLIC SILVER SYSTEM - Hyper-Realistic Reflections
+       PLATA PLATINO — #E2E8F0
        ═══════════════════════════════════════════════════════════════════════ */
-    --silver: 210 8% 92%;
-    --silver-light: 210 8% 96%;
-    --silver-dark: 210 8% 75%;
-    --silver-metallic: 210 12% 85%;
-    --silver-shine: 210 15% 98%;
+    --silver: 215 25% 84%;
+    --silver-light: 214 32% 91%;
+    --silver-dark: 215 16% 55%;
+    --silver-metallic: 215 20% 78%;
+    --silver-shine: 210 15% 95%;
     
     /* ═══════════════════════════════════════════════════════════════════════
-       AQUA LUMINESCENT - Bioluminescent Ocean Depths
+       AZUL PLASMA — #0066FF
        ═══════════════════════════════════════════════════════════════════════ */
-    --aqua: 185 100% 60%;
-    --aqua-light: 185 100% 75%;
-    --aqua-dark: 185 100% 45%;
-    --aqua-glow: 185 100% 70%;
-    --aqua-pulse: 185 100% 65%;
+    --aqua: 220 100% 50%;
+    --aqua-light: 220 90% 65%;
+    --aqua-dark: 220 100% 35%;
+    --aqua-glow: 220 100% 55%;
+    --aqua-pulse: 220 100% 45%;
     
     /* ═══════════════════════════════════════════════════════════════════════
-       NAVY METALLIC IRIDESCENT - Deep Space Cosmic
+       NEGRO ABSOLUTO — #050505
        ═══════════════════════════════════════════════════════════════════════ */
-    --navy: 220 80% 30%;
-    --navy-metallic: 220 85% 45%;
-    --navy-deep: 225 90% 20%;
-    --navy-iridescent: 220 75% 55%;
-    --navy-cosmic: 230 85% 25%;
+    --navy: 0 0% 6%;
+    --navy-metallic: 220 8% 12%;
+    --navy-deep: 0 0% 3%;
+    --navy-iridescent: 220 10% 18%;
+    --navy-cosmic: 220 6% 8%;
     
     /* ═══════════════════════════════════════════════════════════════════════
-       QUANTUM ACCENTS - Plasma & Energy
+       ORO GOVERNANCE — #FFD700 (Micro-LED status)
        ═══════════════════════════════════════════════════════════════════════ */
-    --quantum-purple: 271 100% 65%;
-    --quantum-pink: 330 100% 65%;
-    --quantum-gold: 45 100% 60%;
-    --quantum-cyan: 190 100% 60%;
-    --quantum-lime: 120 100% 55%;
+    --gold: 51 100% 50%;
+    --gold-dark: 43 80% 40%;
+    --gold-glow: 51 100% 60%;
     
     /* ═══════════════════════════════════════════════════════════════════════
-       SEMANTIC TOKENS - Enhanced Contrast
+       ACCENTS — Industrial Steel
        ═══════════════════════════════════════════════════════════════════════ */
-    --card: 220 18% 4%;
-    --card-foreground: 0 0% 98%;
+    --quantum-purple: 220 60% 50%;
+    --quantum-pink: 220 40% 55%;
+    --quantum-gold: 51 100% 50%;
+    --quantum-cyan: 220 100% 55%;
+    --quantum-lime: 170 30% 50%;
     
-    --popover: 220 18% 5%;
-    --popover-foreground: 0 0% 98%;
+    /* ═══════════════════════════════════════════════════════════════════════
+       SEMANTIC TOKENS — Sovereign Console
+       ═══════════════════════════════════════════════════════════════════════ */
+    --card: 0 0% 4%;
+    --card-foreground: 214 32% 91%;
     
-    --primary: 185 100% 60%;
-    --primary-foreground: 220 20% 2%;
-    --primary-glow: 185 100% 70%;
+    --popover: 0 0% 5%;
+    --popover-foreground: 214 32% 91%;
     
-    --secondary: 220 85% 50%;
-    --secondary-foreground: 0 0% 100%;
-    --secondary-glow: 220 80% 60%;
+    --primary: 220 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 220 100% 60%;
     
-    --accent: 271 100% 65%;
-    --accent-foreground: 0 0% 100%;
+    --secondary: 220 8% 15%;
+    --secondary-foreground: 214 32% 91%;
+    --secondary-glow: 220 20% 25%;
     
-    --muted: 220 15% 20%;
-    --muted-foreground: 220 15% 65%;
+    --accent: 51 100% 50%;
+    --accent-foreground: 0 0% 5%;
+    --accent-glow: 51 100% 60%;
     
-    --destructive: 0 90% 60%;
+    --muted: 0 0% 8%;
+    --muted-foreground: 220 10% 50%;
+    
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
     
-    --border: 220 20% 12%;
-    --input: 220 20% 12%;
-    --ring: 185 100% 60%;
+    --border: 220 10% 12%;
+    --input: 220 10% 12%;
+    --ring: 220 100% 50%;
     
-    --radius: 1rem;
+    --radius: 0.125rem;
     
     /* ═══════════════════════════════════════════════════════════════════════
-       GLASS MORPHISM - Ultra-Crystal Effects
+       GLASS MORPHISM — Ballistic Carbon
        ═══════════════════════════════════════════════════════════════════════ */
-    --glass-bg: 220 20% 4% / 0.35;
-    --glass-bg-heavy: 220 20% 3% / 0.65;
-    --glass-border: 220 30% 25% / 0.25;
-    --glass-border-light: 220 30% 35% / 0.15;
+    --glass-bg: 0 0% 4% / 0.65;
+    --glass-bg-heavy: 0 0% 3% / 0.85;
+    --glass-border: 220 10% 18% / 0.4;
+    --glass-border-light: 220 10% 25% / 0.2;
     
     /* ═══════════════════════════════════════════════════════════════════════
-       GRADIENTS - Multi-Dimensional Quantum Flows
+       GRADIENTS — Plasma + Steel (NO rainbow)
        ═══════════════════════════════════════════════════════════════════════ */
     --gradient-quantum: linear-gradient(135deg, 
-      hsl(185 100% 60%) 0%, 
-      hsl(217 100% 60%) 25%,
-      hsl(271 100% 65%) 50%, 
-      hsl(330 100% 65%) 75%,
-      hsl(45 100% 60%) 100%);
+      hsl(214 32% 91%) 0%, 
+      hsl(220 100% 50%) 45%,
+      hsl(214 32% 78%) 75%, 
+      hsl(220 100% 55%) 100%);
     
     --gradient-crystal: linear-gradient(180deg, 
-      hsl(220 20% 3%) 0%, 
-      hsl(220 20% 6%) 50%,
-      hsl(220 20% 4%) 100%);
+      hsl(0 0% 2%) 0%, 
+      hsl(0 0% 5%) 50%,
+      hsl(0 0% 2%) 100%);
     
     --gradient-nebula: radial-gradient(ellipse at 30% 20%, 
-      hsl(185 100% 60% / 0.25) 0%, 
-      hsl(271 100% 65% / 0.15) 40%,
+      hsl(220 100% 50% / 0.12) 0%, 
+      hsl(220 60% 40% / 0.06) 40%,
       transparent 70%);
     
     --gradient-nebula-alt: radial-gradient(ellipse at 70% 80%, 
-      hsl(330 100% 65% / 0.2) 0%, 
-      hsl(217 100% 60% / 0.1) 50%,
+      hsl(220 80% 45% / 0.08) 0%, 
+      hsl(220 50% 40% / 0.04) 50%,
       transparent 70%);
-    
+
     --gradient-holographic: linear-gradient(90deg, 
-      hsl(185 100% 60%), 
-      hsl(217 100% 60%), 
-      hsl(271 100% 65%), 
-      hsl(330 100% 65%),
-      hsl(45 100% 60%),
-      hsl(185 100% 60%));
+      hsl(214 20% 72%), 
+      hsl(220 100% 50%), 
+      hsl(214 20% 82%), 
+      hsl(220 100% 55%),
+      hsl(214 20% 72%));
     
     --gradient-shimmer: linear-gradient(105deg,
       transparent 0%,
-      hsl(0 0% 100% / 0.1) 45%,
-      hsl(0 0% 100% / 0.3) 50%,
-      hsl(0 0% 100% / 0.1) 55%,
+      hsl(0 0% 100% / 0.04) 45%,
+      hsl(0 0% 100% / 0.1) 50%,
+      hsl(0 0% 100% / 0.04) 55%,
       transparent 100%);
     
     --gradient-aurora: linear-gradient(180deg,
-      hsl(185 100% 60% / 0.3) 0%,
-      hsl(271 100% 65% / 0.2) 30%,
-      hsl(330 100% 65% / 0.15) 60%,
+      hsl(220 100% 50% / 0.15) 0%,
+      hsl(220 60% 40% / 0.08) 30%,
+      hsl(0 0% 5% / 0.06) 60%,
       transparent 100%);
     
     /* ═══════════════════════════════════════════════════════════════════════
-       SHADOWS - Dimensional Depth System
+       SHADOWS — Industrial Depth
        ═══════════════════════════════════════════════════════════════════════ */
-    --shadow-sm: 0 1px 2px hsl(220 50% 0% / 0.3);
-    --shadow-md: 0 4px 12px hsl(220 50% 0% / 0.4);
-    --shadow-lg: 0 8px 24px hsl(220 50% 0% / 0.5);
-    --shadow-xl: 0 16px 48px hsl(220 50% 0% / 0.6);
+    --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.5);
+    --shadow-md: 0 4px 12px hsl(0 0% 0% / 0.6);
+    --shadow-lg: 0 8px 24px hsl(0 0% 0% / 0.7);
+    --shadow-xl: 0 16px 48px hsl(0 0% 0% / 0.8);
     
     --shadow-quantum: 
-      0 0 40px hsl(185 100% 60% / 0.4), 
-      0 0 80px hsl(271 100% 65% / 0.25),
-      0 0 120px hsl(217 100% 60% / 0.15);
+      0 0 30px hsl(220 100% 50% / 0.2), 
+      0 0 60px hsl(220 80% 40% / 0.1);
     
     --shadow-crystal: 
-      0 4px 24px hsl(220 50% 0% / 0.4),
-      0 0 0 1px hsl(220 30% 25% / 0.2);
+      0 4px 24px hsl(0 0% 0% / 0.6),
+      0 0 0 1px hsl(220 10% 16% / 0.3);
     
     --shadow-glow: 
-      0 0 20px hsl(271 100% 65% / 0.5), 
-      0 0 40px hsl(185 100% 60% / 0.3),
-      0 0 60px hsl(217 100% 60% / 0.2);
+      0 0 20px hsl(220 100% 50% / 0.25), 
+      0 0 40px hsl(220 80% 40% / 0.1);
     
     --shadow-elegant: 
-      0 20px 60px -10px hsl(185 100% 60% / 0.35),
-      0 0 0 1px hsl(220 30% 30% / 0.2);
+      0 20px 60px -10px hsl(220 100% 50% / 0.15),
+      0 0 0 1px hsl(220 10% 18% / 0.3);
     
-    --shadow-inner-glow: inset 0 1px 1px hsl(0 0% 100% / 0.1);
+    --shadow-inner-glow: inset 0 1px 1px hsl(0 0% 100% / 0.04);
     
     /* ═══════════════════════════════════════════════════════════════════════
-       ANIMATIONS - Temporal Fluidity
+       ANIMATIONS
        ═══════════════════════════════════════════════════════════════════════ */
     --transition-instant: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -178,7 +182,7 @@
     --transition-quantum: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
     
     /* ═══════════════════════════════════════════════════════════════════════
-       SPACING - Golden Ratio Scale
+       SPACING — Golden Ratio Scale
        ═══════════════════════════════════════════════════════════════════════ */
     --space-xs: 0.25rem;
     --space-sm: 0.5rem;
@@ -492,10 +496,10 @@
   
   @keyframes quantum-pulse {
     0%, 100% {
-      box-shadow: 0 0 20px rgba(0, 217, 255, 0.3), 0 0 40px rgba(0, 217, 255, 0.1);
+      box-shadow: 0 0 20px hsl(210 45% 55% / 0.3), 0 0 40px hsl(210 45% 55% / 0.1);
     }
     50% {
-      box-shadow: 0 0 40px rgba(0, 217, 255, 0.5), 0 0 80px rgba(0, 217, 255, 0.2);
+      box-shadow: 0 0 40px hsl(210 45% 55% / 0.5), 0 0 80px hsl(210 45% 55% / 0.2);
     }
   }
   
@@ -580,24 +584,24 @@
   /* Crystal Glass System */
   .glass-crystal {
     background: linear-gradient(135deg, 
-      hsl(220 20% 6% / 0.4) 0%, 
-      hsl(220 20% 4% / 0.6) 100%);
-    backdrop-filter: blur(24px) saturate(200%);
-    border: 1px solid hsl(220 30% 30% / 0.3);
+      hsl(0 0% 4% / 0.6) 0%, 
+      hsl(0 0% 3% / 0.8) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid hsl(220 10% 16% / 0.4);
     box-shadow: 
-      0 8px 32px hsl(220 50% 0% / 0.4),
-      inset 0 1px 0 hsl(0 0% 100% / 0.1);
+      0 8px 32px hsl(0 0% 0% / 0.5),
+      inset 0 1px 0 hsl(0 0% 100% / 0.04);
   }
   
   .glass-crystal-hover:hover {
     background: linear-gradient(135deg, 
       hsl(220 20% 8% / 0.5) 0%, 
       hsl(220 20% 6% / 0.7) 100%);
-    border-color: hsl(185 100% 60% / 0.4);
+    border-color: hsl(210 45% 55% / 0.4);
     box-shadow: 
-      0 12px 48px hsl(220 50% 0% / 0.5),
-      0 0 40px hsl(185 100% 60% / 0.2),
-      inset 0 1px 0 hsl(0 0% 100% / 0.15);
+      0 12px 48px hsl(222 40% 0% / 0.5),
+      0 0 40px hsl(210 45% 55% / 0.15),
+      inset 0 1px 0 hsl(0 0% 100% / 0.1);
   }
   
   /* Quantum Glow Effects */
@@ -724,8 +728,8 @@
     position: relative;
     overflow: hidden;
     background: linear-gradient(135deg, 
-      hsl(185 100% 60%) 0%, 
-      hsl(217 100% 60%) 100%);
+      hsl(220 100% 45%) 0%, 
+      hsl(220 80% 35%) 100%);
     border: none;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -735,8 +739,8 @@
     position: absolute;
     inset: 0;
     background: linear-gradient(135deg, 
-      hsl(185 100% 70%) 0%, 
-      hsl(217 100% 70%) 100%);
+      hsl(220 100% 55%) 0%, 
+      hsl(220 80% 45%) 100%);
     opacity: 0;
     transition: opacity 0.4s ease;
   }
@@ -744,8 +748,8 @@
   .btn-premium:hover {
     transform: translateY(-2px);
     box-shadow: 
-      0 10px 40px hsl(185 100% 60% / 0.4),
-      0 0 60px hsl(217 100% 60% / 0.2);
+      0 10px 40px hsl(220 100% 50% / 0.25),
+      0 0 60px hsl(220 80% 40% / 0.1);
   }
   
   .btn-premium:hover::before {
@@ -996,7 +1000,7 @@
   }
   
   .hover-glow:hover {
-    box-shadow: 0 0 40px hsl(185 100% 60% / 0.4);
+    box-shadow: 0 0 40px hsl(210 45% 55% / 0.3);
   }
   
   /* Focus States */
@@ -1004,7 +1008,7 @@
     outline: none;
     box-shadow: 
       0 0 0 2px hsl(220 20% 4%),
-      0 0 0 4px hsl(185 100% 60%);
+      0 0 0 4px hsl(210 45% 55%);
   }
   
   /* Loading Shimmer */
