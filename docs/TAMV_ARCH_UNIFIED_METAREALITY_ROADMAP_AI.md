@@ -1,192 +1,162 @@
 # TAMV — Arquitectura Unificada de Metarrealidad + Roadmap de Ejecución por IA
 
-**Versión:** 1.0.0  
-**Estado:** Lista para integración operativa  
-**Trazabilidad TAMV:** L0 (Doctrina) → L7 (Quant-Inspired)
+**ID canónico:** `TAMV_ARCH_UNIFIED_METAREALITY_ROADMAP_AI`  
+**Versión:** 2.1.0  
+**Estado:** Versión final unificada (documental + operativa)  
+**Fecha:** 2026-03-10  
+**Trazabilidad por capas:** L0 → L7
+
+---
+
+## 0. Nota de consolidación y compatibilidad
+
+Esta revisión conserva el enfoque de la versión 2.0.0, pero recupera mayor granularidad funcional para facilitar implementación por equipos técnicos y lectura ejecutiva por instituciones.
+
+Se mantienen los mismos artefactos de salida:
+- Documento arquitectónico unificado en `docs/**`.
+- Módulo Python funcional en `tools/tamv_metareality_viewer.py`.
 
 ---
 
 ## 1. Visión General del TAMV
 
-El **TAMV** (Territorio Autónomo de Metarrealidad Viva) es una infraestructura digital civilizatoria que combina red social, metaverso operativo, fábrica de IA y capa de gobernanza/servicios para ciudades, universidades, redes de salud y comunidades creativas.
+El **TAMV (Territorio Autónomo de Metarrealidad Viva)** es una infraestructura digital civilizatoria que integra red social, metaverso operativo, fábrica de IA y capa de gobernanza/servicios para ciudades, universidades, salud y comunidades creativas.
 
-No se comporta como una aplicación aislada, sino como un **sistema nervioso digital** que integra mundos XR, datos, telemedicina, educación, economía digital e integración continua de repositorios de software.
+No es una aplicación aislada: funciona como un **sistema nervioso digital** que conecta experiencias XR, datos, telemedicina, educación, economía digital e integración continua de repositorios.
 
-Su núcleo opera como:
-
+Núcleo operativo:
 - **Sistema Nervioso Digital:** eventos, IA, BookPI, Sensory Gate.
 - **Metaverso Operativo:** DreamSpaces, CitySpaces, UniversitySpaces, CrisisSpaces.
-- **Fábrica de IA:** IsabellaOrchestrator, Repo‑Unification, funciones de evolución continua.
+- **Fábrica de IA:** IsabellaOrchestrator, Repo-Unification, edge functions evolutivas.
 
 ---
 
 ## 2. Modelo Metarreal del Sistema
 
 ### 2.1 WORLD_LAYERS — Mundos y experiencias
-
-Los `WORLD_LAYERS` representan los espacios donde viven las experiencias de usuario:
-
-- Ciudades XR turísticas y cívicas.
-- Espacios sociales y hubs de comunidad.
+- Ciudades XR turísticas/cívicas.
+- Hubs sociales y comunitarios.
 - DreamSpaces inmersivos.
-- Mundos educativos y campus.
-- Escenarios de simulación de crisis, economía y gobernanza.
+- Campus y mundos educativos.
+- Simulación de crisis, economía y gobernanza.
 
-Características clave:
+Características:
+- Geometría procedural bajo demanda.
+- Usuarios como flujos energéticos (no solo avatares estáticos).
+- Actividad que altera entorno en tiempo real (nodos, color, intensidad, efectos).
 
-- Geometría procedural para generar ciudades y escenas bajo demanda.
-- Usuarios representados como flujos energéticos, no solo avatares estáticos.
-- Actividad que modifica el entorno en tiempo real (densidad de nodos, intensidad de color, efectos).
-
-### 2.2 INFRASTRUCTURE_FIELD — Infraestructura del sistema
-
-La `INFRASTRUCTURE_FIELD` hace visible la topología real del ecosistema:
-
-- Nodos de servidores, clusters, redes federadas, pipelines de datos e integraciones de APIs.
-- Visualización como espirales, grafos, líneas de energía y nodos pulsantes con latencia, carga y estado de servicios.
+### 2.2 INFRASTRUCTURE_FIELD — Infraestructura visible
+- Nodos de servidores, clústeres, redes federadas, pipelines e integraciones API.
+- Visualización por espirales, grafos, líneas de energía y nodos pulsantes.
+- Señales mínimas de observabilidad: latencia, carga y estado.
 
 ### 2.3 GOVERNANCE_OVERLAYS — Gobernanza
-
-La gobernanza se representa como patrones dinámicos:
-
-- Votaciones como ondas de expansión sobre el grafo.
-- Cambios de reglas como reconfiguraciones topológicas visibles.
-- Permisos y roles como constelaciones de nodos conectados.
+- Votaciones como ondas de expansión.
+- Cambios de reglas como reconfiguración topológica.
+- Roles/permisos como constelaciones enlazadas.
 
 ### 2.4 USER_TRAILS — Trayectorias de usuario
-
-Cada usuario genera trayectorias que cruzan capas:
-
-- Navegación social, creación de contenido, visitas XR, transacciones, votaciones y consultas de salud.
-- Visualización como líneas de luz, estelas volumétricas y bifurcaciones para lectura de comportamiento colectivo.
+- Navegación social, creación de contenido, recorridos XR, transacciones, salud y voto.
+- Representación en líneas de luz y estelas volumétricas para lectura de dinámica colectiva.
 
 ---
 
-## 3. Visualizador Metarreal en Python (módulo funcional)
+## 3. Módulo Python de Visualización Metarreal
 
-Archivo: `tools/tamv_metareality_viewer.py`
+**Archivo:** `tools/tamv_metareality_viewer.py`
 
-El módulo implementa una visualización 3D base de la metarrealidad TAMV, diseñada para evolucionar a pipeline GPU/VisPy y conectarse a datos reales del sistema.
+Módulo plug-and-play para visualización base 3D de TAMV, listo para evolucionar a GPU/VisPy y conectarse a datos reales (trazas de usuario, infraestructura y gobernanza).
 
-### Capacidades incluidas
+Capacidades:
+- Núcleo espiral `SYSTEM_CORE`.
+- Mundos semitransparentes `WORLD_LAYERS`.
+- Trazas dinámicas `USER_TRAILS`.
+- Eventos críticos `EVENTS/CRISIS/GOVERNANCE_OVERLAYS`.
+- Rotación animada, exportación de frame PNG y GIF opcional.
+- CLI parametrizable y ejecución no interactiva (`--no-show`).
+- Mensajes de error claros cuando faltan dependencias (`matplotlib`, `pillow`).
 
-- Núcleo espiral del sistema (`SYSTEM_CORE`).
-- Mundos flotantes (`WORLD_LAYERS`) con superficies semitransparentes.
-- Trayectorias de usuario (`USER_TRAILS`).
-- Eventos críticos (`EVENTS`, `CRISIS`, `GOVERNANCE_OVERLAYS`).
-- Exportación de frame inicial en PNG.
-- Exportación opcional de animación GIF.
-- CLI con parámetros para semilla, cantidad de elementos, rutas de salida y modo sin interfaz.
-
-### Uso rápido
+### 3.1 Uso base
 
 ```bash
 python tools/tamv_metareality_viewer.py --save-frame tamv_metareality_frame0.png --no-show
 ```
 
-### Uso con animación GIF
+### 3.2 Uso ampliado
 
 ```bash
 python tools/tamv_metareality_viewer.py \
+  --seed 77 \
+  --world-count 12 \
+  --trail-count 60 \
   --frames 240 \
+  --elevation-deg 22 \
+  --azimuth-speed 0.8 \
   --save-frame tamv_metareality_frame0.png \
   --save-gif tamv_metareality.gif \
   --no-show
+```
+
+### 3.3 Dependencias recomendadas
+
+```bash
+pip install matplotlib pillow
 ```
 
 ---
 
 ## 4. Roadmap de Ejecución por IA (versión final)
 
-### 4.1 Horizonte 0 — Consolidación inmediata (0–4 horas IA)
+### 4.1 Horizonte 0 — Consolidación inmediata (0–4 h IA)
+Objetivo: base limpia y coherente para evolución continua.
 
-Objetivo: dejar la base del TAMV limpia y coherente para evolución continua.
+- **Limpieza estructural:** consolidar navegación informativa en Centro de Conocimiento + Centro Legal/Documentación; regenerar índices automáticos MD/MDX.
+- **Unificación visual:** fondo único `UnifiedBackground Matrix 3D`; retirar variantes obsoletas (`EpicBackground`, `QuantumCanvas`) mediante migración compatible.
+- **Integraciones críticas:** robustecer `github-repo-scanner` (rate limit, timeout, fallback); endurecer TTS de Isabella con estrategias de degradación.
 
-Acciones por agentes:
+### 4.2 Fase 1 — Producto orientado a usuario final (4–24 h IA)
+Objetivo: experiencia social + XR + salud + gifts de extremo a extremo.
 
-- **Limpieza estructural**
-  - Reorganizar rutas y consolidar páginas informativas en dos centros: `Centro de Conocimiento` y `Centro Legal / Documentación`.
-  - Generar índices automáticos desde MD existentes (`01_filosofia_tamv.md`, `MDX4_FUNCTIONAL_ARCHITECTURE_MAP.md`, etc.).
-- **Unificación visual**
-  - Forzar sistema único de fondo: `UnifiedBackground Matrix 3D`.
-  - Eliminar variantes obsoletas (`EpicBackground`, `QuantumCanvas`).
-  - Ajustar `CinematicIntro v12.0` con escenas ancladas a módulos reales.
-- **Corrección de integraciones**
-  - Endurecer `github-repo-scanner` (rate limit, errores, timeouts).
-  - Revisar TTS de Isabella con fallback y manejo de errores.
-
-### 4.2 Fase 1 — Producto centrado en usuario final (4–24 horas IA)
-
-Objetivo: convertir el núcleo en experiencia completa (social + XR + salud + gifts).
-
-- **Social Feed + Onboarding Isabella**
-  - Flujo de 3 pasos: identidad soberana → primer contenido → primer DreamSpace XR.
-  - Progress bar, badges y Gifts (Light/Epic).
-- **DreamSpaces XR y tours**
-  - Recorridos guiados (ciudad, educativo, crisis) con `DreamSpaceViewer v3.0` + `IsabellaXRGuide`.
-  - Escenas demo estables (FPS, HUD, audio KAOS, permisos XR).
-- **Telemedicina y Gifts**
-  - Extender `/health`: agenda, espera, consulta, cierre con BookPI Health.
-  - Integración de gifts en feed social, XR y salud.
+- **Onboarding social guiado:** identidad soberana → primer contenido → primer DreamSpace XR.
+- **DreamSpaces con tours:** ciudad, universidad y crisis con `DreamSpaceViewer` + `IsabellaXRGuide`.
+- **Telemedicina operacional:** agenda → sala de espera → consulta → cierre BookPI Health.
 
 ### 4.3 Fase 2 — Bundles institucionales (1–3 días IA)
+Objetivo: empaquetar TAMV por dominio.
 
-Objetivo: empaquetar TAMV para clientes concretos.
-
-- **Bundle Ciudad**
-  - Rutas XR turísticas, nodos comerciales, dashboards económicos y simulaciones urbanas.
-  - Escenas y textos autogenerados desde documentos técnico-financieros.
-- **Bundle Universidad**
-  - Campus XR, certificación federada, identidad académica soberana y tutoría IA.
-  - Integración BookPI + XR para logros y aulas inmersivas.
-- **Bundle Salud**
-  - Red de clínicas, teleconsulta, ledger médico, consentimiento digital.
-  - Uso intensivo de BookPI Health, MSR ledger y `GOVERNANCE_OVERLAYS`.
+- **Bundle Ciudad:** turismo XR, nodos comerciales, tablero económico, simulación urbana.
+- **Bundle Universidad:** campus XR, identidad académica soberana, certificación federada.
+- **Bundle Salud:** red clínica, teleconsulta, consentimiento digital, políticas de acceso.
 
 ### 4.4 Fase 3 — Ecosistema auto-evolutivo (3–7 días IA)
+Objetivo: absorber repositorios por olas de valor.
 
-Objetivo: absorber código desde universo de repos por olas.
+- Escaneo/registro continuo (`github-repo-scanner`).
+- Olas de integración: (1) IA/XR, (2) Infra/Sec, (3) Economía/Contenido.
+- Auditoría arquitectónica automática con reportes de consistencia.
 
-- **Escaneo y clasificación continua**
-  - `github-repo-scanner` + scripts de análisis mantienen un registro vivo de repos y potencial de integración.
-- **Olas de integración**
-  - Ola 1: IA y XR.
-  - Ola 2: Infraestructura y seguridad.
-  - Ola 3: Economía y contenido.
-- **Auditoría automática**
-  - Scripts verifican consistencia arquitectónica y generan reportes/sugerencias.
+### 4.5 Fase 4 — TAMV auto-operado por IA (7–14 días IA)
+Objetivo: mejora continua autónoma supervisada.
 
-### 4.5 Fase 4 — TAMV auto-operado por IA (7–14 días IA, iterativo)
-
-Objetivo: que el propio sistema decida qué mejorar, lanzar y absorber.
-
-- **IsabellaOrchestrator como director de producto**
-  - Analiza uso de feed, XR, salud, gifts y repos integrados.
-  - Genera tareas, escenas y ajustes por objetivos institucionales.
-- **Sensory Gate + Crisis**
-  - Monitorea picos de uso, fallos XR y riesgos de seguridad.
-  - Activa respuestas automáticas: cerrar escenas inestables, reconfigurar rutas, escalar servicios.
-- **Loop de despliegue continuo**
-  - Agentes ejecutan E2E, auditorías y despliegues sobre CI/CD, K8s y Docker.
+- **IsabellaOrchestrator** prioriza mejoras por uso real.
+- **Sensory Gate + Crisis** detecta y mitiga fallas de experiencia/seguridad.
+- **Loop continuo** con E2E, auditoría, CI/CD y despliegue gradual.
 
 ---
 
 ## 5. Modo Pitch Automático y Auto-Demo Permanente
 
-- **Modo Pitch Automático**
-  - Secuencia: Cinematic Intro → Feed Social → XR DreamSpace → Telemedicina → Repo‑Unification.
-  - Narrativas por público objetivo: alcalde, rector, inversor y comunidad creativa.
-- **Auto-Demo Permanente**
-  - Agentes simulan usuarios, sesiones XR, comercio digital y consultas médicas para mantener el ecosistema vivo.
+- **Pitch automático:** Cinematic Intro → Feed Social → XR DreamSpace → Telemedicina → Repo-Unification.
+- **Narrativas por perfil:** alcaldía, rectoría, inversión y comunidad creativa.
+- **Auto-demo permanente:** simulación continua de actividad para mantener el ecosistema “vivo” en demos.
 
 ---
 
 ## 6. Resultado Final
 
-Con esta arquitectura unificada, el visualizador metarreal funcional en Python y el roadmap de ejecución por IA, TAMV queda definido como una infraestructura civilizatoria de metarrealidad capaz de:
+Con esta versión unificada:
+- TAMV queda definido como infraestructura civilizatoria de metarrealidad.
+- Existe una base ejecutable mínima en Python para visualización metarreal.
+- El roadmap IA entrega secuencia de ejecución trazable para crecimiento modular, institucional y auto-evolutivo.
 
-- Desarrollarse de forma continua.
-- Auto‑expandirse por integración de repos y servicios.
-- Auto‑optimizarse con trazabilidad y auditoría.
-
-Esto deja la base lista para posterior conversión a MDX navegable con hooks de código y embebido del viewer dentro del propio ecosistema TAMV.
+> Próximo paso opcional: convertir este documento a MDX navegable con embeds de código y hook directo al viewer.
