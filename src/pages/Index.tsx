@@ -11,7 +11,9 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Flame, TrendingUp, Users, Video, Radio, Search,
-  Hash, Crown, Zap, Globe, Star, Sparkles,
+  Hash, Crown, Zap, Globe, Star, Sparkles, Brain,
+  Layers, GraduationCap, Music, ShoppingBag, Wallet,
+  Shield, Rocket, BookOpen, ChevronRight,
 } from "lucide-react";
 
 // Social components
