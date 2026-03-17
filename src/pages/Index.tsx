@@ -20,6 +20,7 @@ import {
 import { NextGenFeed } from "@/components/social/NextGenFeed";
 import { TrendingSidebar } from "@/components/social/TrendingSidebar";
 import { StoriesCarousel } from "@/components/social/StoriesCarousel";
+import { PremiumCard, StatCard } from "@/components/effects/PremiumCard";
 import CinematicIntro from "@/components/CinematicIntro";
 import { useAuth } from "@/hooks/useAuth";
 

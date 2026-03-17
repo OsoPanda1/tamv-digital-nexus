@@ -6,7 +6,7 @@
 // ============================================================================
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { motion, AnimatePresence, useSpring } from "framer-motion";
+import { motion, AnimatePresence, useSpring, useTransform } from "framer-motion";
 import introAudio from "@/assets/intro.mp3";
 import logoImg from "@/assets/LOGOTAMV2.jpg";
 import heroCity from "@/assets/gallery/hero-city.jpg";
