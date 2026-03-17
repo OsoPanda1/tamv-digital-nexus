@@ -109,6 +109,7 @@
 
 ## Repo unification y auditoría
 - `docs/repo-unification/TAMV_MDX5_UNIFICATION_BLUEPRINT.md` ✅ nuevo — núcleo conceptual MD-X5 + plan de convergencia 177 repos
+- `docs/repo-unification/MDX5_FUNCTIONAL_IMPLEMENTATION_RUNBOOK.md` ✅ nuevo — plan operativo por fases, gates y DoD para ejecución funcional
 - `docs/repo-unification/UNIFICATION_EXEC_SUMMARY.md` ✅
 - `docs/repo-unification/INTEGRATION_WAVES.md` ✅
 - `docs/repo-unification/REPO_TO_DOMAIN_MATRIX.md` ✅

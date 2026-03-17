@@ -8,6 +8,8 @@
 
 ---
 
+> **Nota operativa:** la ejecución funcional paso a paso está definida en `docs/repo-unification/MDX5_FUNCTIONAL_IMPLEMENTATION_RUNBOOK.md`.
+
 ## 1) Núcleo conceptual TAMV MD-X5
 
 TAMV MD-X5 se define como infraestructura digital civilizatoria híbrida con seis pilares de operación:
