@@ -7,7 +7,9 @@
 
 ---
 
-## 1. Visión General del TAMV
+## 0. Nota de consolidación y compatibilidad
+
+Esta revisión conserva el enfoque de la versión 2.0.0, pero recupera mayor granularidad funcional para facilitar implementación por equipos técnicos y lectura ejecutiva por instituciones.
 
 El **TAMV (Territorio Autónomo de Metarrealidad Viva)** es una infraestructura digital civilizatoria que integra red social, metaverso operativo, fábrica de IA y capa de gobernanza/servicios para ciudades, universidades, salud y comunidades creativas.
 
@@ -78,12 +80,14 @@ python tools/tamv_metareality_viewer.py \
   --world-count 12 \
   --trail-count 60 \
   --frames 240 \
+  --elevation-deg 22 \
+  --azimuth-speed 0.8 \
   --save-frame tamv_metareality_frame0.png \
   --save-gif tamv_metareality.gif \
   --no-show
 ```
 
----
+### 3.3 Dependencias recomendadas
 
 ## 4. Roadmap de Ejecución por IA (versión final)
 
