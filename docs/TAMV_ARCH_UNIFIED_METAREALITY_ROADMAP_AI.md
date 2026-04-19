@@ -1,7 +1,6 @@
-# TAMV — Arquitectura Unificada de Metarrealidad + Roadmap de Ejecución por IA
+# TAMV_ARCH_UNIFIED_METAREALITY_ROADMAP_AI
 
-**ID canónico:** `TAMV_ARCH_UNIFIED_METAREALITY_ROADMAP_AI`  
-**Versión:** 2.1.0  
+**Versión:** 2.0.0  
 **Estado:** Versión final unificada (documental + operativa)  
 **Fecha:** 2026-03-10  
 **Trazabilidad por capas:** L0 → L7
@@ -11,14 +10,6 @@
 ## 0. Nota de consolidación y compatibilidad
 
 Esta revisión conserva el enfoque de la versión 2.0.0, pero recupera mayor granularidad funcional para facilitar implementación por equipos técnicos y lectura ejecutiva por instituciones.
-
-Se mantienen los mismos artefactos de salida:
-- Documento arquitectónico unificado en `docs/**`.
-- Módulo Python funcional en `tools/tamv_metareality_viewer.py`.
-
----
-
-## 1. Visión General del TAMV
 
 El **TAMV (Territorio Autónomo de Metarrealidad Viva)** es una infraestructura digital civilizatoria que integra red social, metaverso operativo, fábrica de IA y capa de gobernanza/servicios para ciudades, universidades, salud y comunidades creativas.
 
@@ -74,15 +65,14 @@ Capacidades:
 - Eventos críticos `EVENTS/CRISIS/GOVERNANCE_OVERLAYS`.
 - Rotación animada, exportación de frame PNG y GIF opcional.
 - CLI parametrizable y ejecución no interactiva (`--no-show`).
-- Mensajes de error claros cuando faltan dependencias (`matplotlib`, `pillow`).
 
-### 3.1 Uso base
+Uso base:
 
 ```bash
 python tools/tamv_metareality_viewer.py --save-frame tamv_metareality_frame0.png --no-show
 ```
 
-### 3.2 Uso ampliado
+Uso ampliado:
 
 ```bash
 python tools/tamv_metareality_viewer.py \
@@ -98,12 +88,6 @@ python tools/tamv_metareality_viewer.py \
 ```
 
 ### 3.3 Dependencias recomendadas
-
-```bash
-pip install matplotlib pillow
-```
-
----
 
 ## 4. Roadmap de Ejecución por IA (versión final)
 

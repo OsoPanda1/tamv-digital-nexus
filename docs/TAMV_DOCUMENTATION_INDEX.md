@@ -1,6 +1,6 @@
 # TAMV_DOCUMENTATION_INDEX
 
-> **Última actualización:** 2026-03-04 · **Estado:** en construcción iterativa · **MD-X4 Wiki Update v1**
+> **Última actualización:** 2026-03-10 · **Estado:** en construcción iterativa · **MD-X4 Wiki Update v1**
 > 
 > **Nuevo:** TAMV Unified API Master Technical v3.0.0-Sovereign — Documento maestro de ingeniería técnica institucional
 
@@ -108,11 +108,14 @@
 - `docs/sofreports/THESOF_STATE_REPORT.md` ✅
 
 ## Repo unification y auditoría
+- `docs/repo-unification/TAMV_MDX5_UNIFICATION_BLUEPRINT.md` ✅ nuevo — núcleo conceptual MD-X5 + plan de convergencia 177 repos
+- `docs/repo-unification/MDX5_FUNCTIONAL_IMPLEMENTATION_RUNBOOK.md` ✅ nuevo — plan operativo por fases, gates y DoD para ejecución funcional
 - `docs/repo-unification/UNIFICATION_EXEC_SUMMARY.md` ✅
 - `docs/repo-unification/INTEGRATION_WAVES.md` ✅
 - `docs/repo-unification/REPO_TO_DOMAIN_MATRIX.md` ✅
 - `docs/repo-unification/AUDITORIA_GENERAL_2026-02-24.md` ✅
 - `docs/repo-unification/REPO_REGISTRY_177.csv` ✅
+- `docs/repo-unification/MEGA_ANALISIS_EVOLUCION_MDX4_2026-03-10.md` ✅ **ACTUALIZADO** — diagnóstico integral L0–L7, errores críticos detectados, plan de migración por olas y resolución de comentarios post-PR
 
 ## Código fuente — contratos y módulos
 

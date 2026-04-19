@@ -11,13 +11,16 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Flame, TrendingUp, Users, Video, Radio, Search,
-  Hash, Crown, Zap, Globe, Star, Sparkles,
+  Hash, Crown, Zap, Globe, Star, Sparkles, Brain,
+  Layers, GraduationCap, Music, ShoppingBag, Wallet,
+  Shield, Rocket, BookOpen, ChevronRight,
 } from "lucide-react";
 
 // Social components
 import { NextGenFeed } from "@/components/social/NextGenFeed";
 import { TrendingSidebar } from "@/components/social/TrendingSidebar";
 import { StoriesCarousel } from "@/components/social/StoriesCarousel";
+import { PremiumCard, StatCard } from "@/components/effects/PremiumCard";
 import CinematicIntro from "@/components/CinematicIntro";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -132,7 +135,8 @@ const Index = () => {
               className="w-full bg-card/40 border border-border/20 rounded-xl pl-10 pr-4 py-2 text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/40 backdrop-blur-sm"
             />
           </div>
-        </section>
+        </div>
+      </div>
 
         {/* ═══════════════════════════════════════════════════════════════════
            STATS SECTION
@@ -376,6 +380,12 @@ const Index = () => {
                 </p>
               </div>
             </motion.div>
+          </div>
+        </section>
+
+      {/* Main layout: Social Feed */}
+      <div className="max-w-7xl mx-auto px-4 mb-4">
+        <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             {!isAuthenticated && (
               <Link to="/auth">

@@ -30,24 +30,8 @@ class ViewerConfig:
     azimuth_speed: float = 0.6
 
 
-def _import_runtime_dependencies() -> tuple[Any, Any, Any]:
-    """Importa dependencias runtime bajo demanda con error de ayuda amigable."""
-    try:
-        import numpy as np
-        import matplotlib.pyplot as plt
-        from matplotlib.animation import FuncAnimation
-    except ModuleNotFoundError as exc:
-        pkg = getattr(exc, "name", "dependencia")
-        raise SystemExit(
-            f"Dependencia faltante: {pkg}. "
-            "Instala con: pip install numpy matplotlib pillow"
-        ) from exc
-    return np, plt, FuncAnimation
-
-
-def create_metareality_figure(config: ViewerConfig) -> tuple[Any, Any]:
+def create_metareality_figure(config: ViewerConfig) -> tuple[plt.Figure, plt.Axes]:
     """Construye la figura base 3D con elementos metarreales."""
-    np, plt, _ = _import_runtime_dependencies()
     rng = np.random.default_rng(config.seed)
 
     fig = plt.figure(figsize=(10, 10))
@@ -102,9 +86,8 @@ def animate_metareality(
     save_frame_path: str | None = None,
     save_gif_path: str | None = None,
     show: bool = True,
-) -> Any:
+) -> FuncAnimation:
     """Genera la animación giratoria y opcionalmente exporta artefactos."""
-    _, plt, FuncAnimation = _import_runtime_dependencies()
     fig, ax = create_metareality_figure(config)
 
     def update(frame: int) -> None:
