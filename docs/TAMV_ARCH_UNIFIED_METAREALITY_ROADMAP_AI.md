@@ -170,25 +170,3 @@ Para reducir saturación de archivos Markdown, este roadmap absorbe la planifica
 - checklist de seguridad y operación aprobado.
 
 > Nota: en `MODE=DOCUMENTAL_ONLY`, esta sección funciona como especificación de ejecución para la siguiente ventana con autorización de cambios de código.
-
-
-
-## 13. Protocolo de absorción masiva de repositorios (bloqueado por gobernanza)
-
-Solicitud de absorción total de repositorios externos (perfil completo + top repos públicos) identificada como operación de alto riesgo y alto impacto.
-
-### 13.1 Bloqueos de ejecución actuales
-- `MODE=DOCUMENTAL_ONLY` impide ejecución de integración de código productivo en esta ventana.
-- `CANON_LOCK=TRUE` exige revisión humana previa para cambios estructurales de gran alcance.
-- La absorción sin curaduría viola principio de trazabilidad y control de superficie de ataque.
-
-### 13.2 Condiciones mínimas para habilitar ejecución funcional
-1. Lista cerrada de repositorios permitidos con prioridad y licencias compatibles.
-2. Política de supply-chain security (firmas, SBOM, SAST/DAST, secretos, CVE gates).
-3. Entorno de cuarentena para ingesta + pruebas de compatibilidad antes de merge.
-4. Plan incremental por olas (20/40/40) con métricas de latencia y rollback.
-
-### 13.3 Salida requerida para abrir ventana CODE_WRITE
-- Aprobación humana explícita de operación masiva.
-- Definición de presupuesto de riesgo y criterios de aceptación.
-- Activación de pipeline verificable de integración segura.
