@@ -11,6 +11,7 @@ const corsHeaders = {
 // ============================================================================
 
 const TARGET_USERNAME = 'OsoPanda1';
+const TOP_REPOS_DEFAULT = 100;
 
 interface RepoData {
   name: string;
@@ -212,7 +213,32 @@ function determineWave(domain: string, status: string): number {
   return 4;
 }
 
-async function fetchAllRepos(): Promise<RepoData[]> {
+
+
+function priorityScore(repo: ClassifiedRepo): number {
+  const statusWeight: Record<string, number> = { INTEGRATED: 40, CONFIRMED: 25, POSSIBLE: 10, NON_TAMV: 0 };
+  const freshnessDays = Math.max(1, (Date.now() - new Date(repo.pushedAt).getTime()) / 86400000);
+  const freshness = Math.max(0, 20 - Math.min(20, freshnessDays / 7));
+  return statusWeight[repo.status] + (repo.domainConfidence * 30) + Math.min(repo.stars / 10, 10) + freshness;
+}
+
+function buildAbsorptionPlan(repos: ClassifiedRepo[]) {
+  return repos.map((repo, index) => ({
+    rank: index + 1,
+    repo: repo.name,
+    domain: repo.domain,
+    waveTarget: repo.waveTarget,
+    status: repo.status,
+    priorityScore: Number(priorityScore(repo).toFixed(2)),
+    actions: [
+      'scan_contracts',
+      'map_to_canon',
+      'generate_patch_candidates',
+      'queue_human_review',
+    ],
+  }));
+}
+async function fetchAllRepos(targetUser: string): Promise<RepoData[]> {
   const allRepos: RepoData[] = [];
   let page = 1;
   const perPage = 100;
@@ -231,7 +257,9 @@ async function fetchAllRepos(): Promise<RepoData[]> {
   }
 
   while (true) {
-    const url = `https://api.github.com/users/${TARGET_USERNAME}/repos?page=${page}&per_page=${perPage}&type=all&sort=updated`;
+    const url = githubToken
+      ? `https://api.github.com/user/repos?page=${page}&per_page=${perPage}&visibility=all&affiliation=owner,collaborator,organization_member&sort=updated`
+      : `https://api.github.com/users/${targetUser}/repos?page=${page}&per_page=${perPage}&type=owner&sort=updated`;
     const response = await fetch(url, { headers });
 
     if (!response.ok) {
@@ -263,9 +291,14 @@ serve(async (req) => {
   }
 
   try {
-    console.log(`[TAMV Scanner] Starting scan of ${TARGET_USERNAME}...`);
-    
-    const rawRepos = await fetchAllRepos();
+    const requestBody = req.method === "POST" ? await req.json().catch(() => ({})) : {};
+    const targetUser = requestBody?.targetUser || TARGET_USERNAME;
+    const topRepos = Math.max(1, Math.min(200, Number(requestBody?.topRepos || TOP_REPOS_DEFAULT)));
+    const includePlan = requestBody?.includePlan !== false;
+
+    console.log(`[TAMV Scanner] Starting scan of ${targetUser}...`);
+
+    const rawRepos = await fetchAllRepos(targetUser);
     console.log(`[TAMV Scanner] Fetched ${rawRepos.length} repos`);
 
     const classified: ClassifiedRepo[] = rawRepos
@@ -310,6 +343,8 @@ serve(async (req) => {
       return b.domainConfidence - a.domainConfidence;
     });
 
+    const prioritized = [...classified].sort((a, b) => priorityScore(b) - priorityScore(a)).slice(0, topRepos);
+
     // Summary stats
     const summary = {
       totalRepos: rawRepos.length,
@@ -339,9 +374,11 @@ serve(async (req) => {
     return new Response(JSON.stringify({
       ok: true,
       scannedAt: new Date().toISOString(),
-      targetUser: TARGET_USERNAME,
+      targetUser,
       summary,
       repos: classified,
+      topRepos: prioritized,
+      absorptionPlan: includePlan ? buildAbsorptionPlan(prioritized) : [],
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
