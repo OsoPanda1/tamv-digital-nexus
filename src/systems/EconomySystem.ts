@@ -657,6 +657,43 @@ export class EconomySystem {
     this.lotteryTickets.clear();
     console.log('[Economy] System destroyed');
   }
+
+  // ============================================================================
+  // Constitutional Runtime Adapter
+  // ============================================================================
+  static async handleIntent(intent: string, payload: unknown, permit: { constraints?: Record<string, unknown> }) {
+    const economy = EconomySystem.getInstance();
+
+    switch (intent) {
+      case 'wallet.transfer':
+      case 'economy.transfer': {
+        const p = payload as { fromUserId: string; toUserId: string; amount: number; description?: string };
+        const maxAmount = Number(permit.constraints?.maxAmount ?? Number.POSITIVE_INFINITY);
+        if (!p.fromUserId || !p.toUserId || !Number.isFinite(p.amount) || p.amount <= 0) {
+          throw new Error('INVALID_TRANSFER_PAYLOAD');
+        }
+        if (p.amount > maxAmount) throw new Error('TRANSFER_AMOUNT_EXCEEDS_POLICY_LIMIT');
+
+        const tx = economy.transferCredits(p.fromUserId, p.toUserId, p.amount, p.description ?? 'Constitutional transfer');
+        if (!tx || tx.status !== 'completed') throw new Error('TRANSFER_FAILED');
+        return { success: true, transaction: tx };
+      }
+      case 'wallet.create': {
+        const p = payload as { ownerId: string };
+        if (!p.ownerId) throw new Error('INVALID_WALLET_CREATE_PAYLOAD');
+        const wallet = economy.getWallet(p.ownerId);
+        return { success: true, wallet };
+      }
+      case 'wallet.balance.get': {
+        const p = payload as { ownerId: string };
+        if (!p.ownerId) throw new Error('INVALID_BALANCE_PAYLOAD');
+        const wallet = economy.getWallet(p.ownerId);
+        return { success: true, wallet };
+      }
+      default:
+        throw new Error(`UNKNOWN_ECONOMY_INTENT: ${intent}`);
+    }
+  }
 }
 
 // Export singleton
