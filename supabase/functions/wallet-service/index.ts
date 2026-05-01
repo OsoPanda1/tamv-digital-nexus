@@ -95,14 +95,18 @@ serve(async (req) => {
       return jsonError('Invalid JSON body', 400);
     }
 
-    const { action } = body;
-    if (typeof action !== 'string' || action.length > 50) {
-      return jsonError('Invalid action', 400);
+    const { action, intent, payload } = body;
+    const resolvedIntent = typeof intent === 'string' ? intent : '';
+    const resolvedAction = typeof action === 'string' ? action : '';
+    const operation = resolvedIntent || resolvedAction;
+    if (!operation || operation.length > 80) {
+      return jsonError('Invalid action/intent', 400);
     }
 
-    switch (action) {
+    switch (operation) {
       // ── GET BALANCE ──
-      case 'get_balance': {
+      case 'get_balance':
+      case 'wallet.balance.get': {
         const { data: wallet, error } = await supabase
           .from('tcep_wallets')
           .select('*')
@@ -139,8 +143,11 @@ serve(async (req) => {
       }
 
       // ── TRANSFER ──
-      case 'transfer': {
-        const { toUserId, amount, description } = body;
+      case 'transfer':
+      case 'wallet.transfer':
+      case 'economy.transfer': {
+        const transferPayload = payload && typeof payload === 'object' ? payload : body;
+        const { toUserId, amount, description } = transferPayload as Record<string, unknown>;
 
         // Strict validation
         if (!toUserId || !isValidUUID(toUserId)) {
@@ -231,7 +238,8 @@ serve(async (req) => {
       }
 
       // ── DAILY LOGIN REWARD ──
-      case 'daily_login': {
+      case 'daily_login':
+      case 'wallet.daily_login': {
         const { data: wallet } = await supabase
           .from('tcep_wallets')
           .select('*')
@@ -283,7 +291,8 @@ serve(async (req) => {
       }
 
       // ── GET HISTORY ──
-      case 'get_history': {
+      case 'get_history':
+      case 'wallet.history.get': {
         const limit = Math.min(Math.max(Number(body.limit) || 50, 1), 200);
         const offset = Math.max(Number(body.offset) || 0, 0);
 

@@ -26,7 +26,7 @@ interface Transaction {
   created_at: string;
 }
 
-async function callWalletService(action: string, extra: Record<string, unknown> = {}) {
+async function callWalletService(intent: string, payload: Record<string, unknown> = {}) {
   const { data: sessionData } = await supabase.auth.getSession();
   const token = sessionData?.session?.access_token;
   if (!token) throw new Error("No autenticado");
@@ -40,7 +40,7 @@ async function callWalletService(action: string, extra: Record<string, unknown> 
         Authorization: `Bearer ${token}`,
         apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
       },
-      body: JSON.stringify({ action, ...extra }),
+      body: JSON.stringify({ intent, domain: "economy", payload }),
     }
   );
 
@@ -62,7 +62,7 @@ export function useWallet() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { setWallet(null); setLoading(false); return; }
 
-      const data = await callWalletService("get_balance");
+      const data = await callWalletService("wallet.balance.get");
       setWallet(data);
     } catch (err: any) {
       console.error("Wallet fetch error:", err);
@@ -77,7 +77,9 @@ export function useWallet() {
   ): Promise<boolean> => {
     try {
       setLoading(true);
-      await callWalletService("transfer", { toUserId, amount, description });
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("No autenticado");
+      await callWalletService("wallet.transfer", { fromUserId: user.id, toUserId, amount, description });
       toast.success(`Transferencia exitosa: ${amount} TCEP`);
       await fetchWallet();
       return true;
@@ -93,7 +95,7 @@ export function useWallet() {
   const claimDailyReward = useCallback(async (): Promise<boolean> => {
     try {
       setLoading(true);
-      const data = await callWalletService("daily_login");
+      const data = await callWalletService("wallet.daily_login");
       toast.success(`¡Recompensa diaria: ${data.amount} TCEP!`);
       await fetchWallet();
       return true;
@@ -109,7 +111,7 @@ export function useWallet() {
   const getHistory = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await callWalletService("get_history");
+      const data = await callWalletService("wallet.history.get");
       setTransactions(data.transactions || []);
     } catch (err: any) {
       setError(err.message);
