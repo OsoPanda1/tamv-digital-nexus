@@ -9,6 +9,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useAdaptivePipelines } from "@/hooks/useAdaptivePipelines";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // OMNI-KERNEL Provider
@@ -64,6 +65,11 @@ const queryClient = new QueryClient({
 // Main App Component
 // ============================================================================
 
+const AdaptivePipelineBootstrap = () => {
+  useAdaptivePipelines();
+  return null;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -73,6 +79,7 @@ const App = () => (
 
       <BrowserRouter>
         <OmniKernelProvider workflowId="tamv-main">
+          <AdaptivePipelineBootstrap />
           <AppLayout>
             <ErrorBoundary>
             <Routes>
