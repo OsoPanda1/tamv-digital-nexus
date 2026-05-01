@@ -1,0 +1,433 @@
+---
+title: Dashboard de Monitoreo
+description: Dashboard central con gráficas de nodos federados y métricas en tiempo real
+category: WikiTAMV
+order: 7
+---
+
+# Dashboard de Monitoreo
+
+## Visión General
+
+El Dashboard de Monitoreo de TAMV MD-X4™ proporciona visibilidad en tiempo real del estado del ecosistema, incluyendo métricas de nodos federados, usuarios activos, rendimiento del sistema y seguridad.
+
+## Arquitectura del Dashboard
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                              HEADER                                       │
+│  TAMV MD-X4™ Control Center          [Usuario] [Notificaciones] [Salir]  │
+├──────────────────────────────────────────────────────────────────────────┤
+│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐             │
+│  │Usuarios │ │Nodos    │ │Latencia │ │Uptime   │ │Alertas  │             │
+│  │ 12.5K   │ │  48/48  │ │  45ms   │ │ 99.9%   │ │   2     │             │
+│  │ +12%    │ │  Online │ │  -5ms   │ │ +0.1%   │ │ Warning │             │
+│  └─────────┘ └─────────┘ └─────────┘ └─────────┘ └─────────┘             │
+├──────────────────────────────────────────────────────────────────────────┤
+│  ┌───────────────────────────────────┐ ┌───────────────────────────────┐ │
+│  │                                   │ │                               │ │
+│  │       GRÁFICA DE ÁREA             │ │      GRÁFICA DE BARRAS        │ │
+│  │     (Usuarios por Tiempo)         │ │     (Actividad por Región)    │ │
+│  │                                   │ │                               │ │
+│  └───────────────────────────────────┘ └───────────────────────────────┘ │
+│  ┌───────────────────────────────────┐ ┌───────────────────────────────┐ │
+│  │                                   │ │                               │ │
+│  │       GRÁFICA DE PIE              │ │      GRÁFICA DE RADAR         │ │
+│  │    (Distribución por Tipo)        │ │     (Salud del Sistema)       │ │
+│  │                                   │ │                               │ │
+│  └───────────────────────────────────┘ └───────────────────────────────┘ │
+├──────────────────────────────────────────────────────────────────────────┤
+│                         TABLA DE NODOS FEDERADOS                          │
+│  ┌─────┬──────────────┬─────────┬─────────┬────────┬─────────┐           │
+│  │ ID  │ Nombre       │ Región  │ Latencia│ Carga  │ Estado  │           │
+│  ├─────┼──────────────┼─────────┼─────────┼────────┼─────────┤           │
+│  │ 001 │ MX-CENTRAL   │ México  │  12ms   │  45%   │ 🟢 OK   │           │
+│  │ 002 │ AR-SUR       │ Argentina│ 89ms  │  32%   │ 🟢 OK   │           │
+│  │ 003 │ BR-LESTE     │ Brasil  │  67ms   │  78%   │ 🟡 WARN │           │
+│  └─────┴──────────────┴─────────┴─────────┴────────┴─────────┘           │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+## Componentes del Dashboard
+
+### 1. Tarjetas de Métricas (Stats Cards)
+
+```typescript
+interface StatCard {
+  label: string;
+  value: string | number;
+  trend?: string;
+  icon: LucideIcon;
+  color: string;
+}
+
+const STATS_CARDS: StatCard[] = [
+  {
+    label: "Usuarios Activos",
+    value: "12,547",
+    trend: "+12%",
+    icon: Users,
+    color: "text-cyan-400"
+  },
+  {
+    label: "Nodos Federados",
+    value: "48/48",
+    trend: "Online",
+    icon: Globe,
+    color: "text-emerald-400"
+  },
+  {
+    label: "Latencia Promedio",
+    value: "45ms",
+    trend: "-5ms",
+    icon: Zap,
+    color: "text-amber-400"
+  },
+  {
+    label: "Uptime",
+    value: "99.9%",
+    trend: "+0.1%",
+    icon: Activity,
+    color: "text-rose-400"
+  },
+  {
+    label: "Alertas Activas",
+    value: "2",
+    trend: "Warning",
+    icon: AlertTriangle,
+    color: "text-orange-400"
+  }
+];
+```
+
+### 2. Gráfica de Área (Usuarios por Tiempo)
+
+```typescript
+interface AreaChartData {
+  timestamp: Date;
+  usuarios: number;
+  sesiones: number;
+  eventos: number;
+}
+
+const AreaChart = ({ data }: { data: AreaChartData[] }) => {
+  return (
+    <ResponsiveContainer width="100%" height={300}>
+      <AreaChart data={data}>
+        <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,217,255,0.1)" />
+        <XAxis dataKey="timestamp" stroke="#666" />
+        <YAxis stroke="#666" />
+        <Tooltip contentStyle={{ background: '#0b0c11', border: '1px solid #00D9FF' }} />
+        <Area type="monotone" dataKey="usuarios" stroke="#00D9FF" fill="url(#gradientCyan)" />
+        <Area type="monotone" dataKey="sesiones" stroke="#9D4EDD" fill="url(#gradientPurple)" />
+        <Area type="monotone" dataKey="eventos" stroke="#FFD700" fill="url(#gradientGold)" />
+      </AreaChart>
+    </ResponsiveContainer>
+  );
+};
+```
+
+### 3. Gráfica de Barras (Actividad por Región)
+
+```typescript
+interface BarChartData {
+  region: string;
+  usuarios: number;
+  transacciones: number;
+  contenido: number;
+}
+
+const BarChart = ({ data }: { data: BarChartData[] }) => {
+  return (
+    <ResponsiveContainer width="100%" height={300}>
+      <RechartsBarChart data={data}>
+        <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,217,255,0.1)" />
+        <XAxis dataKey="region" stroke="#666" />
+        <YAxis stroke="#666" />
+        <Tooltip contentStyle={{ background: '#0b0c11', border: '1px solid #00D9FF' }} />
+        <Bar dataKey="usuarios" fill="#00D9FF" />
+        <Bar dataKey="transacciones" fill="#FFD700" />
+        <Bar dataKey="contenido" fill="#9D4EDD" />
+      </RechartsBarChart>
+    </ResponsiveContainer>
+  );
+};
+```
+
+### 4. Gráfica de Pie (Distribución por Tipo)
+
+```typescript
+interface PieChartData {
+  name: string;
+  value: number;
+  color: string;
+}
+
+const PieChart = ({ data }: { data: PieChartData[] }) => {
+  return (
+    <ResponsiveContainer width="100%" height={300}>
+      <RechartsPieChart>
+        <Pie
+          data={data}
+          cx="50%"
+          cy="50%"
+          innerRadius={60}
+          outerRadius={100}
+          paddingAngle={2}
+          dataKey="value"
+        >
+          {data.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={entry.color} />
+          ))}
+        </Pie>
+        <Tooltip />
+        <Legend />
+      </RechartsPieChart>
+    </ResponsiveContainer>
+  );
+};
+```
+
+### 5. Gráfica de Radar (Salud del Sistema)
+
+```typescript
+interface RadarChartData {
+  metric: string;
+  value: number;
+  fullMark: number;
+}
+
+const RadarChart = ({ data }: { data: RadarChartData[] }) => {
+  return (
+    <ResponsiveContainer width="100%" height={300}>
+      <RechartsRadarChart data={data}>
+        <PolarGrid stroke="rgba(0,217,255,0.2)" />
+        <PolarAngleAxis dataKey="metric" stroke="#666" />
+        <PolarRadiusAxis stroke="#666" />
+        <Radar
+          name="Salud"
+          dataKey="value"
+          stroke="#00D9FF"
+          fill="#00D9FF"
+          fillOpacity={0.3}
+        />
+      </RechartsRadarChart>
+    </ResponsiveContainer>
+  );
+};
+```
+
+## Tabla de Nodos Federados (48 Nodos)
+
+### Estructura de Datos
+
+```typescript
+interface FederatedNode {
+  id: string;
+  name: string;
+  region: string;
+  country: string;
+  status: 'online' | 'warning' | 'offline' | 'maintenance';
+  metrics: {
+    latency: number;      // ms
+    load: number;         // 0-100%
+    health: number;       // 0-100
+    uptime: number;       // days
+  };
+  capabilities: {
+    quantum: boolean;
+    bci: boolean;
+    xr: boolean;
+    ai: boolean;
+  };
+  lastSync: Date;
+}
+```
+
+### Datos de Ejemplo (48 Nodos)
+
+```typescript
+const FEDERATED_NODES: FederatedNode[] = [
+  // México (6 nodos)
+  { id: 'MX-CEN', name: 'México Central', region: 'América del Norte', country: 'México', status: 'online', metrics: { latency: 12, load: 45, health: 98, uptime: 45 }, capabilities: { quantum: true, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'MX-NOR', name: 'México Norte', region: 'América del Norte', country: 'México', status: 'online', metrics: { latency: 18, load: 32, health: 95, uptime: 45 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'MX-SUR', name: 'México Sur', region: 'América del Norte', country: 'México', status: 'online', metrics: { latency: 15, load: 28, health: 97, uptime: 44 }, capabilities: { quantum: false, bci: true, xr: false, ai: true }, lastSync: new Date() },
+  { id: 'MX-OCC', name: 'México Occidente', region: 'América del Norte', country: 'México', status: 'online', metrics: { latency: 14, load: 55, health: 94, uptime: 43 }, capabilities: { quantum: true, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'MX-BAJ', name: 'México Bajío', region: 'América del Norte', country: 'México', status: 'online', metrics: { latency: 16, load: 42, health: 96, uptime: 42 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'MX-SEP', name: 'México Sureste', region: 'América del Norte', country: 'México', status: 'online', metrics: { latency: 19, load: 38, health: 93, uptime: 41 }, capabilities: { quantum: false, bci: false, xr: true, ai: true }, lastSync: new Date() },
+  
+  // Brasil (8 nodos)
+  { id: 'BR-LE', name: 'Brasil Leste', region: 'América del Sur', country: 'Brasil', status: 'online', metrics: { latency: 67, load: 78, health: 91, uptime: 40 }, capabilities: { quantum: true, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'BR-NE', name: 'Brasil Nordeste', region: 'América del Sur', country: 'Brasil', status: 'online', metrics: { latency: 72, load: 45, health: 94, uptime: 39 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'BR-NO', name: 'Brasil Norte', region: 'América del Sur', country: 'Brasil', status: 'online', metrics: { latency: 85, load: 32, health: 89, uptime: 38 }, capabilities: { quantum: false, bci: false, xr: false, ai: true }, lastSync: new Date() },
+  { id: 'BR-SE', name: 'Brasil Sudeste', region: 'América del Sur', country: 'Brasil', status: 'online', metrics: { latency: 63, load: 68, health: 95, uptime: 41 }, capabilities: { quantum: true, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'BR-SU', name: 'Brasil Sur', region: 'América del Sur', country: 'Brasil', status: 'online', metrics: { latency: 70, load: 52, health: 92, uptime: 40 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'BR-CO', name: 'Brasil Centro-Oeste', region: 'América del Sur', country: 'Brasil', status: 'warning', metrics: { latency: 95, load: 85, health: 78, uptime: 35 }, capabilities: { quantum: false, bci: true, xr: false, ai: true }, lastSync: new Date() },
+  { id: 'BR-DF', name: 'Brasil Distrito Federal', region: 'América del Sur', country: 'Brasil', status: 'online', metrics: { latency: 65, load: 48, health: 96, uptime: 42 }, capabilities: { quantum: true, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'BR-RJ', name: 'Brasil Río', region: 'América del Sur', country: 'Brasil', status: 'online', metrics: { latency: 68, load: 72, health: 93, uptime: 41 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  
+  // Argentina (5 nodos)
+  { id: 'AR-BA', name: 'Argentina Buenos Aires', region: 'América del Sur', country: 'Argentina', status: 'online', metrics: { latency: 89, load: 56, health: 94, uptime: 44 }, capabilities: { quantum: true, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'AR-CEN', name: 'Argentina Centro', region: 'América del Sur', country: 'Argentina', status: 'online', metrics: { latency: 92, load: 38, health: 91, uptime: 43 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'AR-NOR', name: 'Argentina Norte', region: 'América del Sur', country: 'Argentina', status: 'online', metrics: { latency: 98, load: 29, health: 88, uptime: 42 }, capabilities: { quantum: false, bci: false, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'AR-SUR', name: 'Argentina Sur', region: 'América del Sur', country: 'Argentina', status: 'online', metrics: { latency: 105, load: 22, health: 86, uptime: 41 }, capabilities: { quantum: false, bci: false, xr: false, ai: true }, lastSync: new Date() },
+  { id: 'AR-CUY', name: 'Argentina Cuyo', region: 'América del Sur', country: 'Argentina', status: 'online', metrics: { latency: 95, load: 35, health: 90, uptime: 40 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  
+  // Colombia (5 nodos)
+  { id: 'CO-BOG', name: 'Colombia Bogotá', region: 'América del Sur', country: 'Colombia', status: 'online', metrics: { latency: 55, load: 62, health: 95, uptime: 43 }, capabilities: { quantum: true, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'CO-MED', name: 'Colombia Medellín', region: 'América del Sur', country: 'Colombia', status: 'online', metrics: { latency: 58, load: 48, health: 93, uptime: 42 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'CO-CAL', name: 'Colombia Cali', region: 'América del Sur', country: 'Colombia', status: 'online', metrics: { latency: 60, load: 42, health: 91, uptime: 41 }, capabilities: { quantum: false, bci: true, xr: false, ai: true }, lastSync: new Date() },
+  { id: 'CO-CAR', name: 'Colombia Caribe', region: 'América del Sur', country: 'Colombia', status: 'online', metrics: { latency: 62, load: 35, health: 89, uptime: 40 }, capabilities: { quantum: false, bci: false, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'CO-PAC', name: 'Colombia Pacífico', region: 'América del Sur', country: 'Colombia', status: 'online', metrics: { latency: 65, load: 28, health: 87, uptime: 39 }, capabilities: { quantum: false, bci: false, xr: false, ai: true }, lastSync: new Date() },
+  
+  // Chile (3 nodos)
+  { id: 'CL-NOR', name: 'Chile Norte', region: 'América del Sur', country: 'Chile', status: 'online', metrics: { latency: 95, load: 38, health: 92, uptime: 42 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'CL-CEN', name: 'Chile Central', region: 'América del Sur', country: 'Chile', status: 'online', metrics: { latency: 92, load: 55, health: 94, uptime: 43 }, capabilities: { quantum: true, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'CL-SUR', name: 'Chile Sur', region: 'América del Sur', country: 'Chile', status: 'online', metrics: { latency: 100, load: 32, health: 90, uptime: 41 }, capabilities: { quantum: false, bci: false, xr: true, ai: true }, lastSync: new Date() },
+  
+  // Perú (3 nodos)
+  { id: 'PE-LIM', name: 'Perú Lima', region: 'América del Sur', country: 'Perú', status: 'online', metrics: { latency: 68, load: 52, health: 93, uptime: 42 }, capabilities: { quantum: true, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'PE-ARE', name: 'Perú Arequipa', region: 'América del Sur', country: 'Perú', status: 'online', metrics: { latency: 72, load: 38, health: 91, uptime: 41 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'PE-CUS', name: 'Perú Cusco', region: 'América del Sur', country: 'Perú', status: 'online', metrics: { latency: 78, load: 28, health: 88, uptime: 40 }, capabilities: { quantum: false, bci: false, xr: false, ai: true }, lastSync: new Date() },
+  
+  // España (4 nodos)
+  { id: 'ES-MAD', name: 'España Madrid', region: 'Europa', country: 'España', status: 'online', metrics: { latency: 145, load: 58, health: 96, uptime: 45 }, capabilities: { quantum: true, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'ES-BCN', name: 'España Barcelona', region: 'Europa', country: 'España', status: 'online', metrics: { latency: 148, load: 52, health: 95, uptime: 44 }, capabilities: { quantum: true, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'ES-VAL', name: 'España Valencia', region: 'Europa', country: 'España', status: 'online', metrics: { latency: 150, load: 42, health: 93, uptime: 43 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'ES-AND', name: 'España Andalucía', region: 'Europa', country: 'España', status: 'online', metrics: { latency: 152, load: 38, health: 91, uptime: 42 }, capabilities: { quantum: false, bci: true, xr: false, ai: true }, lastSync: new Date() },
+  
+  // Estados Unidos (4 nodos)
+  { id: 'US-EAST', name: 'US East', region: 'América del Norte', country: 'Estados Unidos', status: 'online', metrics: { latency: 35, load: 68, health: 97, uptime: 46 }, capabilities: { quantum: true, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'US-WEST', name: 'US West', region: 'América del Norte', country: 'Estados Unidos', status: 'online', metrics: { latency: 42, load: 55, health: 96, uptime: 45 }, capabilities: { quantum: true, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'US-CENT', name: 'US Central', region: 'América del Norte', country: 'Estados Unidos', status: 'online', metrics: { latency: 38, load: 48, health: 95, uptime: 44 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'US-SOUTH', name: 'US South', region: 'América del Norte', country: 'Estados Unidos', status: 'online', metrics: { latency: 40, load: 42, health: 94, uptime: 43 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  
+  // Ecuador (2 nodos)
+  { id: 'EC-UIO', name: 'Ecuador Quito', region: 'América del Sur', country: 'Ecuador', status: 'online', metrics: { latency: 72, load: 45, health: 92, uptime: 41 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'EC-GYE', name: 'Ecuador Guayaquil', region: 'América del Sur', country: 'Ecuador', status: 'online', metrics: { latency: 75, load: 38, health: 90, uptime: 40 }, capabilities: { quantum: false, bci: true, xr: false, ai: true }, lastSync: new Date() },
+  
+  // Venezuela (2 nodos)
+  { id: 'VE-CCS', name: 'Venezuela Caracas', region: 'América del Sur', country: 'Venezuela', status: 'warning', metrics: { latency: 85, load: 72, health: 82, uptime: 38 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'VE-MAR', name: 'Venezuela Maracaibo', region: 'América del Sur', country: 'Venezuela', status: 'online', metrics: { latency: 88, load: 48, health: 85, uptime: 37 }, capabilities: { quantum: false, bci: false, xr: true, ai: true }, lastSync: new Date() },
+  
+  // Centroamérica (3 nodos)
+  { id: 'GT-GUA', name: 'Guatemala', region: 'Centroamérica', country: 'Guatemala', status: 'online', metrics: { latency: 45, load: 35, health: 90, uptime: 40 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'CR-SJO', name: 'Costa Rica', region: 'Centroamérica', country: 'Costa Rica', status: 'online', metrics: { latency: 52, load: 42, health: 92, uptime: 41 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() },
+  { id: 'PA-PTY', name: 'Panamá', region: 'Centroamérica', country: 'Panamá', status: 'online', metrics: { latency: 48, load: 55, health: 94, uptime: 42 }, capabilities: { quantum: false, bci: true, xr: true, ai: true }, lastSync: new Date() }
+];
+```
+
+### Componente de Tabla
+
+```typescript
+const NodesTable = ({ nodes, membershipTier }: { nodes: FederatedNode[], membershipTier: MembershipTier }) => {
+  // Visibilidad según tier
+  const visibleNodes = nodes.filter(node => {
+    if (membershipTier === 'FREE') return false;
+    if (membershipTier === 'STARTER') return nodes.slice(0, 10);
+    if (membershipTier === 'PRO') return nodes.slice(0, 25);
+    return nodes; // BUSINESS+ ve todos
+  });
+  
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>ID</TableHead>
+          <TableHead>Nombre</TableHead>
+          <TableHead>Región</TableHead>
+          <TableHead>Latencia</TableHead>
+          <TableHead>Carga</TableHead>
+          <TableHead>Salud</TableHead>
+          <TableHead>Estado</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {visibleNodes.map(node => (
+          <TableRow key={node.id}>
+            <TableCell className="font-mono">{node.id}</TableCell>
+            <TableCell>{node.name}</TableCell>
+            <TableCell>{node.region}</TableCell>
+            <TableCell>{node.metrics.latency}ms</TableCell>
+            <TableCell>
+              <Progress value={node.metrics.load} />
+            </TableCell>
+            <TableCell>{node.metrics.health}%</TableCell>
+            <TableCell>
+              <Badge variant={node.status === 'online' ? 'success' : 'warning'}>
+                {node.status}
+              </Badge>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
+```
+
+## Visibilidad por Nivel de Membresía
+
+| Tier | Nodos Visibles | Métricas | Actualización |
+|------|----------------|----------|---------------|
+| Free | 0 | Stats básicos | 60s |
+| Starter | 10 | Stats + Latencia | 30s |
+| Pro | 25 | Métricas completas | 15s |
+| Business | 48 | Todo + Alertas | 10s |
+| Enterprise | 48 + histórico | Todo + APIs | 5s |
+| Custom | Personalizado | Personalizado | Custom |
+
+## Integración con Grafana/Prometheus
+
+### Configuración de Prometheus
+
+```yaml
+# prometheus.yml
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'tamv-nodes'
+    static_configs:
+      - targets:
+        - 'mx-central:9090'
+        - 'br-leste:9090'
+        - 'ar-sur:9090'
+        # ... todos los 48 nodos
+
+  - job_name: 'tamv-app'
+    static_configs:
+      - targets: ['app:3000']
+```
+
+### Dashboard en Grafana
+
+```json
+{
+  "dashboard": {
+    "title": "TAMV MD-X4™ Monitoring",
+    "panels": [
+      {
+        "title": "Node Health Overview",
+        "type": "stat",
+        "targets": [
+          { "expr": "count(node_status{status=\"online\"})" },
+          { "expr": "count(node_status{status=\"warning\"})" },
+          { "expr": "count(node_status{status=\"offline\"})" }
+        ]
+      },
+      {
+        "title": "Latency Distribution",
+        "type": "heatmap",
+        "targets": [
+          { "expr": "histogram_quantile(0.95, node_latency_bucket)" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+---
+
+*Próxima sección: [Despliegue Universal](./08-despliegue)*

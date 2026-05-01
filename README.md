@@ -1,5 +1,6 @@
-# TAMV Digital Nexus
+# TAMV MD-X4™ Digital Nexus
 
+<div align="center">
 Repositorio unificado del ecosistema TAMV para consolidar módulos 3D/XR/AI, economía digital, gobernanza y servicios federados en una sola base operativa.
 
 > Meta estratégica: unificar progresivamente los repositorios del ecosistema en una arquitectura mantenible y desplegable desde este núcleo.
@@ -15,39 +16,198 @@ El proyecto ya contiene piezas clave en producción técnica:
 
 ## Comandos principales
 
+
+Repositorio objetivo para la convergencia funcional y documental del ecosistema TAMV (177 repos federados) en una base unificada, con gobierno por canon, trazabilidad y hardening operativo.
+
+**Ecosistema Civilizatorio Latinoamericano**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18+-61DAFB.svg)](https://reactjs.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-Backend-green.svg)](https://supabase.com/)
+
+*PODER · LIDERAZGO · MAGIA*
+
+</div>
+
+---
+
+## Visión General
+
+TAMV MD-X4™ es un ecosistema civilizatorio digital de origen latinoamericano que integra:
+- **Metaverso Inmersivo** con capacidades XR
+- **IA Emocional** (Isabella AI + TBENA BCI)
+- **Economía Digital** con tokens soberanos (TCEP/TAU)
+- **Educación Certificada** con validación blockchain
+- **Gobernanza Descentralizada** (CITEMESH)
+
+Unifica **177 repositorios federados** en un núcleo operativo único.
+
+## Arquitectura
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    TAMV MD-X4™ DIGITAL NEXUS                    │
+├─────────────────────────────────────────────────────────────────┤
+│  WikiTAMV │ MembershipSystem │ BCIEmotionalSystem │ SocialCore │
+├─────────────────────────────────────────────────────────────────┤
+│  UniversitySystem │ EconomySystem │ AnubisSecurity │ KAOS Audio │
+├─────────────────────────────────────────────────────────────────┤
+│                   REACT 18 + VITE + TYPESCRIPT                   │
+├─────────────────────────────────────────────────────────────────┤
+│                  SUPABASE (Auth, DB, Edge Functions)            │
+├─────────────────────────────────────────────────────────────────┤
+│              48 NODOS FEDERADOS + MONITORING STACK              │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+## Stack Tecnológico
+
+| Categoría | Tecnologías |
+|-----------|-------------|
+| **Frontend** | React 18, TypeScript, Vite, Tailwind CSS, Radix UI |
+| **3D/XR** | Three.js, React Three Fiber, Framer Motion |
+| **State** | Zustand, TanStack Query |
+| **Backend** | Supabase (PostgreSQL, Edge Functions, Auth) |
+| **Cache** | Redis |
+| **Monitoring** | Prometheus, Grafana, Tempo, Loki |
+| **AI/Voice** | ElevenLabs, Custom BCI Pipeline |
+| **Deploy** | Docker, Kubernetes |
+
+## Estructura del Proyecto
+
+```
+tamv-digital-nexus/
+├── docs/
+│   └── wikitamv/          # Documentación estructurada (13 secciones)
+├── src/
+│   ├── components/        # Componentes React
+│   ├── pages/             # Páginas de la aplicación
+│   ├── systems/           # Sistemas core
+│   │   ├── MembershipSystem.ts
+│   │   ├── BCIEmotionalSystem.ts
+│   │   ├── UniversitySystem.ts
+│   │   ├── SocialCoreSystem.ts
+│   │   ├── EconomySystem.ts
+│   │   └── AnubisSecuritySystem.ts
+│   ├── hooks/             # Custom hooks
+│   ├── stores/            # Zustand stores
+│   └── integrations/      # Integraciones externas
+├── supabase/
+│   ├── functions/         # Edge Functions
+│   │   ├── bci-emotional-handler/
+│   │   ├── membership-validator/
+│   │   └── dashboard-metrics/
+│   └── migrations/        # SQL migrations
+├── public/
+│   └── sw.js              # Service Worker (PWA)
+├── k8s/                   # Kubernetes manifests
+├── monitoring/            # Prometheus, Tempo configs
+└── docker-compose.yml     # Stack completo
+```
+
+## Sistemas Principales
+
+### 1. MembershipSystem
+Sistema de membresías B2B/B2G con 6 niveles:
+- **Free** ($0) - Acceso básico
+- **Starter** ($30/mes) - APIs limitadas
+- **Pro** ($180/mes) - APIs extendidas, BCI básico
+- **Business** ($550/mes) - Soporte prioritario, SLA 99.9%
+- **Enterprise** ($2,400/año) - Infra dedicada
+- **Custom** ($10,000+) - White-label
+
+### 2. BCIEmotionalSystem (TBENA)
+Sistema de interfaz cerebro-computadora con IA afectiva:
+- Captura y procesamiento EEG
+- Decodificación de estados emocionales
+- Modulación del entorno 3D
+- Modulación del comportamiento del agente IA
+
+### 3. UniversitySystem
+Plataforma educativa con:
+- Cursos BCI-enhanced
+- Certificaciones blockchain
+- Contenido adaptativo basado en emociones
+- Neurofeedback integrado
+
+### 4. SocialCoreSystem
+Red social con:
+- Sistema de reputación EOCT
+- 48 nodos federados
+- Comunidades con membresía
+- Feed personalizado
+
+### 5. Dashboard de Monitoreo
+Visualización en tiempo real de:
+- Métricas de nodos federados
+- Usuarios activos por región
+- Salud del sistema
+- Alertas y eventos
+
+## Comandos
+
 ```bash
+# Desarrollo
 npm install
 npm run dev
+
+# Calidad
 npm run lint
 npm run typecheck
 npm run test
+
+# Build
 npm run build
-```
 
-## Escudo de calidad MD-X5 (Deca-V)
-
-Ejecución integral de validación antes de despliegue:
-
-```bash
+# Auditoría MD-X5 (Deca-V)
 npm run audit:deca-v
 ```
 
-Por defecto corre 10 ciclos de:
-- `npm run lint`
-- `npm run typecheck`
-- `npm run test`
-- `npm run build`
+## Despliegue
 
-Modo rápido para iteración local:
-
+### Docker Compose
 ```bash
-DECA_V_CYCLES=2 npm run audit:deca-v
+docker-compose up -d
 ```
 
-Referencia operativa detallada: `MDX5_OPERATIONAL_PROTOCOL.md`.
+### Kubernetes
+```bash
+kubectl apply -k k8s/
+```
 
-## Roadmap de unificación (177 repos → 1 núcleo)
+## Documentación
 
+- [WikiTAMV](./docs/wikitamv/) - Documentación completa
+- [CHANGELOG](./CHANGELOG.md) - Historial de cambios
+- [SOUL.md](./SOUL.md) - Principios del proyecto
+- [AGENTS.md](./AGENTS.md) - Guía para IA agents
+
+## Contribución
+
+1. Fork el repositorio
+2. Crea una rama feature (`git checkout -b feature/nueva-funcionalidad`)
+3. Commit tus cambios (`git commit -m 'feat: añadir nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Abre un Pull Request
+
+## Licencia
+
+MIT License - ver [LICENSE](LICENSE) para más detalles.
+
+## Fundador
+
+**Edwin Oswaldo Castillo Trejo** (Anubis Villaseñor)
+
+> "PROYECTO DEDICADO A REINA TREJO SERRANO. SONRÍE: TU OVEJA NEGRA LO LOGRÓ. TE QUIERO, MA'."
+
+---
+
+<div align="center">
+
+**TAMV MD-X4™** - Orgullosamente Latinoamericano
+
+[Documentación](./docs/wikitamv/) · [Contribuir](./CONTRIBUTING.md) · [Reportar Bug](https://github.com/tamv/digital-nexus/issues)
 Para que la unificación sea real y sostenible, el plan técnico se divide en fases:
 
 1. **Inventario y clasificación**
@@ -86,3 +246,43 @@ Para que la unificación sea real y sostenible, el plan técnico se divide en fa
 ## Enlace del proyecto en Lovable
 
 - https://lovable.dev/projects/63163423-071c-45b1-95ff-6bdf8e698e0b?view=codeEditor
+
+## Estado de sincronización de rama
+
+</div>
+
+## Actualización 2026-05-01 — Integración fluida + doble pipeline adaptativo
+
+Se implementó una base funcional inicial para reducir latencia percibida y evitar ejecución simultánea innecesaria de subsistemas:
+
+- **Sistema de doble pipeline en paralelo (primario + secundario):**
+  - Pipeline primario orientado al contexto activo de navegación.
+  - Pipeline secundario de precarga en segundo plano usando `requestIdleCallback` (o fallback `setTimeout`).
+- **Sistema de interruptores por sección (route-aware switches):**
+  - Activa tareas prioritarias por sección (`/dashboard`, `/community`, `/isabella`, `/economy`, `/governance`, `/repo-unification`, etc.).
+  - Evita calentar todos los contextos al unísono.
+- **Conexión operativa en `App.tsx`:**
+  - Bootstrap no invasivo para activar la orquestación adaptativa dentro del `OmniKernelProvider`.
+- **Compatibilidad con estrategia de unificación de repos:**
+  - Se añadió precarga de estado de federación y estado de olas de integración para sostener la absorción progresiva de repositorios priorizados.
+
+### Objetivo técnico de esta fase
+
+1. Disminuir latencia de primera interacción por sección.
+2. Preparar infraestructura de conmutación para integrar dominios sin saturación global.
+3. Crear base extensible para incorporar lógica real de ingestión/normalización de los repos priorizados por waves.
+
+### Próximo paso recomendado
+
+Se conectaron `PipelineTask` críticos a endpoints reales de producción (edge functions): `dashboard-metrics`, `github-repo-scanner` y salud sistémica vía `tamv-unified-api` (OMNI-KERNEL API client). Siguiente paso: extender el mismo patrón a todos los dominios (DAO, economy wallet/tx, MSR, sentinel) con presupuesto de concurrencia por tier.
+
+### Guardrails de gobernanza híbrida (DAO)
+
+La malla adaptativa se extendió al dominio de gobernanza con un principio explícito:
+- Las DAO se usan para propuestas y trazabilidad auditable.
+- Las DAO **no** gobiernan control económico central, ni modificaciones a algoritmos/reglamentos troncales.
+- La gobernanza económica y legal permanece en consejo de líderes inversionistas/representantes legales, con capacidad de revocación final por el CEO fundador bajo estatutos TAMV.
+
+Implementación técnica en runtime:
+- Prefetch de `dao/proposals` y `msr/events` para transparencia operativa.
+- Presupuesto de concurrencia por tier para evitar cuellos de botella y saturación sistémica.

@@ -1,0 +1,25 @@
+# TAMV MD-X4™ - Kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: tamv
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - postgres/statefulset.yaml
+  - redis/deployment.yaml
+  - app/deployment.yaml
+  - app/ingress.yaml
+
+images:
+  - name: tamv/digital-nexus
+    newTag: latest
+
+commonLabels:
+  app.kubernetes.io/name: tamv
+  app.kubernetes.io/instance: production
+  app.kubernetes.io/version: "1.0.0"
+  app.kubernetes.io/component: platform
+  app.kubernetes.io/part-of: tamv-digital-nexus
+  app.kubernetes.io/managed-by: kustomize

@@ -1,0 +1,445 @@
+---
+title: Intro Cinematográfica - Máquina de Estados
+description: Sistema de intro cinematográfica con máquina de estados S0-S6
+category: WikiTAMV
+order: 4
+---
+
+# Intro Cinematográfica
+
+## Visión General
+
+La intro cinematográfica de TAMV MD-X4™ es una experiencia inmersiva que combina:
+- **Motor visual 3D** con Three.js
+- **Máquina de estados** para control de flujo
+- **Sistema de partículas** cuánticas
+- **Audio inmersivo** sincronizado
+- **Shaders personalizados** para efectos visuales
+
+## Máquina de Estados (S0-S6)
+
+### Definición de Estados
+
+```
+┌─────────┐     accept      ┌──────────┐
+│   S0    │ ────────────────▶│   S1     │
+│  Idle   │                  │ Activation│
+└─────────┘                  └──────────┘
+    ▲                             │
+    │                         2.0s│
+    │                             ▼
+    │                        ┌──────────┐
+    │    done               │   S2     │
+    │◀──────────────────────│  Origin  │
+    │                       │ _Render  │
+    │                       └──────────┘
+    │                             │
+    │                         2.6s│
+    │                             ▼
+    │                        ┌──────────┐
+    │                        │   S3     │
+    │                        │Infra_    │
+    │                        │Projection│
+    │                        └──────────┘
+    │                             │
+    │                         2.3s│
+    │                             ▼
+    │                        ┌──────────┐
+    │                        │   S4     │
+    │                        │Dedication│
+    │                        │ _Anchor  │
+    │                        └──────────┘
+    │                             │
+    │                         2.3s│
+    │                             ▼
+    │                        ┌──────────┐
+    │                        │   S5     │
+    │                        │ Global_  │
+    │                        │Expansion │
+    │                        └──────────┘
+    │                             │
+    │                         4.6s│
+    │                             ▼
+    │                        ┌──────────┐
+    │                        │   S6     │
+    └────────────────────────│Transition│
+                             │_To_Core  │
+                             └──────────┘
+```
+
+### Especificación de Estados
+
+```typescript
+type Phase =
+  | 'permission'   // S0: Idle - Black screen + accept button
+  | 'awakening'    // S1: Activation - Dark pulse / heartbeat
+  | 'ignition'     // S2: Origin_Render - Power surge
+  | 'explosion'    // S3: Infrastructure_Projection - Quantum big bang
+  | 'cosmos'       // S4: Dedication_Anchor - Stars fly
+  | 'crown'        // S5: Global_Expansion - Leadership moment
+  | 'logo'         // S6: Transition_To_Core - Logo reveal
+  | 'message'      // Final: Isabella narrative
+  | 'done';        // Complete
+```
+
+## Fases Narrativas (6 Fases)
+
+### Fase 1: S0 - Idle (Permission Gate)
+**Duración**: Indefinida hasta interacción
+**Elementos visuales**:
+- Pantalla negra con ambiente sutil
+- Campo de estrellas diminutas
+- Marco HUD con corchetes de esquina
+- Logo TAMV con glow pulsante
+- Botón de aceptación
+
+**Audio**: Ambiente espacial sutil
+
+```typescript
+// Permission Gate Component
+<div className="permission-gate">
+  <StarField count={80} />
+  <HUDFrame />
+  <LogoGlow />
+  <AcceptButton onClick={handleAccept} />
+</div>
+```
+
+### Fase 2: S1 - Awakening (Activation)
+**Duración**: 2.0 segundos
+**Transición**: Fade in con pulse
+**Elementos visuales**:
+- Pulso oscuro / heartbeat
+- Texto "INICIALIZANDO..."
+- Power Core comienza a brillar
+
+**Audio**: Heartbeat sincronizado
+
+```typescript
+// Awakening Phase
+<motion.div animate={{ opacity: [0.3, 1, 0.3], scale: [0.98, 1.02, 0.98] }}>
+  <Text>INICIALIZANDO...</Text>
+  <PowerCore intensity={0.6} />
+</motion.div>
+```
+
+### Fase 3: S2 - Origin_Render (Ignition)
+**Duración**: 2.6 segundos
+**Elementos visuales**:
+- Texto "PODER · LIDERAZGO · MAGIA"
+- Power Core se expande (scale: 1.4)
+- Magic Runes aparecen
+- Anillos de poder
+
+**Audio**: Power surge / build-up
+
+```typescript
+// Ignition Phase
+<PowerCore scale={1.4} emissive={2.8} />
+<MagicRunes visible />
+<Text gradient>PODER · LIDERAZGO · MAGIA</Text>
+```
+
+### Fase 4: S3 - Infrastructure_Projection (Explosion)
+**Duración**: 2.3 segundos
+**Elementos visuales**:
+- Flash de luz blanca
+- Expansión cuántica
+- Partículas vuelan radialmente
+- Shockwave rings
+
+**Audio**: Explosion / big bang
+
+```typescript
+// Explosion Phase
+<motion.div initial={{ opacity: 0.9 }} animate={{ opacity: 0 }}>
+  <RadialFlash color="white" />
+</motion.div>
+<QuantumField flying speed={0.32} />
+<ShockwaveRings count={3} />
+```
+
+### Fase 5: S4 - Dedication_Anchor (Cosmos)
+**Duración**: 2.3 segundos
+**Elementos visuales**:
+- Campo estelar acelerado
+- Partículas dispersas
+- Colores: cyan, purple, gold
+- Crown comienza a aparecer
+
+**Audio**: Ambient space / wonder
+
+```typescript
+// Cosmos Phase
+<Stars speed={2.5} count={12000} />
+<QuantumField colorPalette={['cyan', 'purple', 'gold']} />
+```
+
+### Fase 6: S5 - Global_Expansion (Crown)
+**Duración**: 4.6 segundos
+**Elementos visuales**:
+- Crown of Leadership desciende
+- Texto "ERES LÍDER"
+- Gem central brillante
+- Elementos mesoamericanos
+
+**Audio**: Triumphal / leadership theme
+
+```typescript
+// Crown Phase
+<LeadershipCrown position={[0, 2.5, 0]} />
+<Text>ERES LÍDER</Text>
+<Text variant="subtitle">El mundo te espera</Text>
+```
+
+### Fase 7: S6 - Transition_To_Core (Logo + Message)
+**Duración**: ~16 segundos
+**Elementos visuales**:
+- Logo TAMV MD-X4™
+- Anillos orbitales
+- Líneas narrativas de Isabella
+- Progress bar
+
+**Audio**: Main theme con narración
+
+```typescript
+// Logo + Message Phase
+<LogoWithOrbits />
+<Title>TAMV MD-X4™</Title>
+<IsabellaNarrative lines={ISABELLA_LINES} />
+<ProgressBar value={progress} />
+```
+
+## Sistema de Partículas Cuánticas
+
+### QuantumField Component
+
+```typescript
+function QuantumField({ phase }: { phase: Phase }) {
+  const COUNT = 12000;
+  
+  // Posiciones iniciales en esfera
+  for (let i = 0; i < COUNT; i++) {
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    const r = 0.3 + Math.random() * 3.5;
+    
+    positions[i] = {
+      x: r * Math.sin(phi) * Math.cos(theta),
+      y: r * Math.sin(phi) * Math.sin(theta),
+      z: r * Math.cos(phi)
+    };
+  }
+  
+  // Velocidades para efecto de vuelo
+  const speed = flying ? 0.32 : 0.015;
+  
+  return (
+    <Points positions={positions} stride={3}>
+      <PointMaterial
+        vertexColors
+        size={0.045}
+        transparent
+        opacity={0.92}
+        blending={AdditiveBlending}
+      />
+    </Points>
+  );
+}
+```
+
+### PowerCore Geometry
+
+Geometría sagrada basada en icosaedro:
+
+```typescript
+function PowerCore({ phase }: { phase: Phase }) {
+  // Escala dinámica según fase
+  const targetScale = {
+    awakening: 0.6,
+    ignition: 1.4,
+    explosion: 7
+  }[phase] || 0;
+  
+  return (
+    <Float speed={2} rotationIntensity={0.5}>
+      {/* Icosaedro exterior - gold */}
+      <mesh>
+        <icosahedronGeometry args={[1, 4]} />
+        <meshStandardMaterial color="#FFD700" wireframe />
+      </mesh>
+      
+      {/* Octaedro interior - cyan */}
+      <mesh>
+        <octahedronGeometry args={[1, 2]} />
+        <meshStandardMaterial color="#00D9FF" wireframe />
+      </mesh>
+      
+      {/* Anillos de poder */}
+      <TorusRing radius={1.6} color="#9D4EDD" />
+      <TorusRing radius={2.1} color="#FF2D78" />
+    </Float>
+  );
+}
+```
+
+## Leadership Crown
+
+### Geometría de la Corona
+
+```typescript
+function LeadershipCrown({ phase }: { phase: Phase }) {
+  const SPIKE_ANGLES = [0, 60, 120, 180, 240, 300];
+  
+  return (
+    <group>
+      {/* Base ring */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[1.1, 0.09, 16, 80]} />
+        <meshStandardMaterial color="#FFD700" emissive="#FFD700" />
+      </mesh>
+      
+      {/* Picos alternados */}
+      {SPIKE_ANGLES.map((angle, i) => (
+        <mesh
+          key={i}
+          position={[
+            Math.cos(angle * Math.PI / 180) * 1.1,
+            0.3 + (i % 2 === 0 ? 0.55 : 0.2),
+            Math.sin(angle * Math.PI / 180) * 1.1
+          ]}
+        >
+          <coneGeometry args={[0.08, i % 2 === 0 ? 0.9 : 0.5, 8]} />
+          <meshStandardMaterial color="#FFD700" emissive="#FFD700" />
+        </mesh>
+      ))}
+      
+      {/* Gema central */}
+      <mesh position={[0, 0.3, 0]}>
+        <octahedronGeometry args={[0.28, 0]} />
+        <meshStandardMaterial color="#00D9FF" emissive="#00D9FF" />
+      </mesh>
+    </group>
+  );
+}
+```
+
+## Narrativa de Isabella
+
+### Líneas del Script
+
+```typescript
+const ISABELLA_LINES = [
+  { text: "PROTOCOLO DE INMERSIÓN ACTIVADO...", duration: 3000 },
+  { text: "TAMV ONLINE · ORGULLOSAMENTE LATINOAMERICANOS.", duration: 4500 },
+  { text: "PROYECTO DEDICADO A REINA TREJO SERRANO.", duration: 4000 },
+  { text: "SONRÍE: TU OVEJA NEGRA LO LOGRÓ. TE QUIERO, MA'.", duration: 5000 }
+];
+```
+
+### Timeline de Ejecución
+
+| Evento | Timestamp | Duración |
+|--------|-----------|----------|
+| Permission accept | 0ms | - |
+| S1: Awakening | 200ms | 2000ms |
+| S2: Ignition | 2200ms | 2600ms |
+| S3: Explosion | 4800ms | 2400ms |
+| S4: Cosmos | 7200ms | 2300ms |
+| S5: Crown | 9500ms | 2300ms |
+| S6: Logo | 11800ms | 2200ms |
+| Message start | 14000ms | - |
+| Line 1 | 14000ms | 3000ms |
+| Line 2 | 17000ms | 4500ms |
+| Line 3 | 21500ms | 4000ms |
+| Line 4 | 25500ms | 5000ms |
+| Complete | ~31000ms | - |
+
+## Post-Procesamiento
+
+### Efectos Visuales
+
+```typescript
+// Chromatic radial glow
+<motion.div
+  animate={{
+    background: `radial-gradient(circle, ${bgGlow} 0%, transparent 60%)`
+  }}
+/>
+
+// CRT scanlines
+<div style={{
+  backgroundImage: 'repeating-linear-gradient(...)',
+  opacity: 0.18
+}} />
+
+// Film grain
+<div style={{
+  backgroundImage: `url("data:image/svg+xml,...")`,
+  opacity: 0.10
+}} />
+```
+
+### HUD Frame
+
+```typescript
+// Marco de interfaz
+<div className="hud-frame">
+  <CornerBrackets />
+  <TopBar>TAMV MD-X4™ · GENESIS PROTOCOL</TopBar>
+  <BottomBar>LATAM NODE · MSR · THE SOF · UTAMV</BottomBar>
+</div>
+```
+
+## Audio
+
+### Sincronización
+
+```typescript
+// Inicialización de audio
+const initAudio = async () => {
+  const audio = new Audio('/assets/intro.mp3');
+  audio.volume = 0.9;
+  await audio.play();
+};
+
+// Control de volumen por fase
+const volumeMap = {
+  permission: 0,
+  awakening: 0.3,
+  ignition: 0.5,
+  explosion: 0.9,
+  cosmos: 0.7,
+  crown: 0.8,
+  logo: 0.6,
+  message: 0.5
+};
+```
+
+## Configuración
+
+### Props del Componente
+
+```typescript
+interface CinematicIntroProps {
+  onComplete: () => void;      // Callback al terminar
+  skipEnabled?: boolean;        // Mostrar botón skip
+  audioEnabled?: boolean;       // Habilitar audio
+  debugMode?: boolean;          // Modo debug
+  customLines?: NarrativeLine[]; // Líneas personalizadas
+}
+```
+
+### Uso
+
+```tsx
+<CinematicIntro
+  onComplete={() => navigate('/dashboard')}
+  skipEnabled={true}
+  audioEnabled={true}
+/>
+```
+
+---
+
+*Próxima sección: [Dominios](./05-dominios)*

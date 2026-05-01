@@ -263,22 +263,29 @@ class IsabellaTTSService {
 
     onProgress?.(80);
 
-    // Si el edge function devuelve audio base64
-    if (data?.audio) {
-      const binaryString = atob(data.audio);
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-      
+    // Fallback graceful: si no hay audio (API key issue, rate limit, etc.)
+    if (data?.fallback || !data?.audio) {
+      console.warn('[ISABELLA-TTS] Text-only mode:', data?.message || 'no audio');
+      // Return empty buffer to signal no audio available
       return {
-        audioBuffer: bytes.buffer,
+        audioBuffer: new ArrayBuffer(0),
         mimeType: 'audio/mpeg',
         generatedAt: new Date(),
       };
     }
 
-    throw new Error('No se recibió audio del servidor');
+    // Si el edge function devuelve audio base64
+    const binaryString = atob(data.audio);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    
+    return {
+      audioBuffer: bytes.buffer,
+      mimeType: 'audio/mpeg',
+      generatedAt: new Date(),
+    };
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -421,7 +428,10 @@ export function useIsabellaTTS() {
 
       if (abortRef.current) return;
 
-      await service.playAudio(result.audioBuffer);
+      // Only play if we got actual audio data
+      if (result.audioBuffer.byteLength > 0) {
+        await service.playAudio(result.audioBuffer);
+      }
     } catch (err) {
       if (!abortRef.current) {
         const message = err instanceof Error ? err.message : 'Error desconocido';

@@ -1,6 +1,7 @@
 // ============================================================================
-// TAMV MD-X4â"¢ - Main Application Entry
+// TAMV MD-X4™ - Main Application Entry
 // Ecosystem Civilizatory Digital Mexicano
+// OMNI-KERNEL Integration Active
 // ============================================================================
 
 import { Toaster } from "@/components/ui/toaster";
@@ -8,15 +9,15 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useAdaptivePipelines } from "@/hooks/useAdaptivePipelines";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
-// Unified Background System - Single source of truth for visuals
-import { UnifiedBackground } from "@/components/UnifiedBackground";
+// OMNI-KERNEL Provider
+import { OmniKernelProvider } from "@/lib/omni-kernel";
 
-// Core Components
-import { CivilizatorySidebar } from "@/components/CivilizatorySidebar";
-import { IsabellaChat } from "@/components/IsabellaChat";
-import { NotificationCenter } from "@/components/notifications/NotificationCenter";
-import { NotificationToast } from "@/components/notifications/NotificationToast";
+// Layout System
+import { AppLayout } from "@/components/layout/AppLayout";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // Pages
 import Index from "./pages/Index";
@@ -42,12 +43,19 @@ import NotFound from "./pages/NotFound";
 import Gifts from "./pages/Gifts";
 import Governance from "./pages/Governance";
 import Economy from "./pages/Economy";
+import MDXOperations from "./pages/MDXOperations";
+import MembershipOnboarding from "./pages/MembershipOnboarding";
+import Evolution from "./pages/Evolution";
+import Singularity from "./pages/Singularity";
+import Reels from "./pages/Reels";
+import Health from "./pages/Health";
+import RepoUnification from "./pages/RepoUnification";
 
 // Configure React Query
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
+      staleTime: 1000 * 60 * 5,
       retry: 1,
     },
   },
@@ -57,35 +65,23 @@ const queryClient = new QueryClient({
 // Main App Component
 // ============================================================================
 
+const AdaptivePipelineBootstrap = () => {
+  useAdaptivePipelines();
+  return null;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      {/* Global Toast Notifications */}
       <Toaster />
       <Sonner position="top-right" />
+      <SpeedInsights />
 
-      {/* Main Router */}
       <BrowserRouter>
-        {/* Root Container */}
-        <div className="relative min-h-screen w-full bg-background overflow-hidden">
-          
-          {/* UNIFIED BACKGROUND - Single elegant background system */}
-          <UnifiedBackground mode="quantum" intensity={0.35} />
-          
-          {/* Civilizatory Sidebar Navigation */}
-          <CivilizatorySidebar />
-          
-          {/* Isabella AI Chat Widget */}
-          <IsabellaChat />
-          
-          {/* Notification System */}
-          <NotificationToast />
-          <div className="fixed top-4 right-4 z-50">
-            <NotificationCenter />
-          </div>
-          
-          {/* Main Content Area */}
-          <main className="ml-20 lg:ml-72 transition-all duration-500 relative z-20">
+        <OmniKernelProvider workflowId="tamv-main">
+          <AdaptivePipelineBootstrap />
+          <AppLayout>
+            <ErrorBoundary>
             <Routes>
               {/* Core Routes */}
               <Route path="/" element={<Index />} />
@@ -94,38 +90,48 @@ const App = () => (
               <Route path="/community" element={<Community />} />
               <Route path="/docs" element={<Docs />} />
               <Route path="/profile" element={<Profile />} />
-              
+
               {/* AI & Security */}
               <Route path="/isabella" element={<Isabella />} />
               <Route path="/anubis" element={<Anubis />} />
               <Route path="/kaos" element={<Kaos />} />
-              
+
               {/* Ecosystem */}
               <Route path="/ecosystem" element={<Ecosystem />} />
               <Route path="/dream-spaces" element={<DreamSpaces />} />
               <Route path="/university" element={<University />} />
               <Route path="/bookpi" element={<BookPI />} />
               <Route path="/3d-space" element={<ThreeDSpace />} />
-              
+
               {/* Auth & Onboarding */}
               <Route path="/auth" element={<Auth />} />
               <Route path="/onboarding" element={<Onboarding />} />
-              
+
               {/* Economy & Governance */}
               <Route path="/monetization" element={<Monetization />} />
               <Route path="/gifts" element={<Gifts />} />
               <Route path="/governance" element={<Governance />} />
               <Route path="/economy" element={<Economy />} />
-              
+
               {/* Admin & Crisis */}
               <Route path="/crisis" element={<Crisis />} />
               <Route path="/admin" element={<Admin />} />
-              
+
+              {/* MD-X Operations & OMNI-KERNEL */}
+              <Route path="/operations" element={<MDXOperations />} />
+              <Route path="/evolution" element={<Evolution />} />
+              <Route path="/singularity" element={<Singularity />} />
+              <Route path="/reels" element={<Reels />} />
+              <Route path="/health" element={<Health />} />
+              <Route path="/onboarding/membership" element={<MembershipOnboarding />} />
+              <Route path="/repo-unification" element={<RepoUnification />} />
+
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </main>
-        </div>
+            </ErrorBoundary>
+          </AppLayout>
+        </OmniKernelProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

@@ -1,0 +1,9 @@
+# TAMV MD-X4™ - Kubernetes Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tamv
+  labels:
+    app: tamv
+    environment: production
+    managed-by: kustomize

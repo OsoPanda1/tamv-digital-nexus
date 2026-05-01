@@ -1,5 +1,5 @@
 // ============================================================================
-// TAMV MD-X4â"¢ - Federation System
+// TAMV MD-X4™ - Federation System
 // 21+ Federations for the Civilizatory Ecosystem
 // ============================================================================
 

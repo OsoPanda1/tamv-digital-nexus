@@ -1,5 +1,5 @@
 // ============================================================================
-// TAMV MD-X4â"¢ - Economy System
+// TAMV MD-X4™ - Economy System
 // TCEP Credits, TAU Tokens, and Simbiotic Economy Management
 // ============================================================================
 
@@ -102,7 +102,7 @@ export const MEMBERSHIP_TIERS: Record<MembershipTier, {
     name: 'Free',
     commissionRate: 0.30,
     monthlyPrice: 0,
-    features: ['Acceso bÃ¡sico', 'Dream Spaces pÃºblicos', 'Chat Isabella limitado'],
+    features: ['Acceso básico', 'Dream Spaces públicos', 'Chat Isabella limitado'],
     color: 'text-gray-400',
   },
   premium: {
@@ -397,7 +397,7 @@ export class EconomySystem {
     const activeDraw: LotteryDraw = {
       id: 'lottery-001',
       name: 'Sorteo Civilizatorio Q1 2026',
-      description: 'Gran sorteo con redistribuciÃ³n Ã©tica. 20,000 oportunidades a $1 USD.',
+      description: 'Gran sorteo con redistribución ética. 20,000 oportunidades a $1 USD.',
       status: 'open',
       ticketPrice: 1,
       maxTickets: 20000,
@@ -565,18 +565,18 @@ export class EconomySystem {
   }
 
   // ============================================================================
-  // FÃ©nix Fund
+  // Fénix Fund
   // ============================================================================
 
   /**
-   * Get FÃ©nix Fund status
+   * Get Fénix Fund status
    */
   getFenixFund(): FenixFund {
     return { ...this.fenixFund };
   }
 
   /**
-   * Contribute to FÃ©nix Fund
+   * Contribute to Fénix Fund
    */
   contributeToFenix(userId: string, amount: number): void {
     this.fenixFund.totalPool += amount;

@@ -1,5 +1,5 @@
 // ============================================================================
-// TAMV MD-X4â"¢ - KAOS Audio System
+// TAMV MD-X4™ - KAOS Audio System
 // Advanced 3D/4D Spatial Audio Engine with Quantum Processing
 // ============================================================================
 

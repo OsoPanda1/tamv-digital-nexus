@@ -1,0 +1,35 @@
+{
+  "valid": true,
+  "violations": [
+    {
+      "rule": "L7",
+      "severity": "warning",
+      "file": "pages/Economy.tsx",
+      "importPath": "@/integrations/supabase/client",
+      "message": "Page directly imports Supabase. Services should be in integrations/"
+    },
+    {
+      "rule": "L7",
+      "severity": "warning",
+      "file": "pages/Governance.tsx",
+      "importPath": "@/integrations/supabase/client",
+      "message": "Page directly imports Supabase. Services should be in integrations/"
+    },
+    {
+      "rule": "L7",
+      "severity": "warning",
+      "file": "pages/University.tsx",
+      "importPath": "@/integrations/supabase/client",
+      "message": "Page directly imports Supabase. Services should be in integrations/"
+    }
+  ],
+  "stats": {
+    "totalFiles": 130,
+    "pages": 23,
+    "modules": 0,
+    "domains": 0,
+    "coreFiles": 0,
+    "integrations": 3
+  },
+  "timestamp": "2026-02-24T06:44:55.521Z"
+}

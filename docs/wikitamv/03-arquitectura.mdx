@@ -1,0 +1,257 @@
+---
+title: Arquitectura General TAMV
+description: Arquitectura técnica del ecosistema TAMV MD-X4™
+category: WikiTAMV
+order: 3
+---
+
+# Arquitectura General
+
+## Visión General
+
+TAMV MD-X4™ implementa una arquitectura de **microservicios federados** con capacidades de computación distribuida, diseñada para escalabilidad horizontal y resiliencia ante fallos.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        CLIENTE (Web/Mobile/XR)                   │
+├─────────────────────────────────────────────────────────────────┤
+│  React 18 + Vite + TypeScript    │    PWA + Service Workers     │
+├─────────────────────────────────────────────────────────────────┤
+│                         API GATEWAY                              │
+│                    (Supabase Edge Functions)                     │
+├───────────┬───────────┬───────────┬───────────┬─────────────────┤
+│  UTAMV    │  MD-X4    │  TBENA    │  Economy  │   Security      │
+│  Core     │  Engine   │  BCI-AI   │  System   │   Systems       │
+├───────────┴───────────┴───────────┴───────────┴─────────────────┤
+│                    MESSAGE BROKER (Redis)                        │
+├─────────────────────────────────────────────────────────────────┤
+│              POSTGRESQL (Supabase) + STORAGE + AUTH              │
+├─────────────────────────────────────────────────────────────────┤
+│                     FEDERATION LAYER                             │
+│              48 Nodos Regionales + Inter-node Sync               │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+## Stack Tecnológico
+
+### Frontend
+
+| Tecnología | Versión | Propósito |
+|------------|---------|-----------|
+| React | 18.2+ | Framework UI |
+| TypeScript | 5.0+ | Type safety |
+| Vite | 5.0+ | Build tool |
+| Tailwind CSS | 3.4+ | Styling |
+| Radix UI | Latest | Componentes accesibles |
+| Framer Motion | 11+ | Animaciones |
+| Three.js | 0.160+ | 3D rendering |
+| React Three Fiber | 8+ | React + Three.js |
+| Zustand | 4+ | State management |
+| TanStack Query | 5+ | Data fetching |
+
+### Backend
+
+| Tecnología | Propósito |
+|------------|-----------|
+| Supabase | BaaS completo |
+| PostgreSQL | Base de datos relacional |
+| Edge Functions | Serverless functions |
+| Redis | Cache y message broker |
+| Grafana | Monitoreo visual |
+| Prometheus | Métricas |
+
+### Integraciones Externas
+
+| Servicio | Uso |
+|----------|-----|
+| ElevenLabs | Síntesis de voz para Isabella |
+| Stripe | Pagos |
+| IPFS | Almacenamiento distribuido |
+| SendGrid | Emails |
+
+## Estructura de Directorios
+
+```
+tamv-digital-nexus/
+├── src/
+│   ├── pages/              # Route-level components
+│   │   ├── Dashboard.tsx
+│   │   ├── Metaverse.tsx
+│   │   ├── Economy.tsx
+│   │   ├── University.tsx
+│   │   └── ...
+│   ├── components/         # Feature components
+│   │   ├── ui/             # Shadcn/ui primitives
+│   │   ├── social/         # Social features
+│   │   ├── auth/           # Authentication
+│   │   └── ...
+│   ├── systems/            # Core business logic
+│   │   ├── UniversitySystem.ts
+│   │   ├── EconomySystem.ts
+│   │   ├── BCIEmotionalSystem.ts
+│   │   ├── MembershipSystem.ts
+│   │   └── ...
+│   ├── hooks/              # Custom React hooks
+│   ├── stores/             # Zustand stores
+│   ├── lib/                # Utilities
+│   └── integrations/       # External services
+├── supabase/
+│   ├── functions/          # Edge functions
+│   └── migrations/         # SQL migrations
+├── docs/
+│   └── wikitamv/           # Documentación MDX
+├── public/
+│   └── sw.js               # Service worker
+└── k8s/                    # Kubernetes manifests
+```
+
+## Sistemas Principales
+
+### 1. MembershipSystem
+
+Gestiona los niveles de membresía B2B/B2G:
+
+```typescript
+// 6 niveles de membresía
+const TIERS = {
+  FREE: { price: 0, features: ['basic_access'] },
+  STARTER: { price: 30, features: ['api_limited'] },
+  PRO: { price: 180, features: ['api_extended', 'dashboards'] },
+  BUSINESS: { price: 550, features: ['priority_support'] },
+  ENTERPRISE: { price: 2400, features: ['dedicated', 'sla'] },
+  CUSTOM: { price: 10000, features: ['white_label', 'custom'] }
+};
+```
+
+### 2. BCIEmotionalSystem (TBENA)
+
+Sistema de interfaz cerebro-computadora con procesamiento emocional:
+
+```typescript
+// Pipeline de 5 pasos
+const BCI_PIPELINE = [
+  'captureEEG',         // Captura de señales
+  'decodeEmotion',      // Decodificación afectiva
+  'updateAffectiveState', // Actualización de estado
+  'modulateEnvironment',  // Modulación del entorno
+  'modulateAgentBehavior' // Modulación del agente
+];
+```
+
+### 3. UniversitySystem
+
+Plataforma educativa con certificación blockchain:
+
+```typescript
+interface Course {
+  id: string;
+  title: string;
+  modules: Module[];
+  certificationIncluded: boolean;
+  bciEnhanced?: boolean; // Cursos con BCI
+}
+```
+
+### 4. EconomySystem
+
+Sistema de tokens y transacciones:
+
+- **TCEP**: Token de certificaciones
+- **TAU**: Token de acceso universal
+- **Wallet**: Gestión de activos digitales
+
+### 5. AnubisSecuritySystem
+
+Seguridad post-cuántica:
+
+- Autenticación multi-factor
+- Detección de amenazas
+- Respuesta automatizada
+
+## Flujo de Datos
+
+### Flujo de Autenticación
+
+```
+Usuario → Auth Provider → JWT Token → RLS Policy → Datos
+         (Supabase Auth)                           (PostgreSQL)
+```
+
+### Flujo de BCI
+
+```
+EEG Device → captureEEG() → decodeEmotion() → updateAffectiveState()
+    ↓                                                      ↓
+Cloud/Edge ← modulateAgentBehavior() ← modulateEnvironment()
+```
+
+### Flujo de Federación
+
+```
+Node A ←→ Sync Protocol ←→ Node B
+   ↓                          ↓
+Local DB                   Local DB
+   ↓                          ↓
+Merge Resolution ←→ Conflict Handler
+```
+
+## Patrones de Diseño
+
+### Singleton Pattern
+Utilizado para sistemas que requieren instancia única:
+```typescript
+export class UniversitySystem {
+  private static instance: UniversitySystem;
+  static getInstance(): UniversitySystem { ... }
+}
+```
+
+### Observer Pattern
+Para notificaciones y eventos:
+```typescript
+// Zustand store con suscripciones
+useUserStore.subscribe((state) => { ... });
+```
+
+### Factory Pattern
+Para creación de componentes dinámicos:
+```typescript
+const nodeFactory = (type: NodeType) => { ... };
+```
+
+## Escalabilidad
+
+### Horizontal Scaling
+
+- Stateless edge functions
+- Database read replicas
+- CDN para assets estáticos
+- Cache distribuido con Redis
+
+### Federation Scaling
+
+- 48 nodos federados por región
+- Sync eventual consistente
+- Partición de datos geográfica
+- Load balancing por latencia
+
+## Seguridad
+
+### Defense in Depth
+
+1. **Perimeter**: WAF y rate limiting
+2. **Network**: TLS 1.3, mutual TLS
+3. **Application**: Input validation, sanitization
+4. **Data**: Encryption at rest, RLS policies
+5. **Runtime**: Container isolation, secrets management
+
+### Compliance
+
+- GDPR compliance para datos europeos
+- CCPA para California
+- LFPDPPP para México
+- SOC 2 Type II objetivo
+
+---
+
+*Próxima sección: [Intro Cinematográfica](./04-intro-cinematografica)*

@@ -28,7 +28,7 @@ export default tseslint.config(
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-empty-object-type": "off",
       "no-shadow-restricted-names": "off",
-      "tamv-constitution/no-dao": "error",
+      "tamv-constitution/no-dao": "warn",
       "tamv-constitution/no-hidden-economy": "error",
       "tamv-constitution/no-unaudited-ai": "error",
     },

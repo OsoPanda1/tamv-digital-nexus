@@ -1,0 +1,575 @@
+---
+title: Despliegue Universal
+description: Guía de despliegue Cloud/On-Premise/Federado con docker-compose y Kubernetes
+category: WikiTAMV
+order: 8
+---
+
+# Despliegue Universal
+
+## Visión General
+
+TAMV MD-X4™ soporta múltiples modelos de despliegue para adaptarse a diferentes necesidades: Cloud público, On-Premise privado, y Federación distribuida.
+
+## Modelos de Despliegue
+
+### 1. Cloud (SaaS)
+- Infraestructura gestionada por TAMV
+- Actualizaciones automáticas
+- Escalado automático
+- Ideal para: Usuarios individuales, PyMEs
+
+### 2. On-Premise
+- Instalación en servidores propios
+- Control total de datos
+- Cumplimiento regulatorio estricto
+- Ideal para: Gobiernos, Bancos, Empresas grandes
+
+### 3. Federado
+- Nodos distribuidos en múltiples ubicaciones
+- Sincronización entre nodos
+- Resiliencia geográfica
+- Ideal para: Organizaciones multinacionales
+
+---
+
+## Docker Compose
+
+### Configuración Completa
+
+```yaml
+# docker-compose.yml
+version: '3.8'
+
+services:
+  # ============================================
+  # APPLICATION
+  # ============================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://tamv:secret@postgres:5432/tamv
+      - REDIS_URL=redis://redis:6379
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - tamv-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ============================================
+  # DATABASE
+  # ============================================
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=tamv
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=tamv
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./supabase/migrations:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - tamv-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tamv"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # CACHE & MESSAGE BROKER
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - tamv-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # MONITORING STACK
+  # ============================================
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - tamv-network
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:10.2.0
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_INSTALL_PLUGINS=redis-datasource
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/dashboards:/etc/grafana/provisioning/dashboards
+    ports:
+      - "3001:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - tamv-network
+    restart: unless-stopped
+
+  # ============================================
+  # TRACING & LOGGING
+  # ============================================
+  tempo:
+    image: grafana/tempo:2.3.0
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./monitoring/tempo.yaml:/etc/tempo.yaml
+      - tempo_data:/var/tempo
+    ports:
+      - "3200:3200"
+    networks:
+      - tamv-network
+    restart: unless-stopped
+
+  loki:
+    image: grafana/loki:2.9.0
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki_data:/loki
+    ports:
+      - "3100:3100"
+    networks:
+      - tamv-network
+    restart: unless-stopped
+
+  # ============================================
+  # ANALYTICS & ML
+  # ============================================
+  jupyter:
+    image: jupyter/datascience-notebook:latest
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - JUPYTER_TOKEN=${JUPYTER_TOKEN:-tamv2024}
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - jupyter_data:/home/jovyan
+    ports:
+      - "8888:8888"
+    networks:
+      - tamv-network
+    restart: unless-stopped
+    profiles:
+      - analytics
+
+  # ============================================
+  # REVERSE PROXY
+  # ============================================
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+      - grafana
+    networks:
+      - tamv-network
+    restart: unless-stopped
+
+networks:
+  tamv-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+  tempo_data:
+  loki_data:
+  jupyter_data:
+```
+
+### Comandos de Operación
+
+```bash
+# Iniciar todos los servicios
+docker-compose up -d
+
+# Escalar aplicación
+docker-compose up -d --scale app=3
+
+# Ver logs
+docker-compose logs -f app
+
+# Backup de base de datos
+docker-compose exec postgres pg_dump -U tamv tamv > backup.sql
+
+# Restaurar
+cat backup.sql | docker-compose exec -T postgres psql -U tamv tamv
+
+# Detener todo
+docker-compose down
+
+# Detener y eliminar volúmenes
+docker-compose down -v
+```
+
+---
+
+## Kubernetes (K8s)
+
+### Estructura de Manifests
+
+```
+k8s/
+├── namespace.yaml
+├── configmap.yaml
+├── secrets.yaml
+├── postgres/
+│   ├── statefulset.yaml
+│   ├── service.yaml
+│   └── pvc.yaml
+├── redis/
+│   ├── deployment.yaml
+│   └── service.yaml
+├── app/
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   ├── hpa.yaml
+│   └── ingress.yaml
+├── monitoring/
+│   ├── prometheus/
+│   ├── grafana/
+│   └── alertmanager/
+└── kustomization.yaml
+```
+
+### Namespace
+
+```yaml
+# k8s/namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tamv
+  labels:
+    app: tamv
+    environment: production
+```
+
+### ConfigMap
+
+```yaml
+# k8s/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tamv-config
+  namespace: tamv
+data:
+  NODE_ENV: "production"
+  DATABASE_URL: "postgresql://tamv:$(POSTGRES_PASSWORD)@postgres:5432/tamv"
+  REDIS_URL: "redis://redis:6379"
+  SUPABASE_URL: "${SUPABASE_URL}"
+```
+
+### Secrets
+
+```yaml
+# k8s/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tamv-secrets
+  namespace: tamv
+type: Opaque
+stringData:
+  POSTGRES_PASSWORD: "your-secure-password"
+  SUPABASE_ANON_KEY: "your-supabase-key"
+  GRAFANA_PASSWORD: "your-grafana-password"
+```
+
+### Deployment de Aplicación
+
+```yaml
+# k8s/app/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tamv-app
+  namespace: tamv
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tamv-app
+  template:
+    metadata:
+      labels:
+        app: tamv-app
+    spec:
+      containers:
+        - name: app
+          image: tamv/digital-nexus:latest
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: tamv-config
+            - secretRef:
+                name: tamv-secrets
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: tamv-app
+                topologyKey: kubernetes.io/hostname
+```
+
+### Service
+
+```yaml
+# k8s/app/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: tamv-app
+  namespace: tamv
+spec:
+  type: ClusterIP
+  selector:
+    app: tamv-app
+  ports:
+    - port: 80
+      targetPort: 3000
+```
+
+### Ingress
+
+```yaml
+# k8s/app/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tamv-ingress
+  namespace: tamv
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  tls:
+    - hosts:
+        - tamv.network
+        - app.tamv.network
+      secretName: tamv-tls
+  rules:
+    - host: tamv.network
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tamv-app
+                port:
+                  number: 80
+```
+
+### Horizontal Pod Autoscaler
+
+```yaml
+# k8s/app/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: tamv-app-hpa
+  namespace: tamv
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: tamv-app
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+```
+
+### PostgreSQL StatefulSet
+
+```yaml
+# k8s/postgres/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: tamv
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: tamv
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tamv-secrets
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              value: tamv
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 50Gi
+```
+
+---
+
+## Requisitos de Hardware
+
+### Mínimo (Desarrollo)
+
+| Componente | Requisito |
+|------------|-----------|
+| CPU | 4 cores |
+| RAM | 8 GB |
+| Storage | 50 GB SSD |
+| Network | 100 Mbps |
+
+### Recomendado (Producción)
+
+| Componente | Requisito |
+|------------|-----------|
+| CPU | 16+ cores |
+| RAM | 32+ GB |
+| Storage | 500+ GB SSD NVMe |
+| Network | 1 Gbps |
+
+### Enterprise (Alta disponibilidad)
+
+| Componente | Requisito |
+|------------|-----------|
+| CPU | 32+ cores |
+| RAM | 64+ GB |
+| Storage | 1+ TB SSD NVMe (RAID) |
+| Network | 10 Gbps |
+
+---
+
+## Checklist de Despliegue
+
+### Pre-Despliegue
+
+- [ ] Configurar secrets y variables de entorno
+- [ ] Preparar certificados SSL/TLS
+- [ ] Configurar backup automático
+- [ ] Establecer políticas de monitoreo
+- [ ] Documentar procedimientos de rollback
+
+### Post-Despliegue
+
+- [ ] Verificar health checks
+- [ ] Comprobar conectividad entre servicios
+- [ ] Validar logs y métricas
+- [ ] Ejecutar smoke tests
+- [ ] Notificar al equipo
+
+### Mantenimiento
+
+- [ ] Rotación de secrets (cada 90 días)
+- [ ] Actualización de imágenes Docker
+- [ ] Revisión de alertas
+- [ ] Backup verification
+- [ ] Disaster recovery drill
+
+---
+
+*Próxima sección: [Gobernanza](./09-gobernanza)*

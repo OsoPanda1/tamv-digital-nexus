@@ -1,256 +1,172 @@
-import { useState, useEffect } from 'react';
+// ============================================================================
+// TAMV MD-X4™ — DreamSpaces v2.0 (Functional)
+// Real data from Lovable Cloud + immersive 3D viewer + KAOS audio
+// ============================================================================
+
+import { useState } from 'react';
 import Navigation from '@/components/Navigation';
-import { HolographicPanel, HolographicButton, QuantumBadge } from '@/components/HolographicUI';
 import { DreamSpaceViewer } from '@/components/dreamspaces/DreamSpaceViewer';
-import { Sparkles, Users, Lock, Globe, Headphones, Volume2, Play } from 'lucide-react';
+import { useDreamSpaces, type DreamSpaceRow } from '@/hooks/useDreamSpaces';
 import { useQuantumState } from '@/hooks/useQuantumState';
-import { binauralAudio } from '@/utils/binauralAudio';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Sparkles, Users, Lock, Globe, Headphones, Volume2, Play, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface DreamSpace {
-  id: string;
-  name: string;
-  description: string;
-  participants: number;
-  maxParticipants: number;
-  isPublic: boolean;
-  environment: 'quantum' | 'forest' | 'cosmic' | 'crystal';
-  coherenceRequired: number;
-  audioType: 'binaural' | 'ambient' | 'interactive';
+type XREnv = 'quantum' | 'forest' | 'cosmic' | 'crystal';
+
+const ENV_COLORS: Record<string, string> = {
+  quantum: 'from-primary/20 to-secondary/10',
+  forest: 'from-green-900/30 to-emerald-800/10',
+  cosmic: 'from-indigo-900/30 to-violet-800/10',
+  crystal: 'from-rose-900/30 to-amber-800/10',
+};
+
+function resolveEnv(theme: string | null): XREnv {
+  if (['quantum', 'forest', 'cosmic', 'crystal'].includes(theme || '')) return theme as XREnv;
+  return 'quantum';
 }
 
-const mockSpaces: DreamSpace[] = [
-  {
-    id: '1',
-    name: 'Plaza Cuántica Central',
-    description: 'Espacio público de encuentro y co-creación colectiva con audio espacial 3D',
-    participants: 47,
-    maxParticipants: 100,
-    isPublic: true,
-    environment: 'quantum',
-    coherenceRequired: 0,
-    audioType: 'binaural'
-  },
-  {
-    id: '2',
-    name: 'Bosque de Meditación',
-    description: 'Espacio sensorial para introspección con ondas theta binaurales',
-    participants: 12,
-    maxParticipants: 30,
-    isPublic: true,
-    environment: 'forest',
-    coherenceRequired: 20,
-    audioType: 'ambient'
-  },
-  {
-    id: '3',
-    name: 'Sala de Colaboración Pro',
-    description: 'Workspace privado con herramientas avanzadas y audio reactivo',
-    participants: 8,
-    maxParticipants: 20,
-    isPublic: false,
-    environment: 'crystal',
-    coherenceRequired: 60,
-    audioType: 'interactive'
-  },
-  {
-    id: '4',
-    name: 'Observatorio Cósmico',
-    description: 'Experiencia astronómica inmersiva con sonido espacial envolvente',
-    participants: 23,
-    maxParticipants: 50,
-    isPublic: true,
-    environment: 'cosmic',
-    coherenceRequired: 40,
-    audioType: 'binaural'
-  }
-];
-
 export default function DreamSpaces() {
-  const [spaces] = useState<DreamSpace[]>(mockSpaces);
-  const [selectedSpace, setSelectedSpace] = useState<DreamSpace | null>(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const { user, quantumCoherence, activateDreamSpace } = useQuantumState();
+  const { spaces, loading, error } = useDreamSpaces();
+  const { user, quantumCoherence } = useQuantumState();
+  const [activeSpace, setActiveSpace] = useState<DreamSpaceRow | null>(null);
 
-  const handleEnterSpace = async (space: DreamSpace) => {
+  const handleEnter = (space: DreamSpaceRow) => {
     if (!user) {
-      toast.error('Debes iniciar sesión para entrar a un Dream Space');
+      toast.error('Inicia sesión para entrar a un DreamSpace');
       return;
     }
-
-    if (quantumCoherence < space.coherenceRequired) {
-      toast.error(
-        `Necesitas ${space.coherenceRequired}% de coherencia cuántica. Actual: ${quantumCoherence}%`
-      );
+    if ((space.current_participants ?? 0) >= (space.max_participants ?? 100)) {
+      toast.error('Este espacio está lleno');
       return;
     }
-
-    if (!space.isPublic && user.role === 'public') {
-      toast.error('Este espacio requiere membresía Pro o Creator');
-      return;
-    }
-
-    // Play entrance sound
-    await binauralAudio.playNotificationSound('celebration', { x: 0, y: 0, z: -1 });
-
-    activateDreamSpace(space.id);
-    setSelectedSpace(space);
-    setIsFullscreen(true);
-    toast.success(`Entrando a ${space.name}... 🌟`);
+    setActiveSpace(space);
+    toast.success(`Entrando a ${space.name}…`);
   };
 
-  const handleExitSpace = async () => {
-    await binauralAudio.playNotificationSound('system', { x: 0, y: 0, z: 1 });
-    setSelectedSpace(null);
-    setIsFullscreen(false);
-  };
-
-  const handleTestAudio = async (type: 'binaural' | 'ambient' | 'interactive') => {
-    toast.info('Reproduciendo audio de prueba...');
-    if (type === 'binaural') {
-      await binauralAudio.playBinauralBeat(10, 3000); // Theta waves
-    } else {
-      await binauralAudio.playNotificationSound('celebration', { x: 0, y: 0, z: -1 });
-    }
-  };
-
-  // Fullscreen 3D view
-  if (selectedSpace && isFullscreen) {
+  // ─── Fullscreen 3D Mode ────────────────────────────────────────────────
+  if (activeSpace) {
     return (
       <div className="fixed inset-0 z-50 bg-background">
         <DreamSpaceViewer
-          environment={selectedSpace.environment}
-          onExit={handleExitSpace}
+          environment={resolveEnv(activeSpace.theme)}
+          spaceName={activeSpace.name}
+          spaceId={activeSpace.id}
+          onExit={() => setActiveSpace(null)}
         />
       </div>
     );
   }
 
+  // ─── Listing ───────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-primary/5">
+    <div className="min-h-screen bg-background">
       <Navigation />
-      
-      <div className="container mx-auto px-6 pt-32 pb-20">
+
+      <main className="container mx-auto px-6 pt-32 pb-20">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 glow-text">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6">
             <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-              Dream Spaces
+              DreamSpaces
             </span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Espacios multisensoriales 3D con navegación libre, avatares interactivos y audio espacial binaural
+            Entornos inmersivos 3D con audio espacial binaural KAOS, avatares y consistencia adaptable en tiempo real.
           </p>
-          
-          <div className="flex justify-center gap-4 mt-8 flex-wrap">
-            <QuantumBadge color="primary">
-              Coherencia: {quantumCoherence}%
-            </QuantumBadge>
-            <QuantumBadge color="secondary">
-              {user?.role || 'Invitado'}
-            </QuantumBadge>
-            <QuantumBadge color="accent">
-              🎧 Audio Binaural HRTF
-            </QuantumBadge>
+          <div className="flex justify-center gap-3 mt-6 flex-wrap">
+            <Badge variant="outline" className="gap-1 bg-card/50"><Sparkles className="w-3 h-3" /> Coherencia: {quantumCoherence}%</Badge>
+            <Badge variant="outline" className="gap-1 bg-card/50"><Headphones className="w-3 h-3" /> KAOS 432 Hz</Badge>
+            <Badge variant="outline" className="gap-1 bg-card/50"><Users className="w-3 h-3" /> Multiusuario</Badge>
           </div>
         </div>
 
+        {/* Error */}
+        {error && <p className="text-destructive text-center mb-8">Error al cargar espacios: {error}</p>}
+
+        {/* Loading */}
+        {loading && (
+          <div className="grid md:grid-cols-2 gap-8">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} className="h-64 rounded-xl" />
+            ))}
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && spaces.length === 0 && (
+          <Card className="max-w-lg mx-auto p-12 text-center border-border/30">
+            <Sparkles className="w-12 h-12 text-primary mx-auto mb-4" />
+            <h3 className="text-2xl font-bold mb-2">Sin DreamSpaces activos</h3>
+            <p className="text-muted-foreground">Crea el primer entorno inmersivo desde el panel de administración.</p>
+          </Card>
+        )}
+
         {/* Spaces Grid */}
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-          {spaces.map((space) => (
-            <HolographicPanel key={space.id} className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-2xl font-bold mb-2">{space.name}</h3>
-                  <p className="text-muted-foreground">{space.description}</p>
-                </div>
-                {space.isPublic ? (
-                  <Globe className="w-6 h-6 text-primary" />
-                ) : (
-                  <Lock className="w-6 h-6 text-accent" />
-                )}
-              </div>
+        {!loading && spaces.length > 0 && (
+          <div className="grid md:grid-cols-2 gap-8 mb-16">
+            {spaces.map((space) => {
+              const env = resolveEnv(space.theme);
+              const cap = space.max_participants ?? 100;
+              const cur = space.current_participants ?? 0;
+              const pct = Math.min(100, (cur / cap) * 100);
+              const isPublic = space.access_level === 'public';
 
-              <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground flex-wrap">
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  <span>{space.participants}/{space.maxParticipants}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4" />
-                  <span>Req: {space.coherenceRequired}%</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Headphones className="w-4 h-4" />
-                  <span className="capitalize">{space.environment}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Volume2 className="w-4 h-4" />
-                  <span className="capitalize">{space.audioType}</span>
-                </div>
-              </div>
-
-              {/* Capacity bar */}
-              <div className="w-full bg-muted rounded-full h-2 mb-4">
-                <div
-                  className="bg-quantum-gradient h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${(space.participants / space.maxParticipants) * 100}%` }}
-                />
-              </div>
-
-              <div className="flex gap-3">
-                <HolographicButton
-                  variant="primary"
-                  onClick={() => handleEnterSpace(space)}
-                  className="flex-1"
+              return (
+                <Card
+                  key={space.id}
+                  className={`relative overflow-hidden border-border/30 bg-gradient-to-br ${ENV_COLORS[env] || ENV_COLORS.quantum} backdrop-blur-sm transition-all hover:shadow-lg hover:shadow-primary/10`}
                 >
-                  <Play className="w-4 h-4 mr-2 inline" />
-                  Entrar al Espacio
-                </HolographicButton>
-                <HolographicButton
-                  variant="ghost"
-                  onClick={() => handleTestAudio(space.audioType)}
-                >
-                  <Volume2 className="w-4 h-4" />
-                </HolographicButton>
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1">
+                        <h3 className="text-2xl font-bold mb-1">{space.name}</h3>
+                        <p className="text-sm text-muted-foreground line-clamp-2">{space.description || 'Espacio inmersivo TAMV'}</p>
+                      </div>
+                      {isPublic ? <Globe className="w-5 h-5 text-primary shrink-0" /> : <Lock className="w-5 h-5 text-accent shrink-0" />}
+                    </div>
+
+                    {/* Metadata */}
+                    <div className="flex items-center gap-4 mb-4 text-xs text-muted-foreground flex-wrap">
+                      <span className="flex items-center gap-1"><Users className="w-3 h-3" /> {cur}/{cap}</span>
+                      <span className="flex items-center gap-1"><Sparkles className="w-3 h-3" /> {env}</span>
+                      <span className="flex items-center gap-1"><Volume2 className="w-3 h-3" /> {space.space_type || 'binaural'}</span>
+                    </div>
+
+                    {/* Capacity */}
+                    <Progress value={pct} className="h-1.5 mb-5" />
+
+                    <Button className="w-full gap-2" onClick={() => handleEnter(space)}>
+                      <Play className="w-4 h-4" /> Entrar al Espacio
+                    </Button>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Features */}
+        <div className="grid md:grid-cols-3 gap-6">
+          {[
+            { icon: Headphones, title: 'Audio Binaural KAOS', desc: 'HRTF espacial 432 Hz con presets theta, alpha y gamma para inmersión cognitiva.' },
+            { icon: Users, title: 'Presencia Multiusuario', desc: 'Avatares 3D con consistencia eventual para animaciones y fuerte para accesos.' },
+            { icon: Globe, title: 'Navegación Libre (WASD)', desc: 'Controles de primera persona con LOD adaptativo y monitoreo de FPS en tiempo real.' },
+          ].map(({ icon: Icon, title, desc }) => (
+            <Card key={title} className="p-6 border-border/30 text-center">
+              <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <Icon className="w-7 h-7 text-primary" />
               </div>
-            </HolographicPanel>
+              <h3 className="text-lg font-bold mb-2">{title}</h3>
+              <p className="text-sm text-muted-foreground">{desc}</p>
+            </Card>
           ))}
         </div>
-
-        {/* Features Section */}
-        <div className="grid md:grid-cols-3 gap-6">
-          <HolographicPanel className="p-6 text-center">
-            <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
-              <Headphones className="w-8 h-8 text-primary" />
-            </div>
-            <h3 className="text-xl font-bold mb-2">Audio Binaural 3D</h3>
-            <p className="text-muted-foreground text-sm">
-              Sistema HRTF para audio espacial inmersivo que responde a tu posición en el espacio
-            </p>
-          </HolographicPanel>
-
-          <HolographicPanel className="p-6 text-center">
-            <div className="w-16 h-16 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-4">
-              <Users className="w-8 h-8 text-secondary" />
-            </div>
-            <h3 className="text-xl font-bold mb-2">Avatares Interactivos</h3>
-            <p className="text-muted-foreground text-sm">
-              Presencia en tiempo real con avatares 3D que responden a emociones y movimientos
-            </p>
-          </HolographicPanel>
-
-          <HolographicPanel className="p-6 text-center">
-            <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4">
-              <Globe className="w-8 h-8 text-accent" />
-            </div>
-            <h3 className="text-xl font-bold mb-2">Navegación Libre</h3>
-            <p className="text-muted-foreground text-sm">
-              Controles WASD para movimiento fluido y exploración libre del entorno 3D
-            </p>
-          </HolographicPanel>
-        </div>
-      </div>
+      </main>
     </div>
   );
 }

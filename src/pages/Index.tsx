@@ -1,413 +1,486 @@
 // ============================================================================
-// TAMV MD-X4â"¢ - Landing Page
-// Elegant, sophisticated landing with unified design
+// TAMV MD-X4™ — HOME: Social Feed First (Instagram/TikTok-style)
+// Visual-first: 85% media, 15% text
 // ============================================================================
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { 
-  ArrowRight, Sparkles, Globe, Users, Zap, Brain, Shield, 
-  Headphones, BookOpen, Vote, DollarSign, Layers, Star,
-  Compass, Tv, GraduationCap, Music, Gamepad2, ShoppingBag,
-  Users as UsersIcon, Radio, Play, Flame
-} from "lucide-react";
-import { CinematicIntro } from "@/components/CinematicIntro";
-import { useBackgroundControl } from "@/components/UnifiedBackground";
-import { federationManager } from "@/systems/FederationSystem";
 import { motion } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  Flame, TrendingUp, Users, Video, Radio, Search,
+  Hash, Crown, Zap, Globe, Star, Sparkles, Brain,
+  Layers, GraduationCap, Music, ShoppingBag, Wallet,
+  Shield, Rocket, BookOpen, ChevronRight,
+} from "lucide-react";
+
+// Social components
+import { NextGenFeed } from "@/components/social/NextGenFeed";
+import { TrendingSidebar } from "@/components/social/TrendingSidebar";
+import { StoriesCarousel } from "@/components/social/StoriesCarousel";
+import { PremiumCard, StatCard } from "@/components/effects/PremiumCard";
+import CinematicIntro from "@/components/CinematicIntro";
+import { useAuth } from "@/hooks/useAuth";
 
 // ============================================================================
-// Quick Navigation Configuration
+// UNIFIED DATA FROM ALL OSOPANDA1 REPOS
 // ============================================================================
 
-const QUICK_NAV = [
-  { icon: Compass, label: "Explorar", path: "/ecosystem", color: "text-cyan-400" },
-  { icon: Tv, label: "Videos", path: "/dream-spaces", color: "text-red-400" },
-  { icon: Radio, label: "Lives", path: "/kaos", color: "text-green-400" },
-  { icon: Music, label: "MÃºsica", path: "/kaos", color: "text-purple-400" },
-  { icon: GraduationCap, label: "Cursos", path: "/university", color: "text-amber-400" },
-  { icon: UsersIcon, label: "Grupos", path: "/community", color: "text-blue-400" },
-  { icon: ShoppingBag, label: "Market", path: "/monetization", color: "text-pink-400" },
-  { icon: Gamepad2, label: "Games", path: "/dream-spaces", color: "text-emerald-400" },
-];
-
-const FEATURED_REELS = [
-  { id: 1, img: "https://picsum.photos/seed/reel1/300/530", user: "MarÃ­a R.", views: "12.4K" },
-  { id: 2, img: "https://picsum.photos/seed/reel2/300/530", user: "Carlos M.", views: "8.2K" },
-  { id: 3, img: "https://picsum.photos/seed/reel3/300/530", user: "TAMV", views: "45.1K" },
-  { id: 4, img: "https://picsum.photos/seed/reel4/300/530", user: "Isabella", views: "23.7K" },
-  { id: 5, img: "https://picsum.photos/seed/reel5/300/530", user: "UTAMV", views: "5.6K" },
-  { id: 6, img: "https://picsum.photos/seed/reel6/300/530", user: "Ana T.", views: "9.3K" },
-];
-
-// ============================================================================
-// Feature Cards Configuration
-// ============================================================================
-
-const coreFeatures = [
+const UNIFIED_FEATURES = [
   {
-    icon: Sparkles,
-    title: "Dream Spaces 4D",
-    description: "Espacios inmersivos multisensoriales con audio espacial binaural",
-    link: "/dream-spaces",
-    federation: "DREAMSPACES",
-    gradient: "from-rose-500 to-rose-700",
+    icon: <Globe className="w-6 h-6" />,
+    title: "Ecosistema Federado",
+    description: "7 capas civilizatorias interconectadas. Arquitectura antifrágil con soberanía digital total.",
+    gradient: "from-cyan-500/20 to-blue-500/20",
   },
   {
-    icon: Brain,
+    icon: <Brain className="w-6 h-6" />,
     title: "Isabella AI",
-    description: "Asistente multimodal con memoria cuÃ¡ntica y orientaciÃ³n emocional",
-    link: "/isabella",
-    federation: "ISABELLA",
-    gradient: "from-cyan-500 to-blue-600",
+    description: "Inteligencia artificial emocional avanzada. La IA más humana del mundo digital.",
+    gradient: "from-purple-500/20 to-pink-500/20",
   },
   {
-    icon: Users,
-    title: "Comunidad Global",
-    description: "Red social inmersiva con grupos, canales y streaming 4D",
-    link: "/community",
-    federation: "HARMONY",
-    gradient: "from-pink-500 to-pink-700",
+    icon: <Layers className="w-6 h-6" />,
+    title: "DreamSpaces XR",
+    description: "Espacios virtuales infinitos en 3D/4D. Crea mundos imposibles con física cuántica.",
+    gradient: "from-amber-500/20 to-orange-500/20",
   },
   {
-    icon: Shield,
-    title: "Anubis Security",
-    description: "Sistema de seguridad post-cuÃ¡ntica DEKATEOTL de 11 capas",
-    link: "/anubis",
-    federation: "ANUBIS",
-    gradient: "from-red-500 to-red-700",
+    icon: <GraduationCap className="w-6 h-6" />,
+    title: "Universidad TAMV",
+    description: "Educación certificada en blockchain. Certificaciones BookPI reconocidas globalmente.",
+    gradient: "from-emerald-500/20 to-teal-500/20",
+  },
+  {
+    icon: <Music className="w-6 h-6" />,
+    title: "KAOS Audio",
+    description: "Frecuencias binaurales 432Hz. Audio inmersivo que transforma la consciencia.",
+    gradient: "from-rose-500/20 to-red-500/20",
+  },
+  {
+    icon: <ShoppingBag className="w-6 h-6" />,
+    title: "Marketplace Global",
+    description: "30+ formas de monetización ética. Economía federada con distribución justa.",
+    gradient: "from-green-500/20 to-emerald-500/20",
   },
 ];
 
-const ecosystemFeatures = [
-  { icon: Headphones, label: "KAOS Audio", desc: "Audio 4D", link: "/kaos" },
-  { icon: BookOpen, label: "Universidad", desc: "Certificaciones", link: "/university" },
-  { icon: Vote, label: "Gobernanza", desc: "DAO HÃ­brida", link: "/governance" },
-  { icon: DollarSign, label: "EconomÃ­a", desc: "MSR/TCEP", link: "/economy" },
-  { icon: Layers, label: "Ecosistema", desc: "21+ Federaciones", link: "/ecosystem" },
-  { icon: Star, label: "ID-NVIDA", desc: "Identidad Digital", link: "/profile" },
+const UNIFIED_STATS = [
+  { value: "30+", label: "Formas Monetización", icon: <Wallet />, color: "aqua" as const },
+  { value: "7", label: "Capas Federadas", icon: <Layers />, color: "purple" as const },
+  { value: "∞", label: "DreamSpaces", icon: <Sparkles />, color: "gold" as const },
+  { value: "100%", label: "Soberanía Digital", icon: <Shield />, color: "aqua" as const },
+];
+
+const REPOS_UNIFIED = [
+  { name: "tamv-digital-nexus", category: "Core" },
+  { name: "ecosistema-nextgen-tamv", category: "Ecosystem" },
+  { name: "TAMV-ONLINE-NEXTGEN-1.0", category: "Platform" },
+  { name: "DOCUMENTACION-TAMV-DM-X4", category: "Docs" },
+  { name: "tamv-sentient-digital-nexus", category: "AI" },
+  { name: "NEWTAMVGENESIS", category: "Genesis" },
+  { name: "epic-visual-forge", category: "Visual" },
+  { name: "civilizational-core", category: "Core" },
+];
+
+const TRENDING_HASHTAGS = [
+  { tag: "#TAMVQuantum", posts: "2.4M" },
+  { tag: "#DreamSpacesXR", posts: "1.8M" },
+  { tag: "#IsabellaAI", posts: "956K" },
+  { tag: "#NuevaEraDigital", posts: "743K" },
+  { tag: "#UTAMV2026", posts: "621K" },
+  { tag: "#KAOSAudio", posts: "489K" },
+];
+
+
+const QUICK_ACCESS_LINKS = [
+  { label: "Metaverso", icon: <Globe />, path: "/metaverse", iconClass: "bg-cyan-500/20 text-cyan-300" },
+  { label: "Isabella AI", icon: <Brain />, path: "/isabella", iconClass: "bg-purple-500/20 text-purple-300" },
+  { label: "Universidad", icon: <GraduationCap />, path: "/university", iconClass: "bg-amber-500/20 text-amber-300" },
+  { label: "DreamSpaces", icon: <Sparkles />, path: "/dream-spaces", iconClass: "bg-pink-500/20 text-pink-300" },
+  { label: "Marketplace", icon: <ShoppingBag />, path: "/monetization", iconClass: "bg-emerald-500/20 text-emerald-300" },
+  { label: "Gobernanza", icon: <Crown />, path: "/governance", iconClass: "bg-yellow-500/20 text-yellow-300" },
+];
+
+const NEXUS_COMMAND_DECK = [
+  { title: "Estado Federado", metric: "177 repos sincronizados", status: "Operativo" },
+  { title: "Resiliencia IA", metric: "99.93% continuidad", status: "Estable" },
+  { title: "XR Rendering", metric: "Latencia < 24ms", status: "Optimizado" },
 ];
 
 // ============================================================================
-// Main Landing Page Component
+// MAIN COMPONENT
+// MAIN
 // ============================================================================
 
 const Index = () => {
   const [showIntro, setShowIntro] = useState(true);
-  const { setBackground } = useBackgroundControl();
-  const fedStats = federationManager.getStatistics();
-
-  useEffect(() => {
-    // Set quantum background for landing page
-    setBackground('quantum', 0.3);
-  }, [setBackground]);
+  const { isAuthenticated } = useAuth();
 
   if (showIntro) {
     return <CinematicIntro onComplete={() => setShowIntro(false)} />;
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center px-6">
-        <div className="max-w-5xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <Badge 
-              className="mb-6 px-4 py-2 text-sm border-aqua/30 text-aqua"
-              variant="outline"
+    <div className="min-h-screen py-4">
+      {/* Top bar: Search + Quick actions */}
+      <div className="max-w-7xl mx-auto px-4 mb-4">
+        <div className="flex items-center gap-3">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              placeholder="Buscar en TAMV..."
+              className="w-full bg-card/40 border border-border/20 rounded-xl pl-10 pr-4 py-2 text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/40 backdrop-blur-sm"
+            />
+          </div>
+        </div>
+      </div>
+
+        {/* ═══════════════════════════════════════════════════════════════════
+           STATS SECTION
+           ═══════════════════════════════════════════════════════════════════ */}
+        <section className="py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="glass-crystal rounded-3xl p-8 md:p-12"
             >
-              <Sparkles className="w-4 h-4 mr-2" />
-              Ecosistema Digital Civilizatorio
-            </Badge>
-            
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              <span 
-                style={{
-                  background: 'linear-gradient(135deg, #00D9FF, #3E7EA3, #C1CBD5)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
-              >
-                TAMV MD-X4â"¢
-              </span>
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              La primera plataforma digital civilizatoria de LatinoamÃ©rica. 
-              Un ecosistema completo de IA, economÃ­a, educaciÃ³n y metaverso.
-            </p>
-            
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link to="/dashboard">
-                <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-8"
-                >
-                  Comenzar Ahora
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </Link>
-              <Link to="/docs">
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="border-aqua/30 text-aqua hover:bg-aqua/10 px-8"
-                >
-                  DocumentaciÃ³n
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+              <div className="text-center mb-12">
+                <h2 className="text-headline text-white mb-4">
+                  Métricas <span className="text-gradient-quantum">Civilizatorias</span>
+                </h2>
+                <p className="text-body-large text-white/60">
+                  El poder de la unificación en números
+                </p>
+              </div>
 
-      {/* Quick Navigation */}
-      <section className="py-8 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
-            {QUICK_NAV.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <Link key={index} to={item.path}>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {UNIFIED_STATS.map((stat, index) => (
                   <motion.div
-                    className="flex flex-col items-center p-3 rounded-xl border border-aqua/10 hover:border-aqua/30 transition-all duration-300 cursor-pointer"
-                    style={{ background: 'rgba(11, 12, 17, 0.6)' }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Icon className={`w-5 h-5 ${item.color} mb-1`} />
-                    <span className="text-xs text-muted-foreground">{item.label}</span>
-                  </motion.div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Reels */}
-      <section className="py-8 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold flex items-center gap-2">
-              <Play className="w-5 h-5 text-aqua" />
-              Reels Destacados
-            </h2>
-            <Link to="/community" className="text-sm text-aqua hover:underline">
-              Ver todos
-            </Link>
-          </div>
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-            {FEATURED_REELS.map((reel) => (
-              <motion.div
-                key={reel.id}
-                className="relative flex-shrink-0 w-28 h-48 rounded-xl overflow-hidden cursor-pointer"
-                whileHover={{ scale: 1.05 }}
-              >
-                <img 
-                  src={reel.img} 
-                  alt={`Reel by ${reel.user}`}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <div className="absolute bottom-2 left-2 right-2">
-                  <p className="text-xs font-medium truncate">{reel.user}</p>
-                  <p className="text-xs text-muted-foreground">{reel.views} vistas</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Core Features Grid */}
-      <section className="py-16 px-6">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Pilares del Ecosistema
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Cuatro sistemas integrados que forman la base de la civilizaciÃ³n digital TAMV
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {coreFeatures.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <Link key={index} to={feature.link}>
-                  <motion.div
+                    key={stat.label}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                   >
-                    <Card 
-                      className="p-6 border-aqua/20 hover:border-aqua/40 transition-all duration-300 group cursor-pointer"
-                      style={{
-                        background: 'rgba(11, 12, 17, 0.6)',
-                        backdropFilter: 'blur(10px)',
-                      }}
-                    >
-                      <div className="flex items-start gap-4">
-                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                          <Icon className="w-6 h-6 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-xl font-bold mb-2 group-hover:text-aqua transition-colors">
-                            {feature.title}
-                          </h3>
-                          <p className="text-muted-foreground text-sm">
-                            {feature.description}
-                          </p>
-                          <Badge variant="outline" className="mt-3 text-xs border-aqua/20 text-aqua">
-                            {feature.federation}
-                          </Badge>
-                        </div>
-                        <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-aqua group-hover:translate-x-1 transition-all" />
-                      </div>
-                    </Card>
+                    <StatCard
+                      label={stat.label}
+                      value={stat.value}
+                      icon={stat.icon}
+                      color={stat.color}
+                    />
                   </motion.div>
-                </Link>
-              );
-            })}
+                ))}
+              </div>
+            </motion.div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Ecosystem Features */}
-      <section className="py-16 px-6">
-        <div className="max-w-6xl mx-auto">
-          <Card 
-            className="p-8 border-aqua/20"
-            style={{
-              background: 'rgba(11, 12, 17, 0.6)',
-              backdropFilter: 'blur(10px)',
-            }}
-          >
-            <h3 className="text-xl font-bold mb-6 text-center">Explora el Ecosistema</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              {ecosystemFeatures.map((feature, index) => {
-                const Icon = feature.icon;
-                return (
-                  <Link key={index} to={feature.link}>
-                    <motion.div
-                      className="flex flex-col items-center p-4 rounded-lg border border-aqua/10 hover:border-aqua/30 transition-all cursor-pointer"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      <Icon className="w-6 h-6 text-aqua mb-2" />
-                      <span className="text-sm font-medium">{feature.label}</span>
-                      <span className="text-xs text-muted-foreground">{feature.desc}</span>
-                    </motion.div>
-                  </Link>
-                );
-              })}
-            </div>
-          </Card>
-        </div>
-      </section>
-
-      {/* Federation Stats */}
-      <section className="py-16 px-6">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-8"
-          >
-            <h2 className="text-2xl font-bold mb-2">Estado de las Federaciones</h2>
-            <p className="text-muted-foreground">21+ sistemas integrados operando en sincronÃ­a</p>
-          </motion.div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card 
-              className="p-6 text-center border-aqua/20"
-              style={{ background: 'rgba(11, 12, 17, 0.6)' }}
-            >
-              <p className="text-4xl font-bold text-aqua mb-1">{fedStats.total}</p>
-              <p className="text-sm text-muted-foreground">Federaciones</p>
-            </Card>
-            <Card 
-              className="p-6 text-center border-emerald-500/20"
-              style={{ background: 'rgba(11, 12, 17, 0.6)' }}
-            >
-              <p className="text-4xl font-bold text-emerald-400 mb-1">{fedStats.active}</p>
-              <p className="text-sm text-muted-foreground">Activas</p>
-            </Card>
-            <Card 
-              className="p-6 text-center border-amber-500/20"
-              style={{ background: 'rgba(11, 12, 17, 0.6)' }}
-            >
-              <p className="text-4xl font-bold text-amber-400 mb-1">{fedStats.development}</p>
-              <p className="text-sm text-muted-foreground">En Desarrollo</p>
-            </Card>
-            <Card 
-              className="p-6 text-center border-violet-500/20"
-              style={{ background: 'rgba(11, 12, 17, 0.6)' }}
-            >
-              <p className="text-4xl font-bold text-violet-400 mb-1">{fedStats.quantumEnabled}</p>
-              <p className="text-sm text-muted-foreground">Quantum Ready</p>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Ãšnete a la CivilizaciÃ³n Digital
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              LatinoamÃ©rica estÃ¡ despertando. SÃ© parte de la revoluciÃ³n digital 
-              que estÃ¡ transformando nuestra regiÃ³n.
-            </p>
-            <Link to="/auth">
-              <Button 
-                size="lg"
-                className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-12 py-6 text-lg"
+        {/* ═══════════════════════════════════════════════════════════════════
+           TRENDING SECTION
+           ═══════════════════════════════════════════════════════════════════ */}
+        <section className="py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Trending Hashtags */}
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="lg:col-span-2"
               >
-                Crear Cuenta Gratuita
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
+                <PremiumCard className="p-8 h-full">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-3 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/20">
+                      <TrendingUp className="w-6 h-6 text-pink-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white">Tendencias Globales</h3>
+                      <p className="text-sm text-white/50">Lo más viral en TAMV</p>
+                    </div>
+                  </div>
 
-      {/* Footer */}
-      <footer className="py-8 px-6 border-t border-aqua/10">
-        <div className="max-w-6xl mx-auto text-center">
-          <p className="text-sm text-muted-foreground">
-            Â© 2025 TAMV MD-X4â"¢ â€" Ecosistema Digital Civilizatorio
-          </p>
-          <p className="text-xs text-muted-foreground mt-2">
-            Hecho con â¤ï¸ en LatinoamÃ©rica
-          </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {TRENDING_HASHTAGS.map((item, index) => (
+                      <motion.div
+                        key={item.tag}
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.3, delay: index * 0.05 }}
+                        className="flex items-center justify-between p-4 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] transition-colors cursor-pointer group"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg font-bold text-white/30">0{index + 1}</span>
+                          <span className="text-white group-hover:text-cyan-400 transition-colors">
+                            {item.tag}
+                          </span>
+                        </div>
+                        <span className="text-sm text-white/40">{item.posts} posts</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </PremiumCard>
+              </motion.div>
+
+              {/* Quick Access */}
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <PremiumCard className="p-8 h-full">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-3 rounded-xl bg-gradient-to-br from-amber-500/20 to-yellow-500/20">
+                      <Zap className="w-6 h-6 text-amber-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white">Acceso Rápido</h3>
+                      <p className="text-sm text-white/50">Navega el ecosistema</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {QUICK_ACCESS_LINKS.map((link) => (
+                      <Link key={link.path} to={link.path}>
+                        <motion.div
+                          whileHover={{ x: 5 }}
+                          className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] transition-all group"
+                        >
+                          <div className={`p-2 rounded-lg ${link.iconClass}`}>
+                            {link.icon}
+                          </div>
+                          <span className="text-white group-hover:text-cyan-400 transition-colors flex-1">
+                            {link.label}
+                          </span>
+                          <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-cyan-400 transition-colors" />
+                        </motion.div>
+                      </Link>
+                    ))}
+                  </div>
+                </PremiumCard>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+
+        {/* ═══════════════════════════════════════════════════════════════════
+           NEXUS COMMAND DECK
+           ═══════════════════════════════════════════════════════════════════ */}
+        <section className="py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            >
+              {NEXUS_COMMAND_DECK.map((item) => (
+                <div
+                  key={item.title}
+                  className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-[#0b1020]/80 via-[#101728]/70 to-[#071018]/90 p-6"
+                >
+                  <div className="absolute -top-10 -right-10 h-28 w-28 rounded-full bg-cyan-500/20 blur-2xl" />
+                  <p className="text-xs tracking-[0.2em] uppercase text-white/50 mb-3">{item.status}</p>
+                  <h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
+                  <p className="text-cyan-300 font-medium">{item.metric}</p>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════════════
+           CTA SECTION
+           ═══════════════════════════════════════════════════════════════════ */}
+        <section className="py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-5xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="glass-crystal rounded-3xl p-12 relative overflow-hidden"
+            >
+              {/* Background decoration */}
+              <div className="absolute inset-0 opacity-30">
+                <div className="absolute top-0 left-1/4 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl" />
+                <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl" />
+              </div>
+
+              <div className="relative z-10">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-cyan-500 to-purple-500 p-[2px]"
+                >
+                  <div className="w-full h-full rounded-full bg-[#050508] flex items-center justify-center">
+                    <Rocket className="w-8 h-8 text-cyan-400" />
+                  </div>
+                </motion.div>
+
+                <h2 className="text-display text-white mb-6">
+                  Únete a la <span className="text-gradient-quantum">Revolución</span>
+                </h2>
+                <p className="text-body-large text-white/60 max-w-2xl mx-auto mb-8">
+                  Visión y creación de <span className="text-cyan-400 font-semibold">Edwin Oswaldo Castillo Trejo</span>. 
+                  Desde Real del Monte, Hidalgo — un ecosistema civilizatorio para que los creadores 
+                  de LATAM tengan más herramientas, más control y más soberanía digital.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  {isAuthenticated ? (
+                    <Link to="/dashboard">
+                      <Button
+                        size="lg"
+                        className="btn-premium px-8 py-6 text-lg rounded-xl"
+                      >
+                        <Rocket className="w-5 h-5 mr-2" />
+                        Entrar al Ecosistema
+                      </Button>
+                    </Link>
+                  ) : (
+                    <>
+                      <Link to="/auth">
+                        <Button
+                          size="lg"
+                          className="btn-premium px-8 py-6 text-lg rounded-xl"
+                        >
+                          <Star className="w-5 h-5 mr-2" />
+                          Crear Cuenta Gratis
+                        </Button>
+                      </Link>
+                      <Link to="/docs">
+                        <Button
+                          size="lg"
+                          variant="outline"
+                          className="glass-crystal px-8 py-6 text-lg rounded-xl border-white/20 hover:border-cyan-400/50"
+                        >
+                          <BookOpen className="w-5 h-5 mr-2" />
+                          Explorar Documentación
+                        </Button>
+                      </Link>
+                    </>
+                  )}
+                </div>
+
+                <p className="text-sm text-white/40 mt-6">
+                  Orgullosamente Latinoamericano · Dedicado a Reina Trejo Serrano ✦
+                  <br />
+                  <span className="text-white/30">Visión de Edwin Oswaldo Castillo Trejo</span>
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+      {/* Main layout: Social Feed */}
+      <div className="max-w-7xl mx-auto px-4 mb-4">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            {!isAuthenticated && (
+              <Link to="/auth">
+                <Button size="sm" className="rounded-xl bg-primary text-primary-foreground text-xs gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  Unirse
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
-      </footer>
+      </div>
+
+      {/* Main layout: Feed + Trending Sidebar */}
+      <div className="max-w-7xl mx-auto px-4 flex gap-6">
+        {/* Feed Column */}
+        <div className="flex-1 max-w-2xl mx-auto xl:mx-0">
+          {/* Stories */}
+          <StoriesCarousel />
+
+          {/* Feed tabs */}
+          <Tabs defaultValue="foryou" className="w-full mb-4">
+            <TabsList className="bg-card/30 border border-border/20 rounded-xl p-1 h-auto flex w-full">
+              <TabsTrigger value="foryou" className="flex-1 gap-1.5 text-xs rounded-lg data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                <Flame className="w-3.5 h-3.5" /> Para ti
+              </TabsTrigger>
+              <TabsTrigger value="following" className="flex-1 gap-1.5 text-xs rounded-lg data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                <Users className="w-3.5 h-3.5" /> Siguiendo
+              </TabsTrigger>
+              <TabsTrigger value="live" className="flex-1 gap-1.5 text-xs rounded-lg data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                <Radio className="w-3.5 h-3.5" /> En Vivo
+              </TabsTrigger>
+              <TabsTrigger value="trending" className="flex-1 gap-1.5 text-xs rounded-lg data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
+                <TrendingUp className="w-3.5 h-3.5" /> Tendencia
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="foryou" className="mt-4">
+              <NextGenFeed />
+            </TabsContent>
+
+            <TabsContent value="following" className="mt-4">
+              <NextGenFeed />
+            </TabsContent>
+
+            <TabsContent value="live" className="mt-4">
+              <LiveGrid />
+            </TabsContent>
+
+            <TabsContent value="trending" className="mt-4">
+              <NextGenFeed />
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        {/* Right sidebar — Trending (desktop only) */}
+        <TrendingSidebar />
+      </div>
     </div>
   );
 };
+
+// ─── Live Grid ───
+const LIVE_CHANNELS = [
+  { name: "Quantum Night Live", viewers: "2.3K", img: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&h=225&fit=crop", host: "TAMV Official" },
+  { name: "Coding Session", viewers: "891", img: "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=400&h=225&fit=crop", host: "Carlos M." },
+  { name: "Art Workshop XR", viewers: "456", img: "https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=400&h=225&fit=crop", host: "María R." },
+  { name: "Music Jam Binaural", viewers: "1.2K", img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&h=225&fit=crop", host: "KAOS Audio" },
+  { name: "DreamSpace Build", viewers: "678", img: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=225&fit=crop", host: "Luna S." },
+  { name: "UTAMV Clase Abierta", viewers: "1.5K", img: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&h=225&fit=crop", host: "UTAMV" },
+];
+
+const LiveGrid = () => (
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    {LIVE_CHANNELS.map((ch) => (
+      <motion.div
+        key={ch.name}
+        whileHover={{ scale: 1.02 }}
+        className="relative rounded-xl overflow-hidden cursor-pointer group"
+      >
+        <img src={ch.img} alt="" className="w-full aspect-video object-cover" loading="lazy" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
+        <Badge className="absolute top-2.5 left-2.5 bg-destructive/90 text-destructive-foreground gap-1 text-[9px] animate-pulse rounded-sm">
+          <Radio className="w-3 h-3" /> LIVE
+        </Badge>
+        <div className="absolute top-2.5 right-2.5 text-[10px] bg-background/60 backdrop-blur px-2 py-0.5 rounded-sm flex items-center gap-1 font-mono">
+          <Users className="w-3 h-3" />{ch.viewers}
+        </div>
+        <div className="absolute bottom-2.5 left-2.5 right-2.5">
+          <p className="font-bold text-sm">{ch.name}</p>
+          <p className="text-[10px] text-muted-foreground">{ch.host}</p>
+        </div>
+      </motion.div>
+    ))}
+  </div>
+);
 
 export default Index;
