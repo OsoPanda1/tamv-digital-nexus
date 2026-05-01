@@ -23,22 +23,34 @@ const idle = (cb: () => void) => {
   setTimeout(cb, 32);
 };
 
+async function runWithConcurrency(tasks: PipelineTask[], maxConcurrent: number): Promise<void> {
+  const queue = [...tasks];
+
+  const workers = Array.from({ length: Math.max(1, maxConcurrent) }, async () => {
+    while (queue.length) {
+      const task = queue.shift();
+      if (!task) return;
+      await task.run();
+    }
+  });
+
+  await Promise.all(workers);
+}
+
 export class ParallelPipelineOrchestrator {
   private isSecondaryRunning = false;
 
-  async runPrimary(tasks: PipelineTask[]): Promise<void> {
-    await Promise.all(tasks.map((task) => task.run()));
+  async runPrimary(tasks: PipelineTask[], maxConcurrent = 2): Promise<void> {
+    await runWithConcurrency(tasks, maxConcurrent);
   }
 
-  runSecondary(tasks: PipelineTask[]): void {
+  runSecondary(tasks: PipelineTask[], maxConcurrent = 1): void {
     if (this.isSecondaryRunning) return;
     this.isSecondaryRunning = true;
 
     idle(async () => {
       try {
-        for (const task of tasks) {
-          await task.run();
-        }
+        await runWithConcurrency(tasks, maxConcurrent);
       } finally {
         this.isSecondaryRunning = false;
       }

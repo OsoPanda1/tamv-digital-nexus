@@ -275,3 +275,14 @@ Se implementó una base funcional inicial para reducir latencia percibida y evit
 ### Próximo paso recomendado
 
 Se conectaron `PipelineTask` críticos a endpoints reales de producción (edge functions): `dashboard-metrics`, `github-repo-scanner` y salud sistémica vía `tamv-unified-api` (OMNI-KERNEL API client). Siguiente paso: extender el mismo patrón a todos los dominios (DAO, economy wallet/tx, MSR, sentinel) con presupuesto de concurrencia por tier.
+
+### Guardrails de gobernanza híbrida (DAO)
+
+La malla adaptativa se extendió al dominio de gobernanza con un principio explícito:
+- Las DAO se usan para propuestas y trazabilidad auditable.
+- Las DAO **no** gobiernan control económico central, ni modificaciones a algoritmos/reglamentos troncales.
+- La gobernanza económica y legal permanece en consejo de líderes inversionistas/representantes legales, con capacidad de revocación final por el CEO fundador bajo estatutos TAMV.
+
+Implementación técnica en runtime:
+- Prefetch de `dao/proposals` y `msr/events` para transparencia operativa.
+- Presupuesto de concurrencia por tier para evitar cuellos de botella y saturación sistémica.
