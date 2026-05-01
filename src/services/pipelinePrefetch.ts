@@ -35,13 +35,11 @@ export async function prefetchDashboardSummary() {
 }
 
 export async function prefetchRepoUnificationSummary() {
-  const { data, error } = await supabase.functions.invoke("github-repo-scanner", {
-    body: { targetUser: "OsoPanda1", topRepos: 100, includePlan: true },
-  });
+  const { data, error } = await supabase.functions.invoke("github-repo-scanner");
   if (error) throw error;
   if (!data?.ok) throw new Error(data?.error || "repo scanner failed");
 
-  return { scannedAt: data.scannedAt, targetUser: data.targetUser, summary: data.summary, topRepos: data.topRepos, absorptionPlan: data.absorptionPlan };
+  return { scannedAt: data.scannedAt, targetUser: data.targetUser, summary: data.summary };
 }
 
 export async function prefetchDAOProposals() {
