@@ -7,36 +7,102 @@ import {
   sectionFromPathname,
   PipelineTask,
 } from "@/systems/ParallelPipelineOrchestrator";
+import {
+  prefetchDashboardSummary,
+  prefetchRepoUnificationSummary,
+  prefetchSystemHealth,
+} from "@/services/pipelinePrefetch";
 
-const buildTasks = (section: PipelineSection, queryClient: ReturnType<typeof useQueryClient>): { primary: PipelineTask[]; secondary: PipelineTask[] } => {
-  const warm = (key: string) => async () => {
-    await queryClient.prefetchQuery({
-      queryKey: ["tamv", "warm", key],
-      queryFn: async () => ({ key, warmedAt: new Date().toISOString() }),
-      staleTime: 1000 * 60 * 4,
-    });
-  };
+const safeTask = (id: string, section: PipelineSection, run: () => Promise<unknown>): PipelineTask => ({
+  id,
+  section,
+  run: async () => {
+    await run();
+  },
+});
 
+const buildTasks = (
+  section: PipelineSection,
+  queryClient: ReturnType<typeof useQueryClient>
+): { primary: PipelineTask[]; secondary: PipelineTask[] } => {
   const globalSecondary: PipelineTask[] = [
-    { id: "federated-health", section: "other", run: warm("federated-health") },
-    { id: "repo-priority-cache", section: "repo-unification", run: warm("repo-priority-cache") },
+    safeTask("system-health", "other", () =>
+      queryClient.prefetchQuery({
+        queryKey: ["tamv", "health", "system"],
+        queryFn: prefetchSystemHealth,
+        staleTime: 1000 * 60,
+      })
+    ),
   ];
 
   const sectionPrimary: Record<PipelineSection, PipelineTask[]> = {
-    home: [{ id: "home-feed", section: "home", run: warm("home-feed") }],
-    dashboard: [{ id: "dashboard-kpi", section: "dashboard", run: warm("dashboard-kpi") }],
-    community: [{ id: "social-presence", section: "community", run: warm("social-presence") }],
-    isabella: [{ id: "isabella-context", section: "isabella", run: warm("isabella-context") }],
-    economy: [{ id: "economy-prices", section: "economy", run: warm("economy-prices") }],
-    governance: [{ id: "governance-votes", section: "governance", run: warm("governance-votes") }],
-    "repo-unification": [{ id: "repo-wave-status", section: "repo-unification", run: warm("repo-wave-status") }],
-    other: [{ id: "baseline-context", section: "other", run: warm("baseline-context") }],
+    home: [
+      safeTask("home-health", "home", () =>
+        queryClient.prefetchQuery({
+          queryKey: ["tamv", "health", "system"],
+          queryFn: prefetchSystemHealth,
+          staleTime: 1000 * 60,
+        })
+      ),
+    ],
+    dashboard: [
+      safeTask("dashboard-metrics", "dashboard", () =>
+        queryClient.prefetchQuery({
+          queryKey: ["tamv", "dashboard", "summary"],
+          queryFn: prefetchDashboardSummary,
+          staleTime: 1000 * 30,
+        })
+      ),
+    ],
+    community: [
+      safeTask("community-health", "community", () =>
+        queryClient.prefetchQuery({
+          queryKey: ["tamv", "health", "system"],
+          queryFn: prefetchSystemHealth,
+          staleTime: 1000 * 60,
+        })
+      ),
+    ],
+    isabella: [
+      safeTask("isabella-health", "isabella", () =>
+        queryClient.prefetchQuery({
+          queryKey: ["tamv", "health", "system"],
+          queryFn: prefetchSystemHealth,
+          staleTime: 1000 * 60,
+        })
+      ),
+    ],
+    economy: [
+      safeTask("economy-dashboard", "economy", () =>
+        queryClient.prefetchQuery({
+          queryKey: ["tamv", "dashboard", "summary"],
+          queryFn: prefetchDashboardSummary,
+          staleTime: 1000 * 30,
+        })
+      ),
+    ],
+    governance: [
+      safeTask("governance-health", "governance", () =>
+        queryClient.prefetchQuery({
+          queryKey: ["tamv", "health", "system"],
+          queryFn: prefetchSystemHealth,
+          staleTime: 1000 * 60,
+        })
+      ),
+    ],
+    "repo-unification": [
+      safeTask("repo-wave-status", "repo-unification", () =>
+        queryClient.prefetchQuery({
+          queryKey: ["tamv", "repo", "summary"],
+          queryFn: prefetchRepoUnificationSummary,
+          staleTime: 1000 * 60 * 5,
+        })
+      ),
+    ],
+    other: [],
   };
 
-  return {
-    primary: sectionPrimary[section],
-    secondary: globalSecondary,
-  };
+  return { primary: sectionPrimary[section], secondary: globalSecondary };
 };
 
 export const useAdaptivePipelines = () => {

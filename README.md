@@ -274,4 +274,4 @@ Se implementó una base funcional inicial para reducir latencia percibida y evit
 
 ### Próximo paso recomendado
 
-Conectar cada `PipelineTask` a endpoints reales de `tamv-unified-api`, `github-repo-scanner` y métricas de observabilidad para que la precarga deje de ser sintética y quede totalmente gobernada por contratos de producción.
+Se conectaron `PipelineTask` críticos a endpoints reales de producción (edge functions): `dashboard-metrics`, `github-repo-scanner` y salud sistémica vía `tamv-unified-api` (OMNI-KERNEL API client). Siguiente paso: extender el mismo patrón a todos los dominios (DAO, economy wallet/tx, MSR, sentinel) con presupuesto de concurrencia por tier.
