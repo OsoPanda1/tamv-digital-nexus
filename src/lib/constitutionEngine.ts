@@ -108,3 +108,28 @@ export function getRuleById(id: string): MSRRule | undefined {
 export function getRulesByDomain(domainId: string): MSRRule[] {
   return MSR_RULES.filter((r) => r.domain === domainId);
 }
+
+export class ConstitutionEngine {
+  policies: any[] = [];
+
+  constructor(public config: any) {}
+
+  register(policy: any) {
+    this.policies.push(policy);
+  }
+
+  validate(ctx: any) {
+    const violations = [];
+
+    for (const p of this.policies) {
+      if (!p.validate(ctx)) {
+        violations.push(p.id);
+      }
+    }
+
+    return {
+      valid: violations.length === 0,
+      violations,
+    };
+  }
+}

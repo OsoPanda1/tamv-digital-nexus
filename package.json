@@ -21,7 +21,13 @@
     "test:e2e": "playwright test",
     "ci": "npm run lint:constitution && npm run scan:semantics && npm run check && npm run test && npm run check:architecture",
     "test:constitution": "npm run lint:constitution && npm run scan:semantics",
-    "audit:deca-v": "bash scripts/deca-v-audit.sh"
+    "audit:deca-v": "bash scripts/deca-v-audit.sh",
+    "test:unit": "vitest run",
+    "test:integration": "vitest run",
+    "validate:execution-paths": "npm run check:architecture",
+    "constitutional:runtime": "tsx scripts/run-constitutional-runtime.ts",
+    "validate:real-flows": "tsx scripts/validate-real-flows.ts",
+    "check:guard-usage": "tsx scripts/check-guard-usage.ts"
   },
   "dependencies": {
     "@11labs/react": "^0.2.0",
