@@ -144,3 +144,51 @@ Con esta versión unificada:
 - El roadmap IA entrega secuencia de ejecución trazable para crecimiento modular, institucional y auto-evolutivo.
 
 > Próximo paso opcional: convertir este documento a MDX navegable con embeds de código y hook directo al viewer.
+
+
+---
+
+## 12. Consolidación operativa (sin expansión documental)
+
+Para reducir saturación de archivos Markdown, este roadmap absorbe la planificación de optimización integral y se establece como documento rector junto al canon maestro.
+
+### 12.1 Directriz de compactación
+- Mantener como máximo 3 documentos troncales activos de arquitectura/roadmap.
+- Evitar crear nuevos planes duplicados cuando exista sección equivalente en este archivo.
+- Priorizar anexos ejecutables (manifiestos, scripts, contratos API) sobre nuevos documentos narrativos.
+
+### 12.2 Backlog técnico ejecutable (siguiente ciclo)
+1. Definir catálogo de endpoints por tier (`T0/T1/T2`) y timeout por criticidad.
+2. Implementar canal dual-path: sync para UX crítica + async para cargas pesadas.
+3. Normalizar redirecciones por estado de ruta (`ready/partial/stub/deprecated`).
+4. Aplicar SLO por módulo y presupuestos de performance por build.
+
+### 12.3 Criterios de cierre por módulo
+- p95 dentro de objetivo definido por dominio.
+- cero rutas huérfanas y fallback válido en rutas parciales.
+- observabilidad mínima (latencia, errores, retries).
+- checklist de seguridad y operación aprobado.
+
+> Nota: en `MODE=DOCUMENTAL_ONLY`, esta sección funciona como especificación de ejecución para la siguiente ventana con autorización de cambios de código.
+
+
+
+## 13. Protocolo de absorción masiva de repositorios (bloqueado por gobernanza)
+
+Solicitud de absorción total de repositorios externos (perfil completo + top repos públicos) identificada como operación de alto riesgo y alto impacto.
+
+### 13.1 Bloqueos de ejecución actuales
+- `MODE=DOCUMENTAL_ONLY` impide ejecución de integración de código productivo en esta ventana.
+- `CANON_LOCK=TRUE` exige revisión humana previa para cambios estructurales de gran alcance.
+- La absorción sin curaduría viola principio de trazabilidad y control de superficie de ataque.
+
+### 13.2 Condiciones mínimas para habilitar ejecución funcional
+1. Lista cerrada de repositorios permitidos con prioridad y licencias compatibles.
+2. Política de supply-chain security (firmas, SBOM, SAST/DAST, secretos, CVE gates).
+3. Entorno de cuarentena para ingesta + pruebas de compatibilidad antes de merge.
+4. Plan incremental por olas (20/40/40) con métricas de latencia y rollback.
+
+### 13.3 Salida requerida para abrir ventana CODE_WRITE
+- Aprobación humana explícita de operación masiva.
+- Definición de presupuesto de riesgo y criterios de aceptación.
+- Activación de pipeline verificable de integración segura.
