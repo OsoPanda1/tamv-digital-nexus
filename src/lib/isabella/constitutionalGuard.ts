@@ -139,3 +139,14 @@ export function createConstitutionalMiddleware() {
 }
 
 export { ConstitutionalRulesEngine };
+
+export async function runConstitutionalGuard({ engine, scope }: any) {
+  const ctx = {
+    user: true,
+    wallet: true,
+  };
+
+  const result = engine.validate(ctx);
+
+  return result;
+}
