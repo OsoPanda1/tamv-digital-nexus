@@ -250,3 +250,28 @@ Para que la unificación sea real y sostenible, el plan técnico se divide en fa
 ## Estado de sincronización de rama
 
 </div>
+
+## Actualización 2026-05-01 — Integración fluida + doble pipeline adaptativo
+
+Se implementó una base funcional inicial para reducir latencia percibida y evitar ejecución simultánea innecesaria de subsistemas:
+
+- **Sistema de doble pipeline en paralelo (primario + secundario):**
+  - Pipeline primario orientado al contexto activo de navegación.
+  - Pipeline secundario de precarga en segundo plano usando `requestIdleCallback` (o fallback `setTimeout`).
+- **Sistema de interruptores por sección (route-aware switches):**
+  - Activa tareas prioritarias por sección (`/dashboard`, `/community`, `/isabella`, `/economy`, `/governance`, `/repo-unification`, etc.).
+  - Evita calentar todos los contextos al unísono.
+- **Conexión operativa en `App.tsx`:**
+  - Bootstrap no invasivo para activar la orquestación adaptativa dentro del `OmniKernelProvider`.
+- **Compatibilidad con estrategia de unificación de repos:**
+  - Se añadió precarga de estado de federación y estado de olas de integración para sostener la absorción progresiva de repositorios priorizados.
+
+### Objetivo técnico de esta fase
+
+1. Disminuir latencia de primera interacción por sección.
+2. Preparar infraestructura de conmutación para integrar dominios sin saturación global.
+3. Crear base extensible para incorporar lógica real de ingestión/normalización de los repos priorizados por waves.
+
+### Próximo paso recomendado
+
+Conectar cada `PipelineTask` a endpoints reales de `tamv-unified-api`, `github-repo-scanner` y métricas de observabilidad para que la precarga deje de ser sintética y quede totalmente gobernada por contratos de producción.
