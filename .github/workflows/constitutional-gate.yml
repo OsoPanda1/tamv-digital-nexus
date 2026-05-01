@@ -1,32 +1,182 @@
-name: TAMV Constitutional Gate
+name: TAMV Constitutional Gate · Sovereign Parallel Matrix
 
-on: [pull_request]
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+
+concurrency:
+  group: constitutional-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  constitution:
-    runs-on: ubuntu-latest
-    name: Constitutional Quality Control
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
 
-      - name: Setup Node.js
+  # ─────────────────────────────────────────────
+  # 🔴 CORE FOUNDATION (una sola vez)
+  # ─────────────────────────────────────────────
+  core-bootstrap:
+    runs-on: ubuntu-latest
+    outputs:
+      cache-key: ${{ steps.cache-key.outputs.key }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: 20
+          cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Generate Cache Key
+        id: cache-key
+        run: echo "key=deps-${{ hashFiles('package-lock.json') }}" >> $GITHUB_OUTPUT
 
-      - name: Lint Constitutional
-        run: npm run lint:constitution
+      - name: Install Dependencies
+        run: npm ci --ignore-scripts
 
-      - name: Semantic Scanner
-        run: npm run scan:semantics
+      - name: Save node_modules cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ steps.cache-key.outputs.key }}
 
-      - name: Architecture Check
-        run: npm run check:architecture
+      - name: Dependency Audit
+        run: npm audit --audit-level=high
 
-      - name: Documentation Sync Check
-        run: npm run check:docs-sync
+      - name: Upload workspace snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: workspace
+          path: .
+
+  # ─────────────────────────────────────────────
+  # 🧬 FEDERATION MATRIX (PARALELO)
+  # ─────────────────────────────────────────────
+  federation-checks:
+    needs: core-bootstrap
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        federation: [id, bookpi, msr, xr, ia, eoct, nexus]
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: workspace
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ needs.core-bootstrap.outputs.cache-key }}
+
+      # ───────────────
+      # CHECK POR FEDERACIÓN
+      # ───────────────
+      - name: Run Federation Checks
+        continue-on-error: true
+        run: |
+          npm run check:federation:${{ matrix.federation }}
+
+      - name: Run Federation Tests
+        continue-on-error: true
+        run: |
+          npm run test:federation:${{ matrix.federation }}
+
+      - name: Upload Federation Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-${{ matrix.federation }}
+          path: ./constitutional-report.json
+
+  # ─────────────────────────────────────────────
+  # 🔐 CORE SYSTEM CHECKS (NO FEDERADOS)
+  # ─────────────────────────────────────────────
+  core-checks:
+    needs: core-bootstrap
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: workspace
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ needs.core-bootstrap.outputs.cache-key }}
+
+      - run: npm run lint:constitution
+      - run: npm run scan:constitution:deep
+      - run: npm run validate:execution-paths
+      - run: npm run check:domain-boundaries
+      - run: npm run check:orchestrators
+      - run: npm run check:pipeline-integrity
+      - run: npm run scan:semantics:deep
+      - run: npm run check:architecture:strict
+      - run: npm run check:docs-sync
+      - run: npm run check:spec-consistency
+
+  # ─────────────────────────────────────────────
+  # 📊 AGREGADOR FINAL (CLAVE)
+  # ─────────────────────────────────────────────
+  constitutional-aggregator:
+    needs: [federation-checks, core-checks]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all reports
+        uses: actions/download-artifact@v4
+
+      - name: Merge Reports
+        run: |
+          node scripts/merge-constitutional-reports.js
+
+      - name: Generate Final Report
+        run: npm run report:constitutional
+
+      - name: Upload Final Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: final-constitutional-report
+          path: ./constitutional-report.json
+
+      - name: Annotate PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = JSON.parse(fs.readFileSync('./constitutional-report.json','utf8'));
+
+            let body = '## 🚨 TAMV Constitutional Global Report\n\n';
+
+            report.summary.forEach(s => {
+              body += `### ${s.federation}\n`;
+              body += `- Violations: ${s.count}\n\n`;
+            });
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body
+            });
+
+      - name: Hard Fail if Violations
+        run: |
+          node scripts/fail-on-violations.js
