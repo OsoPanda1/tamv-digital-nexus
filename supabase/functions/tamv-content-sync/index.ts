@@ -5,14 +5,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const SOURCES = [
-  { name: 'github-profile', url: 'https://api.github.com/users/OsoPanda1' },
-  { name: 'github-repos', url: 'https://api.github.com/users/OsoPanda1/repos?sort=updated&per_page=30' },
-  { name: 'tamv-universe', url: 'https://api.github.com/repos/OsoPanda1/tamv-universe-online' },
-  { name: 'tamv-metanextgen', url: 'https://api.github.com/repos/OsoPanda1/tamvonline-metanextgen' },
-  { name: 'web-4-genesis', url: 'https://api.github.com/repos/OsoPanda1/web-4.0-genesis' },
-  { name: 'unify-nexus', url: 'https://api.github.com/repos/OsoPanda1/unify-nexus-deployment' },
-];
+const TARGET_USER = 'OsoPanda1';
+const TOP_REPOS = 100;
 
 interface SyncResult {
   source: string;
@@ -22,117 +16,132 @@ interface SyncResult {
   timestamp: string;
 }
 
-async function fetchGitHubData(source: { name: string; url: string }): Promise<SyncResult> {
+async function githubFetch(url: string, token?: string) {
+  const res = await fetch(url, {
+    headers: {
+      Accept: 'application/vnd.github+json',
+      'User-Agent': 'TAMV-Content-Sync/2.0',
+      ...(token ? { Authorization: `token ${token}` } : {}),
+    },
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`GitHub API ${res.status}: ${text}`);
+  }
+
+  return res.json();
+}
+
+async function fetchProfile(token?: string): Promise<SyncResult> {
   try {
-    const response = await fetch(source.url, {
-      headers: { 'Accept': 'application/vnd.github.v3+json', 'User-Agent': 'TAMV-Content-Sync/1.0' }
-    });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = await response.json();
-    return { source: source.name, status: 'success', data, timestamp: new Date().toISOString() };
+    const url = token ? 'https://api.github.com/user' : `https://api.github.com/users/${TARGET_USER}`;
+    const data = await githubFetch(url, token);
+    return { source: 'github-profile', status: 'success', data, timestamp: new Date().toISOString() };
   } catch (error) {
-    return { source: source.name, status: 'error', error: (error as Error).message, timestamp: new Date().toISOString() };
+    return { source: 'github-profile', status: 'error', error: (error as Error).message, timestamp: new Date().toISOString() };
   }
 }
 
-async function fetchBlogContent(): Promise<SyncResult> {
+async function fetchTopRepos(token?: string): Promise<SyncResult> {
   try {
-    const response = await fetch('https://tamvonlinenetwork.blogspot.com/', {
-      headers: { 'User-Agent': 'TAMV-Content-Sync/1.0' }
-    });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const html = await response.text();
-    
-    // Extract post titles and content snippets
-    const titleRegex = /<h3 class='post-title[^']*'[^>]*>[\s\S]*?<a[^>]*>([\s\S]*?)<\/a>/gi;
-    const titles: string[] = [];
-    let match;
-    while ((match = titleRegex.exec(html)) !== null) {
-      titles.push(match[1].replace(/<[^>]*>/g, '').trim());
+    const repos: any[] = [];
+    let page = 1;
+
+    while (repos.length < TOP_REPOS) {
+      const url = token
+        ? `https://api.github.com/user/repos?sort=updated&per_page=100&page=${page}&visibility=all&affiliation=owner,collaborator,organization_member`
+        : `https://api.github.com/users/${TARGET_USER}/repos?sort=updated&per_page=100&page=${page}&type=owner`;
+
+      const batch = await githubFetch(url, token);
+      if (!Array.isArray(batch) || batch.length === 0) break;
+      repos.push(...batch);
+      page += 1;
     }
 
-    return {
-      source: 'blog',
-      status: 'success',
-      data: { url: 'https://tamvonlinenetwork.blogspot.com', posts_found: titles.length, titles: titles.slice(0, 20) },
-      timestamp: new Date().toISOString()
-    };
+    const normalized = repos
+      .filter((r) => !r.archived && !r.disabled)
+      .slice(0, TOP_REPOS)
+      .map((r) => ({
+        name: r.name,
+        full_name: r.full_name,
+        private: !!r.private,
+        language: r.language,
+        stars: r.stargazers_count,
+        forks: r.forks_count,
+        updated_at: r.updated_at,
+        pushed_at: r.pushed_at,
+        size: r.size,
+        topics: r.topics || [],
+        html_url: r.html_url,
+      }));
+
+    return { source: 'github-top-repos', status: 'success', data: normalized, timestamp: new Date().toISOString() };
   } catch (error) {
-    return { source: 'blog', status: 'error', error: (error as Error).message, timestamp: new Date().toISOString() };
+    return { source: 'github-top-repos', status: 'error', error: (error as Error).message, timestamp: new Date().toISOString() };
   }
 }
 
-function filterAndStructure(results: SyncResult[]) {
-  const githubProfile = results.find(r => r.source === 'github-profile')?.data;
-  const repos = results.find(r => r.source === 'github-repos')?.data || [];
-  const blog = results.find(r => r.source === 'blog')?.data;
+function classifyDomain(repo: any): string {
+  const text = `${repo.name} ${(repo.topics || []).join(' ')} ${repo.language || ''}`.toLowerCase();
+  if (text.includes('ai') || text.includes('isabella')) return 'IA';
+  if (text.includes('security') || text.includes('anubis') || text.includes('sentinel')) return 'SEGURIDAD';
+  if (text.includes('economy') || text.includes('wallet') || text.includes('payment')) return 'ECONOMIA';
+  if (text.includes('xr') || text.includes('3d') || text.includes('metaverse')) return 'XR';
+  if (text.includes('infra') || text.includes('docker') || text.includes('k8s')) return 'INFRA';
+  if (text.includes('doc') || text.includes('wiki')) return 'DOCS';
+  return 'CORE';
+}
 
-  const tamvRepos = repos.filter((r: any) => 
-    r.name?.toLowerCase().includes('tamv') || 
-    r.name?.toLowerCase().includes('unify') || 
-    r.name?.toLowerCase().includes('web-4') ||
-    r.name?.toLowerCase().includes('anubis')
-  );
-
-  return {
-    ecosystem: {
-      founder: githubProfile?.bio || 'TAMV ONLINE NETWORK',
-      location: githubProfile?.location || 'Pachuca Hidalgo, México',
-      company: githubProfile?.company || 'TAMV Enterprise',
-      total_repos: repos.length,
-      tamv_repos: tamvRepos.length,
-      contributions: githubProfile?.public_repos || 0,
-    },
-    repositories: tamvRepos.map((r: any) => ({
-      name: r.name,
-      description: r.description,
-      language: r.language,
-      updated_at: r.updated_at,
-      stars: r.stargazers_count,
-      url: r.html_url,
-      topics: r.topics || [],
-    })),
-    blog: blog || { posts_found: 0, titles: [] },
-    sync_timestamp: new Date().toISOString(),
-    next_sync: new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString(), // 6 hours
-  };
+function buildIntegrationQueue(repos: any[]) {
+  return repos.map((repo, i) => ({
+    rank: i + 1,
+    repo: repo.full_name,
+    domain: classifyDomain(repo),
+    visibility: repo.private ? 'private' : 'public',
+    actions: [
+      'extract_contracts',
+      'compare_with_tamv_canon',
+      'generate_diff_patch',
+      'submit_audit_review',
+      'stage_merge_candidate',
+    ],
+    tamvExecutionPolicy: 'audit_required',
+  }));
 }
 
 serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
+  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
   try {
-    console.log('[TAMV Content Sync] Starting sync cycle...');
+    const githubToken = Deno.env.get('GITHUB_API_TOKEN');
+    const [profile, repos] = await Promise.all([fetchProfile(githubToken || undefined), fetchTopRepos(githubToken || undefined)]);
 
-    // Fetch all sources in parallel
-    const [blogResult, ...githubResults] = await Promise.all([
-      fetchBlogContent(),
-      ...SOURCES.map(fetchGitHubData)
-    ]);
-
-    const allResults = [blogResult, ...githubResults];
-    const structured = filterAndStructure(allResults);
-
-    const successCount = allResults.filter(r => r.status === 'success').length;
-    const errorCount = allResults.filter(r => r.status === 'error').length;
-
-    console.log(`[TAMV Content Sync] Complete: ${successCount} success, ${errorCount} errors`);
+    const successCount = [profile, repos].filter((r) => r.status === 'success').length;
+    const repoData = repos.status === 'success' ? repos.data || [] : [];
 
     return new Response(JSON.stringify({
       sync_status: 'completed',
+      target_user: TARGET_USER,
+      mode: githubToken ? 'authenticated-private+public' : 'public-only',
+      scanned_at: new Date().toISOString(),
       sources_synced: successCount,
-      sources_failed: errorCount,
-      ecosystem_data: structured,
-      raw_results: allResults.map(r => ({ source: r.source, status: r.status, error: r.error })),
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-    });
+      total_top_repos: repoData.length,
+      integration_queue: buildIntegrationQueue(repoData),
+      repositories: repoData,
+      profile: profile.data || null,
+      next_sync: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
+      protocol: {
+        auto_execute_code: false,
+        requires_human_audit: true,
+        governance: 'dao_transparent_but_non_financial_control',
+      },
+      raw_results: [profile, repos].map(({ source, status, error }) => ({ source, status, error })),
+    }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } catch (error) {
-    console.error('[TAMV Content Sync] Error:', error);
     return new Response(JSON.stringify({ error: (error as Error).message }), {
-      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 });

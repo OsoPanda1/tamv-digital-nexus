@@ -297,3 +297,11 @@ Se activó el arranque funcional del proceso de absorción para el perfil `OsoPa
 **Importante de seguridad/canon:**
 - La absorción es **asistida y auditada**, no auto-despliegue ciego.
 - Las propuestas de mejora pasan por trazabilidad y revisión antes de ejecutarse en código productivo.
+
+### Implementación funcional adicional completada
+
+Se implementó la función edge `tamv-content-sync` v2 para iniciar sincronización continua con GitHub de forma operativa:
+- Escaneo de top 100 repos más relevantes de `OsoPanda1`.
+- Soporte público/privado con `GITHUB_API_TOKEN`.
+- Cola de integración (`integration_queue`) con acciones auditables antes de ejecutar cambios en código.
+- Política explícita en respuesta para impedir auto-ejecución sin revisión humana.
