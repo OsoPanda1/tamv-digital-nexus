@@ -16,10 +16,11 @@ export const EpicBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animRef = useRef(0);
+  const tickRef = useRef(0);
   const mouseRef = useRef({ x: 0, y: 0 });
 
   const init = useCallback((w: number, h: number) => {
-    const count = Math.min(Math.floor((w * h) / 20000), 80);
+    const count = Math.min(Math.floor((w * h) / 28000), 56);
     const p: Particle[] = [];
     for (let i = 0; i < count; i++) {
       p.push({
@@ -53,24 +54,27 @@ export const EpicBackground = () => {
 
     const animate = () => {
       if (!ctx || !canvas) return;
+      tickRef.current += 1;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const ps = particlesRef.current;
       const maxDist = 120;
 
       // Connections
-      for (let i = 0; i < ps.length; i++) {
-        for (let j = i + 1; j < ps.length; j++) {
-          const dx = ps[i].x - ps[j].x;
-          const dy = ps[i].y - ps[j].y;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < maxDist) {
-            ctx.beginPath();
-            ctx.moveTo(ps[i].x, ps[i].y);
-            ctx.lineTo(ps[j].x, ps[j].y);
-            ctx.strokeStyle = `hsla(220, 100%, 50%, ${(1 - d / maxDist) * 0.08})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
+      if (tickRef.current % 2 === 0) {
+        for (let i = 0; i < ps.length; i++) {
+          for (let j = i + 1; j < ps.length; j++) {
+            const dx = ps[i].x - ps[j].x;
+            const dy = ps[i].y - ps[j].y;
+            const d = Math.sqrt(dx * dx + dy * dy);
+            if (d < maxDist) {
+              ctx.beginPath();
+              ctx.moveTo(ps[i].x, ps[i].y);
+              ctx.lineTo(ps[j].x, ps[j].y);
+              ctx.strokeStyle = `hsla(220, 100%, 50%, ${(1 - d / maxDist) * 0.08})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
           }
         }
       }
