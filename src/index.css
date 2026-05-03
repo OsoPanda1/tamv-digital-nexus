@@ -1209,3 +1209,20 @@
     font-family: 'Inter', sans-serif;
   }
 }
+
+@layer components {
+  .monolith-noir-shell {
+    background:
+      radial-gradient(circle at 20% 10%, hsl(220 95% 45% / 0.10) 0%, transparent 40%),
+      radial-gradient(circle at 80% 90%, hsl(210 35% 80% / 0.08) 0%, transparent 42%),
+      linear-gradient(180deg, #050506 0%, #040405 40%, #020203 100%);
+    color: hsl(var(--silver-light));
+  }
+
+  .crystal-action {
+    background: linear-gradient(135deg, hsl(220 30% 92% / 0.18), hsl(220 100% 50% / 0.22));
+    border: 1px solid hsl(220 40% 90% / 0.25);
+    box-shadow: 0 8px 30px hsl(220 100% 50% / 0.15), inset 0 1px 0 hsl(0 0% 100% / 0.25);
+    backdrop-filter: blur(18px) saturate(140%);
+  }
+}
