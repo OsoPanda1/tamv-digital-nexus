@@ -24,8 +24,9 @@ interface CinematicIntroProps {
   autoStart?: boolean;
 }
 
-const TOTAL_DURATION = 52;
+const TOTAL_DURATION = 40;
 const MAX_INTRO_TIME = 58000;
+const FRAME_STEP = 1000 / 24;
 
 type SceneId = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 type VFXMode = "void" | "awaken" | "crisis" | "expand" | "reveal" | "ascend" | "declare";
@@ -639,6 +640,10 @@ function CinematicIntroEngine({ onComplete, skipEnabled, autoStart }: CinematicI
   const [time, setTime] = useState(0);
   const [completed, setCompleted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const reducedMotion = useMemo(
+    () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    []
+  );
   const progress = useSpring(0, { stiffness: 40, damping: 20 });
   const progressWidth = useTransform(progress, [0, 1], ["0%", "100%"]);
   const watchdogRef = useRef<number | null>(null);
@@ -646,19 +651,24 @@ function CinematicIntroEngine({ onComplete, skipEnabled, autoStart }: CinematicI
   useEffect(() => {
     if (!accepted || completed) return;
     let lastTime = performance.now();
+    let accumulator = 0;
     let frameId: number;
 
     const loop = (now: number) => {
       const delta = (now - lastTime) / 1000;
+      accumulator += now - lastTime;
       lastTime = now;
-      setTime(prev => {
-        const next = prev + delta;
-        if (next >= TOTAL_DURATION) {
-          setCompleted(true);
-          return TOTAL_DURATION;
-        }
-        return next;
-      });
+      if (document.visibilityState === "visible" && (accumulator >= FRAME_STEP || delta > 0.2)) {
+        accumulator = 0;
+        setTime(prev => {
+          const next = prev + delta;
+          if (next >= TOTAL_DURATION) {
+            setCompleted(true);
+            return TOTAL_DURATION;
+          }
+          return next;
+        });
+      }
       frameId = requestAnimationFrame(loop);
     };
 
@@ -677,10 +687,18 @@ function CinematicIntroEngine({ onComplete, skipEnabled, autoStart }: CinematicI
   const initAudio = useCallback(async () => {
     try {
       const audio = new Audio(introAudio);
+      audio.preload = "auto";
       audio.volume = 0.6;
       audioRef.current = audio;
       await audio.play();
     } catch { /* silent fallback */ }
+  }, []);
+
+  useEffect(() => {
+    [heroCity, aiNetwork, securityShield, metaverseSpace, university, walletCrypto, logoImg].forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
   }, []);
 
   const scene = useMemo<SceneId>(() => {
@@ -692,10 +710,11 @@ function CinematicIntroEngine({ onComplete, skipEnabled, autoStart }: CinematicI
 
   const currentMode = SCENE_CONFIG[scene]?.mode ?? "declare";
   const vfxIntensity = useMemo(() => {
+    if (reducedMotion) return 0.2;
     if (scene === 0) return Math.min(time / 3, 0.8);
     if (scene === 2) return 1;
     return 0.6 + Math.sin(time * 0.5) * 0.15;
-  }, [scene, time]);
+  }, [reducedMotion, scene, time]);
 
   useEffect(() => {
     if (completed) {
