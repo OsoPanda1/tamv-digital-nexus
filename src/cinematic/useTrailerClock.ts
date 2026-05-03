@@ -13,7 +13,7 @@ export interface TrailerClock {
   completed: boolean
 }
 
-export function useTrailerClock(duration = 32, autoplay = true): TrailerClock {
+export function useTrailerClock(duration = 52, autoplay = true): TrailerClock {
   const [time, setTime] = useState(0)
   const [playing, setPlaying] = useState(autoplay)
   const [completed, setCompleted] = useState(false)
@@ -30,7 +30,7 @@ export function useTrailerClock(duration = 32, autoplay = true): TrailerClock {
       }
 
       if (last.current == null) last.current = now
-      const delta = (now - last.current) / 1000
+      const delta = (now - last.current) / 1500
       last.current = now
 
       setTime((prev) => {
