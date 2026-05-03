@@ -1,0 +1,155 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "https://tamv.dev/contracts/schemas/base.contracts.v1.yaml"
+title: TAMV Base Contract Schemas
+type: object
+$defs:
+  EventEnvelope:
+    type: object
+    required: [eventId, eventType, source, timestamp, version, data]
+    properties:
+      eventId:
+        type: string
+        format: uuid
+      eventType:
+        type: string
+      source:
+        type: string
+      timestamp:
+        type: string
+        format: date-time
+      version:
+        type: string
+        pattern: '^v\\d+\\.\\d+\\.\\d+$'
+      traceId:
+        type: string
+      data:
+        type: object
+        additionalProperties: true
+    additionalProperties: false
+
+  AuditBundle:
+    type: object
+    required: [bundleId, actor, action, occurredAt, resources]
+    properties:
+      bundleId:
+        type: string
+        format: uuid
+      actor:
+        type: object
+        required: [id, role]
+        properties:
+          id:
+            type: string
+          role:
+            type: string
+        additionalProperties: false
+      action:
+        type: string
+      occurredAt:
+        type: string
+        format: date-time
+      resources:
+        type: array
+        items:
+          type: object
+          required: [kind, id]
+          properties:
+            kind:
+              type: string
+            id:
+              type: string
+          additionalProperties: false
+      evidence:
+        type: array
+        items:
+          type: string
+          format: uri
+    additionalProperties: false
+
+  DecisionRecord:
+    type: object
+    required: [decisionId, subject, outcome, rationale, decidedAt]
+    properties:
+      decisionId:
+        type: string
+        format: uuid
+      subject:
+        type: string
+      outcome:
+        type: string
+        enum: [approved, rejected, deferred]
+      rationale:
+        type: string
+      decidedAt:
+        type: string
+        format: date-time
+      decidedBy:
+        type: array
+        items:
+          type: string
+    additionalProperties: false
+
+  TruequeOffer:
+    type: object
+    required: [offerId, proposerId, requestedAsset, offeredAsset, status, createdAt]
+    properties:
+      offerId:
+        type: string
+        format: uuid
+      proposerId:
+        type: string
+      requestedAsset:
+        type: object
+        required: [type, quantity]
+        properties:
+          type:
+            type: string
+          quantity:
+            type: number
+            minimum: 0
+        additionalProperties: true
+      offeredAsset:
+        type: object
+        required: [type, quantity]
+        properties:
+          type:
+            type: string
+          quantity:
+            type: number
+            minimum: 0
+        additionalProperties: true
+      status:
+        type: string
+        enum: [draft, open, accepted, cancelled, expired]
+      expiresAt:
+        type: string
+        format: date-time
+      createdAt:
+        type: string
+        format: date-time
+    additionalProperties: false
+
+  Membership:
+    type: object
+    required: [membershipId, memberId, tier, status, effectiveFrom]
+    properties:
+      membershipId:
+        type: string
+        format: uuid
+      memberId:
+        type: string
+      tier:
+        type: string
+      status:
+        type: string
+        enum: [active, suspended, cancelled, expired]
+      effectiveFrom:
+        type: string
+        format: date
+      effectiveTo:
+        type: string
+        format: date
+      metadata:
+        type: object
+        additionalProperties: true
+    additionalProperties: false
