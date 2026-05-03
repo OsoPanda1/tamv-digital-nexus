@@ -1,16 +1,4 @@
-// ============================================================================
-// TAMV MD-X4™ — INDUSTRIAL SCANNER BACKGROUND v9.0
-// Ballistic Glass + Carbon Grid + Plasma Pulse
-// ============================================================================
-
-import { useEffect, useRef, useCallback } from "react";
-
-interface Particle {
-  x: number; y: number;
-  vx: number; vy: number;
-  size: number; opacity: number;
-  pulse: number; speed: number;
-}
+import { motion } from "framer-motion";
 
 export const EpicBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -127,36 +115,38 @@ export const EpicBackground = () => {
 
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none">
-      {/* Absolute black base */}
-      <div className="absolute inset-0" style={{ background: '#050505' }} />
+      <div className="absolute inset-0 bg-[#030712]" />
 
-      {/* Industrial grid */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: `
-          linear-gradient(hsla(220, 100%, 50%, 0.4) 1px, transparent 1px),
-          linear-gradient(90deg, hsla(220, 100%, 50%, 0.4) 1px, transparent 1px)
-        `,
-        backgroundSize: '80px 80px',
-      }} />
+      <motion.div
+        className="absolute -inset-[20%]"
+        animate={{ rotate: [0, 8, -8, 0], scale: [1, 1.06, 1] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          background:
+            "radial-gradient(circle at 20% 25%, rgba(56,189,248,0.22) 0%, transparent 40%), radial-gradient(circle at 80% 30%, rgba(168,85,247,0.2) 0%, transparent 45%), radial-gradient(circle at 50% 80%, rgba(16,185,129,0.16) 0%, transparent 42%)",
+        }}
+      />
 
-      {/* Subtle plasma glow */}
-      <div className="absolute inset-0 opacity-30" style={{
-        background: `
-          radial-gradient(ellipse 60% 40% at 20% 50%, hsla(220, 100%, 50%, 0.08) 0%, transparent 50%),
-          radial-gradient(ellipse 50% 30% at 80% 40%, hsla(220, 80%, 40%, 0.06) 0%, transparent 50%)
-        `,
-      }} />
+      <div
+        className="absolute inset-0 opacity-20"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
+          backgroundSize: "64px 64px",
+        }}
+      />
 
-      {/* Particle canvas */}
-      <canvas ref={canvasRef} className="absolute inset-0" style={{ opacity: 0.7 }} />
+      <motion.div
+        className="absolute inset-0"
+        animate={{ opacity: [0.15, 0.35, 0.15] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          background:
+            "linear-gradient(120deg, transparent 20%, rgba(255,255,255,0.08) 45%, transparent 70%)",
+        }}
+      />
 
-      {/* Carbon fiber noise */}
-      <div className="absolute inset-0 noise-overlay opacity-[0.015]" />
-
-      {/* Vignette */}
-      <div className="absolute inset-0" style={{
-        background: 'radial-gradient(ellipse at center, transparent 0%, rgba(5,5,5,0.5) 100%)'
-      }} />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/25 to-black/70" />
     </div>
   );
 };
