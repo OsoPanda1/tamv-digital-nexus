@@ -1,36 +1,35 @@
 #!/usr/bin/env bash
 set -euo pipefail
-SCRIPT_NAME="openapi-diff"
-usage(){ cat <<'HELP'
-Uso: openapi-diff.sh --base <spec.yaml> --head <spec.yaml> [--json]
 
-Contrato:
-  Entrada: --base y --head requeridos.
-  Salida: resumen de cambios de contrato API.
+OLD_SPEC="${1:-docs/TAMV_OPENAPI_SPEC_v3.1.0.yaml}"
+NEW_SPEC="${2:-packages/contracts/openapi/tamv.v1.yaml}"
+REPORT_DIR="${3:-artifacts/openapi-diff}"
+REPORT_FILE="$REPORT_DIR/report.md"
 
-Códigos:
-  0 Sin cambios incompatibles
-  2 Uso inválido
-  3 Dependencia no disponible
-  4 Cambios breaking detectados
-  5 Error interno
-HELP
-}
-BASE=""; HEAD=""; JSON=false
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --base) BASE="${2:-}"; shift 2;;
-    --head) HEAD="${2:-}"; shift 2;;
-    --json) JSON=true; shift;;
-    --help|-h) usage; exit 0;;
-    *) echo "Parámetro desconocido: $1" >&2; exit 2;;
-  esac
-done
-[[ -n "$BASE" && -n "$HEAD" ]] || { echo "--base y --head requeridos" >&2; exit 2; }
-TS="$(date -u +%FT%TZ)"
-BREAKING=0
-if [[ "$JSON" == true ]]; then
-  printf '{"script":"%s","base":"%s","head":"%s","breaking":%s,"timestamp":"%s"}\n' "$SCRIPT_NAME" "$BASE" "$HEAD" "$BREAKING" "$TS"
-else
-  echo "[$SCRIPT_NAME] base=$BASE head=$HEAD breaking=$BREAKING timestamp=$TS"
+mkdir -p "$REPORT_DIR"
+
+{
+  echo "# OpenAPI Breaking-Change Report"
+  echo
+  echo "- Baseline: $OLD_SPEC"
+  echo "- Candidate: $NEW_SPEC"
+  echo
+} > "$REPORT_FILE"
+
+set +e
+DIFF_OUTPUT=$(npx -y @openapitools/openapi-diff "$OLD_SPEC" "$NEW_SPEC" --fail-on-incompatible 2>&1)
+EXIT_CODE=$?
+set -e
+
+{
+  echo '```'
+  echo "$DIFF_OUTPUT"
+  echo '```'
+} >> "$REPORT_FILE"
+
+if [[ $EXIT_CODE -ne 0 ]]; then
+  echo "❌ Breaking changes detected or diff failed. See $REPORT_FILE"
+  exit $EXIT_CODE
 fi
+
+echo "✅ No breaking changes detected. Report: $REPORT_FILE"

@@ -34,6 +34,18 @@ jobs:
         run: npm run check:architecture
         continue-on-error: false
 
+      - name: Validate OpenAPI breaking changes
+        run: ./scripts/openapi-diff.sh
+        continue-on-error: false
+
+      - name: Upload OpenAPI diff report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: openapi-diff-report
+          path: artifacts/openapi-diff/report.md
+          retention-days: 30
+
       - name: Run unit tests
         run: npm run test
         continue-on-error: false

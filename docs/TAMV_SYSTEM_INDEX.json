@@ -1,0 +1,269 @@
+{
+  "index_version": "v2026.05.03",
+  "cutoff_date_utc": "2026-05-03",
+  "mode": "DOCUMENTAL_ONLY",
+  "canonical_sources_global": [
+    "SOUL.md",
+    "docs/MASTER_CANON_OPENCLAW_TAMV.md"
+  ],
+  "modules": [
+    {
+      "id": "DM-X4-01",
+      "module": "TAMV Core OS / Nexus",
+      "layer_domain": "Core plataforma",
+      "owner": "TAMV Core / Plataforma",
+      "status": "active",
+      "maturity": "beta",
+      "code_paths": [
+        "src/stores/tamvStore.ts",
+        "src/systems/FederationSystem.ts",
+        "src/pages/*"
+      ],
+      "endpoints": [
+        "Gateway/IGU (documental)",
+        "docs/TAMV_OPENAPI_SPEC_v3.1.0.yaml"
+      ],
+      "metrics": [
+        "uptime_plataforma",
+        "routing_error_rate",
+        "msr_state_coherence"
+      ],
+      "runbooks": [
+        "docs/TAMV_UNIFIED_API_MASTER_TECHNICAL_v3.md",
+        "docs/02_arquitectura_tamv_mdx4.md"
+      ],
+      "canonical_sources": [
+        "SOUL.md",
+        "docs/MASTER_CANON_OPENCLAW_TAMV.md"
+      ],
+      "actionable_gaps": [
+        "Definir owner nominal por célula",
+        "Definir SLO/SLA operativos por entorno"
+      ]
+    },
+    {
+      "id": "DM-X4-02",
+      "module": "IA / Isabella / THE SOF",
+      "layer_domain": "IA + Orquestación",
+      "owner": "DAO-Ética/IA + AI Systems",
+      "status": "active",
+      "maturity": "beta",
+      "code_paths": [
+        "src/components/IsabellaChat.tsx",
+        "src/hooks/useIsabellaChatQuantum.ts",
+        "supabase/functions/isabella-chat-enhanced/",
+        "supabase/functions/isabella-tts/",
+        "supabase/functions/tamv-fusion-core/"
+      ],
+      "endpoints": [
+        "isabella-chat-enhanced",
+        "isabella-tts",
+        "tamv-fusion-core"
+      ],
+      "metrics": [
+        "chat_audio_p95",
+        "tts_cache_hit_ratio",
+        "text_fallback_rate"
+      ],
+      "runbooks": [
+        "docs/07_isabella_multiagente_y_boveda.md",
+        "docs/modules/ia/ia_internal.md",
+        "docs/sofreports/THESOF_STATE_REPORT.md"
+      ],
+      "canonical_sources": [
+        "SOUL.md",
+        "docs/MASTER_CANON_OPENCLAW_TAMV.md"
+      ],
+      "actionable_gaps": [
+        "Formalizar política de retención/log IA",
+        "Definir límites de tokens por request"
+      ]
+    },
+    {
+      "id": "DM-X4-03",
+      "module": "Guardianías + Seguridad",
+      "layer_domain": "Seguridad civilizatoria",
+      "owner": "DAO-Seguridad / Sentinel",
+      "status": "active",
+      "maturity": "prod-ready",
+      "code_paths": [
+        "src/systems/AnubisSecuritySystem.ts",
+        "supabase/functions/dekateotl-security/",
+        "supabase/functions/dekateotl-security-enhanced/",
+        "src/components/crisis/"
+      ],
+      "endpoints": [
+        "dekateotl-security",
+        "dekateotl-security-enhanced"
+      ],
+      "metrics": [
+        "threat_severity_rate",
+        "containment_time",
+        "audit_coverage"
+      ],
+      "runbooks": [
+        "docs/08_seguridad_sentinel_y_radares.md",
+        "docs/modules/guardianias/guardianias_internal.md"
+      ],
+      "canonical_sources": [
+        "SOUL.md",
+        "docs/MASTER_CANON_OPENCLAW_TAMV.md"
+      ],
+      "actionable_gaps": [
+        "Completar post-quantum crypto y deepfake detection",
+        "Publicar evidencia de attestation TEE"
+      ]
+    },
+    {
+      "id": "DM-X4-04",
+      "module": "UTAMV / BookPI",
+      "layer_domain": "Educación + certificación",
+      "owner": "UTAMV/BookPI Team",
+      "status": "planned",
+      "maturity": "prototype",
+      "code_paths": [
+        "docs/devhub/bookpi_api.md"
+      ],
+      "endpoints": [
+        "bookpi API (draft)"
+      ],
+      "metrics": [
+        "certification_rate",
+        "credential_integrity",
+        "issuance_verification_latency"
+      ],
+      "runbooks": [
+        "docs/06_federated_certification.md",
+        "docs/devhub/bookpi_api.md"
+      ],
+      "canonical_sources": [
+        "SOUL.md",
+        "docs/MASTER_CANON_OPENCLAW_TAMV.md"
+      ],
+      "actionable_gaps": [
+        "Completar contrato API",
+        "Aterrizar trazabilidad técnica de implementación"
+      ]
+    },
+    {
+      "id": "DM-X4-05",
+      "module": "MSR / Economía TCEP-TAU",
+      "layer_domain": "Economía + estado/reglas",
+      "owner": "Economy + MSR Core",
+      "status": "active",
+      "maturity": "beta",
+      "code_paths": [
+        "src/lib/msr.ts",
+        "src/systems/EconomySystem.ts",
+        "src/components/stripe/StripeCheckout.tsx",
+        "supabase/functions/create-checkout/"
+      ],
+      "endpoints": [
+        "create-checkout",
+        "stripe-webhook"
+      ],
+      "metrics": [
+        "ledger_consistency",
+        "stripe_webhook_idempotency",
+        "pending_tx_over_24h",
+        "negative_balance_count"
+      ],
+      "runbooks": [
+        "docs/13_economico_financiero_tamv.md",
+        "docs/modules/msr/msr_internal.md"
+      ],
+      "canonical_sources": [
+        "SOUL.md",
+        "docs/MASTER_CANON_OPENCLAW_TAMV.md"
+      ],
+      "actionable_gaps": [
+        "Publicar runbook formal de reconciliación",
+        "Automatizar auditoría económica continua"
+      ]
+    },
+    {
+      "id": "DM-X4-06",
+      "module": "Render XR / MD-X4 Pipelines",
+      "layer_domain": "XR + pipeline sensorial",
+      "owner": "XR/Experience Team",
+      "status": "active",
+      "maturity": "beta",
+      "code_paths": [
+        "src/pages/Metaverse.tsx",
+        "src/pages/DreamSpaces.tsx",
+        "src/systems/ThreeSceneManager.tsx",
+        "src/stores/xrStore.ts"
+      ],
+      "endpoints": [
+        "kaos-audio-system"
+      ],
+      "metrics": [
+        "fps_min_45",
+        "lcp_xr_routes",
+        "threejs_memory",
+        "geometry_leak_count"
+      ],
+      "runbooks": [
+        "docs/09_motor_mdx4_y_pipelines.md",
+        "docs/modules/render/render_internal.md"
+      ],
+      "canonical_sources": [
+        "SOUL.md",
+        "docs/MASTER_CANON_OPENCLAW_TAMV.md"
+      ],
+      "actionable_gaps": [
+        "Completar code-splitting XR",
+        "Aplicar LOD automático y tablero de performance"
+      ]
+    },
+    {
+      "id": "DM-X4-03R",
+      "module": "Radares / Observabilidad avanzada",
+      "layer_domain": "Seguridad + observabilidad",
+      "owner": "Sentinel / Horus Tower",
+      "status": "draft",
+      "maturity": "prototype",
+      "code_paths": [
+        "docs/modules/radares/"
+      ],
+      "endpoints": [
+        "pending"
+      ],
+      "metrics": [
+        "sensor_coverage",
+        "early_detection_rate",
+        "cross_domain_correlation"
+      ],
+      "runbooks": [
+        "docs/modules/radares/radares_internal.md",
+        "docs/08_seguridad_sentinel_y_radares.md"
+      ],
+      "canonical_sources": [
+        "SOUL.md",
+        "docs/MASTER_CANON_OPENCLAW_TAMV.md"
+      ],
+      "actionable_gaps": [
+        "Definir artefactos de código",
+        "Definir contratos de evento y KPIs operativos"
+      ]
+    }
+  ],
+  "version_history": [
+    {
+      "version": "v2026.05.03",
+      "date": "2026-05-03",
+      "change_type": "baseline",
+      "summary": "Primera publicación del índice maestro por módulo (MD + JSON)."
+    }
+  ],
+  "diff": {
+    "previous_version": null,
+    "current_version": "v2026.05.03",
+    "added": [
+      "Tabla maestra por módulo",
+      "Campo de madurez por módulo",
+      "Gaps accionables",
+      "Estructura JSON para Studio/búsqueda"
+    ]
+  }
+}
