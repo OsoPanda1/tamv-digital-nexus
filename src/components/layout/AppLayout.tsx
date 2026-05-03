@@ -27,7 +27,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
   }
 
   return (
-    <div className="relative min-h-screen w-full bg-background overflow-hidden">
+    <div className="relative min-h-screen w-full bg-background overflow-hidden monolith-noir-shell">
       {/* 3D Matrix Background — renders globally */}
       <UnifiedBackground mode="matrix" intensity={0.4} />
 

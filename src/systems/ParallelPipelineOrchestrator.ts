@@ -61,10 +61,10 @@ export class ParallelPipelineOrchestrator {
 export const sectionFromPathname = (pathname: string): PipelineSection => {
   if (pathname === "/") return "home";
   if (pathname.startsWith("/dashboard")) return "dashboard";
-  if (pathname.startsWith("/community")) return "community";
   if (pathname.startsWith("/isabella")) return "isabella";
-  if (pathname.startsWith("/economy")) return "economy";
-  if (pathname.startsWith("/governance")) return "governance";
+  if (pathname.startsWith("/economy") || pathname.startsWith("/marketplace")) return "economy";
+  if (pathname.startsWith("/governance") || pathname.startsWith("/territory")) return "governance";
+  if (pathname.startsWith("/community") || pathname.startsWith("/realito") || pathname.startsWith("/routes")) return "community";
   if (pathname.startsWith("/repo-unification")) return "repo-unification";
 
   return "other";
