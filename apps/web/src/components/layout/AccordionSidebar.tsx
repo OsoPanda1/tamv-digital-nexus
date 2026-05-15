@@ -20,7 +20,7 @@ import {
   AlertTriangle, Settings, Lock, Radio, Layers, Heart, Infinity,
   Sparkles, ChevronLeft, ChevronRight, Zap, Crown, Store,
   GraduationCap, Wallet, Gamepad2, Video, Music, PawPrint,
-  Dna as DNA, Stethoscope,
+  Dna as DNA, Stethoscope, Landmark,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import logoImg from '@/assets/LOGOTAMV2.jpg';
@@ -89,6 +89,7 @@ const NAV_GROUPS: NavGroup[] = [
     icon: DollarSign,
     items: [
       { icon: Wallet, label: 'NubiWallet', path: '/economy', badge: 'TCEP' },
+      { icon: Landmark, label: 'RDM Territorial OS', path: '/territorial-os', badge: '80%' },
       { icon: Store, label: 'Marketplace', path: '/monetization' },
       { icon: Crown, label: 'Membresías', path: '/monetization', badge: 'Pro' },
       { icon: TrendingUp, label: 'Blockchain MSR', path: '/economy' },
