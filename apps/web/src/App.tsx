@@ -50,6 +50,7 @@ import Singularity from "./pages/Singularity";
 import Reels from "./pages/Reels";
 import Health from "./pages/Health";
 import RepoUnification from "./pages/RepoUnification";
+import TerritorialOS from "./pages/TerritorialOS";
 
 // Configure React Query
 const queryClient = new QueryClient({
@@ -125,6 +126,7 @@ const App = () => (
               <Route path="/health" element={<Health />} />
               <Route path="/onboarding/membership" element={<MembershipOnboarding />} />
               <Route path="/repo-unification" element={<RepoUnification />} />
+              <Route path="/territorial-os" element={<TerritorialOS />} />
 
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
