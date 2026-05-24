@@ -15,6 +15,7 @@
 | `docs/05_social_core_schema_ui.md` | `doc_tech` | Social schema, hooks, UI | `stable` |
 | `docs/06_federated_certification.md` | `doc_tech` | BookPI, certs, federation | `stable` |
 | `docs/deployment_templates.md` | `blueprint` | Templates deploy, CI/CD | `stable` |
+| `docs/TAMV_AGENT_UNIFICADO_MESH_206.md` | `architecture_spec` | Binario Rust unificado, gossip, cadena 1→206→1, HMAC, autoreparación mesh | `draft` |
 
 ## Inventario inicial (local)
 | Dominio | Evidencia en repo | Estado |
