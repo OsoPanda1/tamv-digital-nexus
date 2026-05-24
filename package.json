@@ -30,6 +30,8 @@
     "check:guard-usage": "tsx scripts/check-guard-usage.ts",
     "test:rdm": "vitest run apps/web/src/lib/rdm-digital/rdm-digital.test.ts",
     "ci:local": "npm run lint:constitution && npm run typecheck && npm run test:unit && npm run build",
+    "linear:sync:payload": "tsx scripts/linear-repo-sync.ts",
+    "linear:sync:apply": "tsx scripts/linear-sync-apply.ts"
     "linear:sync:payload": "tsx scripts/linear-repo-sync.ts"
   },
   "dependencies": {
